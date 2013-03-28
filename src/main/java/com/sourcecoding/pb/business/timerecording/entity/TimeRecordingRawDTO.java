@@ -5,6 +5,7 @@
 package com.sourcecoding.pb.business.timerecording.entity;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,14 +14,11 @@ import java.util.Map;
  */
 public class TimeRecordingRawDTO {
 
-    
     private Long workPackageId;
-    
     private String projectName;
     private String workPackageName;
-    
     private String description;
-    private Map<Date, Integer> timeRecording;
+    private List<TimeRecordingRawValueDTO> timeRecording;
 
     public Long getWorkPackageId() {
         return workPackageId;
@@ -46,11 +44,11 @@ public class TimeRecordingRawDTO {
         this.description = description;
     }
 
-    public Map<Date, Integer> getTimeRecording() {
+    public List<TimeRecordingRawValueDTO> getTimeRecording() {
         return timeRecording;
     }
 
-    public void setTimeRecording(Map<Date, Integer> timeRecording) {
+    public void setTimeRecording(List<TimeRecordingRawValueDTO> timeRecording) {
         this.timeRecording = timeRecording;
     }
 
@@ -61,7 +59,4 @@ public class TimeRecordingRawDTO {
     public void setProjectName(String projectName) {
         this.projectName = projectName;
     }
-    
-    
-    
 }

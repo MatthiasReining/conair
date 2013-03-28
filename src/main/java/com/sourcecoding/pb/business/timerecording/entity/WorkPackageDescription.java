@@ -10,18 +10,28 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author Matthias
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = WorkPackageDescription.findByWorkPackageAndDescription, query = "SELECT wpd FROM WorkPackageDescription wpd WHERE wpd.workPackage = :" + WorkPackageDescription.findByWorkPackageAndDescription_Param_WorkPackage + " AND wpd.description = :" + WorkPackageDescription.findByWorkPackageAndDescription_Param_Description)
+})
 public class WorkPackageDescription implements Serializable {
 
+    public static final String findByWorkPackageAndDescription = "WorkPackageDescription#findByWorkPackageAndDescription";
+    public static final String findByWorkPackageAndDescription_Param_WorkPackage = "workPackage";
+    public static final String findByWorkPackageAndDescription_Param_Description = "description";
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @ManyToOne
     private WorkPackage workPackage;
     private String description;
 
@@ -48,6 +58,4 @@ public class WorkPackageDescription implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
-    
-    
 }
