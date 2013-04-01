@@ -15,7 +15,7 @@ public class TimeRecordingDTO {
     
     private Long individualId;
     
-    private List<TimeRecordingRawDTO> timeRecordingRaw;
+    private List<TimeRecordingRowDTO> timeRecordingRow;
 
     public Long getIndividualId() {
         return individualId;
@@ -25,12 +25,12 @@ public class TimeRecordingDTO {
         this.individualId = individualId;
     }
 
-    public List<TimeRecordingRawDTO> getTimeRecordingRaw() {
-        return timeRecordingRaw;
+    public List<TimeRecordingRowDTO> getTimeRecordingRow() {
+        return timeRecordingRow;
     }
 
-    public void setTimeRecordingRaw(List<TimeRecordingRawDTO> timeRecordingRaw) {
-        this.timeRecordingRaw = timeRecordingRaw;
+    public void setTimeRecordingRow(List<TimeRecordingRowDTO> timeRecordingRow) {
+        this.timeRecordingRow = timeRecordingRow;
     }
     
     

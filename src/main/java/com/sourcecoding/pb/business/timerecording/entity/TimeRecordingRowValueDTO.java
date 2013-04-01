@@ -10,12 +10,12 @@ import java.util.Date;
  *
  * @author Matthias
  */
-public class TimeRecordingRawValueDTO {
+public class TimeRecordingRowValueDTO {
     
-    public TimeRecordingRawValueDTO() {
+    public TimeRecordingRowValueDTO() {
     }
     
-    public TimeRecordingRawValueDTO(Date workingDay, Integer workingTime) {
+    public TimeRecordingRowValueDTO(Date workingDay, Integer workingTime) {
         this.workingDay = workingDay;
         this.workingTime = workingTime;
     }

@@ -8,8 +8,8 @@ import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingQueryDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawValueDTO;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowDTO;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowValueDTO;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -57,9 +57,9 @@ public class InitalizeSystem {
 
         TimeRecordingDTO tr = search(individual.getId());
         
-        for (TimeRecordingRawDTO row : tr.getTimeRecordingRaw()) {
+        for (TimeRecordingRowDTO row : tr.getTimeRecordingRow()) {
             System.out.print(row.getProjectName() + " " + row.getWorkPackageName() + " " + row.getDescription());
-            for (TimeRecordingRawValueDTO value: row.getTimeRecording()) {
+            for (TimeRecordingRowValueDTO value: row.getTimeRecording()) {
                 System.out.print(value.getWorkingDay() + " / " + value.getWorkingTime());
             }
             System.out.println();
@@ -142,38 +142,38 @@ public class InitalizeSystem {
         
         WorkPackage[] wp = projectInfo.getWorkPackages().toArray(new WorkPackage[]{});
         
-        List<TimeRecordingRawDTO> rawList = new ArrayList<>();
-        timeRecording.setTimeRecordingRaw(rawList);
+        List<TimeRecordingRowDTO> rowList = new ArrayList<>();
+        timeRecording.setTimeRecordingRow(rowList);
 
-        TimeRecordingRawDTO raw = new TimeRecordingRawDTO();
-        rawList.add(raw);
-        raw.setWorkPackageId(wp[0].getId());
-        raw.setProjectName(projectInfo.getName());
-        raw.setWorkPackageName(wp[0].getWpName());
+        TimeRecordingRowDTO row = new TimeRecordingRowDTO();
+        rowList.add(row);
+        row.setWorkPackageId(wp[0].getId());
+        row.setProjectName(projectInfo.getName());
+        row.setWorkPackageName(wp[0].getWpName());
 
-        List<TimeRecordingRawValueDTO> tr = new ArrayList<>();
-        raw.setTimeRecording(tr);
+        List<TimeRecordingRowValueDTO> tr = new ArrayList<>();
+        row.setTimeRecording(tr);
         Calendar c = Calendar.getInstance();
         c.set(2012, 2, 11, 0, 0, 0);
         c.set(Calendar.MILLISECOND, 0);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 510));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 510));
         c.add(Calendar.DATE, 1);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 480));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 480));
 
-        raw = new TimeRecordingRawDTO();
-        rawList.add(raw);
-        raw.setWorkPackageId(wp[1].getId());
-        raw.setProjectName(projectInfo.getName());
-        raw.setWorkPackageName(wp[1].getWpName());
+        row = new TimeRecordingRowDTO();
+        rowList.add(row);
+        row.setWorkPackageId(wp[1].getId());
+        row.setProjectName(projectInfo.getName());
+        row.setWorkPackageName(wp[1].getWpName());
         tr = new ArrayList<>();
-        raw.setTimeRecording(tr);
+        row.setTimeRecording(tr);
         c = Calendar.getInstance();
         c.set(2012, 2, 13, 0, 0, 0);
         c.set(Calendar.MILLISECOND, 0);
         c.add(Calendar.DATE, 2);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 480));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 480));
         c.add(Calendar.DATE, 1);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 480));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 480));
 
 
         ClientResponse cr = webResource.path("time-acquisition")

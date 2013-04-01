@@ -4,21 +4,19 @@
  */
 package com.sourcecoding.pb.business.timerecording.entity;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
  * @author Matthias
  */
-public class TimeRecordingRawDTO {
+public class TimeRecordingRowDTO {
 
     private Long workPackageId;
     private String projectName;
     private String workPackageName;
     private String description;
-    private List<TimeRecordingRawValueDTO> timeRecording;
+    private List<TimeRecordingRowValueDTO> timeRecording;
 
     public Long getWorkPackageId() {
         return workPackageId;
@@ -44,11 +42,11 @@ public class TimeRecordingRawDTO {
         this.description = description;
     }
 
-    public List<TimeRecordingRawValueDTO> getTimeRecording() {
+    public List<TimeRecordingRowValueDTO> getTimeRecording() {
         return timeRecording;
     }
 
-    public void setTimeRecording(List<TimeRecordingRawValueDTO> timeRecording) {
+    public void setTimeRecording(List<TimeRecordingRowValueDTO> timeRecording) {
         this.timeRecording = timeRecording;
     }
 

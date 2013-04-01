@@ -8,8 +8,8 @@ import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecording;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingQueryDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawValueDTO;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowDTO;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowValueDTO;
 import com.sourcecoding.pb.business.timerecording.entity.WorkPackageDescription;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import java.util.ArrayList;
@@ -40,40 +40,39 @@ public class TimeRecordingStore {
                 .setParameter(TimeRecording.findTimeRecordingInRange_Param_endDate, endDate)
                 .getResultList();
 
-        //FIXME rename raw -> row
         TimeRecordingDTO out = new TimeRecordingDTO();
         out.setIndividualId(individualId);
-        List<TimeRecordingRawDTO> rawList = new ArrayList<>();
-        out.setTimeRecordingRaw(rawList);
+        List<TimeRecordingRowDTO> rowList = new ArrayList<>();
+        out.setTimeRecordingRow(rowList);
 
         //XXX find better alogrithm to fill data
         for (TimeRecording tr : trList) {
             Long wpId = tr.getWorkPackageDesciption().getWorkPackage().getId();
 
-            TimeRecordingRawDTO row = null;
-            //search existing raw
-            for (TimeRecordingRawDTO searchRow : rawList) {
+            TimeRecordingRowDTO row = null;
+            //search existing row
+            for (TimeRecordingRowDTO searchRow : rowList) {
                 if (searchRow.getWorkPackageId() == wpId) {
                     row = searchRow;
                 }
             }
             if (row == null) {
-                row = new TimeRecordingRawDTO();
+                row = new TimeRecordingRowDTO();
                 row.setDescription(tr.getWorkPackageDesciption().getDescription());
                 row.setProjectName(tr.getWorkPackageDesciption().getWorkPackage().getProjectInformation().getProjectKey());
                 row.setWorkPackageId(tr.getWorkPackageDesciption().getWorkPackage().getId());
                 row.setWorkPackageName(tr.getWorkPackageDesciption().getWorkPackage().getWpName());
 
-                rawList.add(row);
+                rowList.add(row);
             }
 
             if (row.getTimeRecording() == null)
-                row.setTimeRecording(new ArrayList<TimeRecordingRawValueDTO>());
+                row.setTimeRecording(new ArrayList<TimeRecordingRowValueDTO>());
             
 
-            List<TimeRecordingRawValueDTO> rowValues = row.getTimeRecording();
+            List<TimeRecordingRowValueDTO> rowValues = row.getTimeRecording();
 
-            TimeRecordingRawValueDTO rowValue = new TimeRecordingRawValueDTO();
+            TimeRecordingRowValueDTO rowValue = new TimeRecordingRowValueDTO();
             rowValues.add(rowValue);
             rowValue.setWorkingDay(tr.getWorkingDay());
             rowValue.setWorkingTime(tr.getWorkingTime());
@@ -86,7 +85,7 @@ public class TimeRecordingStore {
 
         Individual individual = em.find(Individual.class, in.getIndividualId());
 
-        for (TimeRecordingRawDTO trr : in.getTimeRecordingRaw()) {
+        for (TimeRecordingRowDTO trr : in.getTimeRecordingRow()) {
             WorkPackage wp = em.find(WorkPackage.class, trr.getWorkPackageId());
 
             String description = trr.getDescription();
@@ -104,10 +103,10 @@ public class TimeRecordingStore {
                 wpd.setWorkPackage(wp);
                 wpd = em.merge(wpd);
             } else {
-                wpd = wpdList.get(0); //there is (should) always one raw available
+                wpd = wpdList.get(0); //there is (should) always one row available
             }
 
-            for (TimeRecordingRawValueDTO rv : trr.getTimeRecording()) {
+            for (TimeRecordingRowValueDTO rv : trr.getTimeRecording()) {
                 Date workingDay = rv.getWorkingDay();
                 Integer workingTime = rv.getWorkingTime();
 
@@ -128,7 +127,7 @@ public class TimeRecordingStore {
                     tr.setWorkingDay(workingDay);
                     tr = em.merge(tr);
                 } else {
-                    tr = trList.get(0); //there is (should) always one raw available
+                    tr = trList.get(0); //there is (should) always one row available
                 }
                 tr.setWorkingTime(workingTime);
 

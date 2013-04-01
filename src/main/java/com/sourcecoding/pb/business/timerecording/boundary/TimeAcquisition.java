@@ -7,8 +7,8 @@ package com.sourcecoding.pb.business.timerecording.boundary;
 import com.sourcecoding.pb.business.timerecording.control.TimeRecordingStore;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingQueryDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawValueDTO;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowDTO;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowValueDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -53,38 +53,38 @@ public class TimeAcquisition {
         TimeRecordingDTO timeRecording = new TimeRecordingDTO();
         timeRecording.setIndividualId(123L);
 
-        List<TimeRecordingRawDTO> rawList = new ArrayList<>();
-        timeRecording.setTimeRecordingRaw(rawList);
+        List<TimeRecordingRowDTO> rowList = new ArrayList<>();
+        timeRecording.setTimeRecordingRow(rowList);
 
-        TimeRecordingRawDTO raw = new TimeRecordingRawDTO();
-        rawList.add(raw);
-        raw.setWorkPackageId(234L);
-        raw.setProjectName("Project X");
-        raw.setWorkPackageName("Module A");
+        TimeRecordingRowDTO row = new TimeRecordingRowDTO();
+        rowList.add(row);
+        row.setWorkPackageId(234L);
+        row.setProjectName("Project X");
+        row.setWorkPackageName("Module A");
 
-        List<TimeRecordingRawValueDTO> tr = new ArrayList<>();
-        raw.setTimeRecording(tr);
+        List<TimeRecordingRowValueDTO> tr = new ArrayList<>();
+        row.setTimeRecording(tr);
         Calendar c = Calendar.getInstance();
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         c.set(Calendar.MILLISECOND, 0);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 510));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 510));
         c.add(Calendar.DATE, 1);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 480));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 480));
 
-        raw = new TimeRecordingRawDTO();
-        rawList.add(raw);
-        raw.setWorkPackageId(434L);
-        raw.setProjectName("Project X");
-        raw.setWorkPackageName("Module C");
+        row = new TimeRecordingRowDTO();
+        rowList.add(row);
+        row.setWorkPackageId(434L);
+        row.setProjectName("Project X");
+        row.setWorkPackageName("Module C");
         tr = new ArrayList<>();
-        raw.setTimeRecording(tr);
+        row.setTimeRecording(tr);
         c = Calendar.getInstance();
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
         c.set(Calendar.MILLISECOND, 0);
         c.add(Calendar.DATE, 2);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 480));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 480));
         c.add(Calendar.DATE, 1);
-        tr.add(new TimeRecordingRawValueDTO(c.getTime(), 480));
+        tr.add(new TimeRecordingRowValueDTO(c.getTime(), 480));
 
 
 
