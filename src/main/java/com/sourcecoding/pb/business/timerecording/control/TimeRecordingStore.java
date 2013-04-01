@@ -7,7 +7,6 @@ package com.sourcecoding.pb.business.timerecording.control;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecording;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingQueryDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowValueDTO;
 import com.sourcecoding.pb.business.timerecording.entity.WorkPackageDescription;
@@ -27,10 +26,7 @@ public class TimeRecordingStore {
     @PersistenceContext
     EntityManager em;
 
-    public TimeRecordingDTO get(TimeRecordingQueryDTO query) {
-        Long individualId = query.getIndividualId();
-        Date startDate = query.getStartDate();
-        Date endDate = query.getEndDate();
+    public TimeRecordingDTO get(Long individualId, Date startDate, Date endDate) {
 
         Individual individual = em.find(Individual.class, individualId);
 
@@ -66,9 +62,10 @@ public class TimeRecordingStore {
                 rowList.add(row);
             }
 
-            if (row.getTimeRecording() == null)
+            if (row.getTimeRecording() == null) {
                 row.setTimeRecording(new ArrayList<TimeRecordingRowValueDTO>());
-            
+            }
+
 
             List<TimeRecordingRowValueDTO> rowValues = row.getTimeRecording();
 

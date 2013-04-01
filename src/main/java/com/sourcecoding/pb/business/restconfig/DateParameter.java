@@ -1,0 +1,30 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.sourcecoding.pb.business.restconfig;
+
+import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author Matthias
+ */
+public class DateParameter implements Serializable {
+
+    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static Date valueOf(String dateString) {
+        try {
+            return DATE_FORMAT.parse(dateString);
+        } catch (ParseException ex) {
+            throw new RuntimeException("'" + dateString + "' cannot be parsed (pattern: 'yyyy-mm-dd')", ex);
+        }
+    }
+}

@@ -7,7 +7,6 @@ package com.sourcecoding.pb.business;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingQueryDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowValueDTO;
 import com.sourcecoding.pb.business.user.entity.Individual;
@@ -56,37 +55,29 @@ public class InitalizeSystem {
         createTimeRecording(individual, projectInfo);
 
         TimeRecordingDTO tr = search(individual.getId());
-        
+
         for (TimeRecordingRowDTO row : tr.getTimeRecordingRow()) {
             System.out.print(row.getProjectName() + " " + row.getWorkPackageName() + " " + row.getDescription());
-            for (TimeRecordingRowValueDTO value: row.getTimeRecording()) {
+            for (TimeRecordingRowValueDTO value : row.getTimeRecording()) {
                 System.out.print(value.getWorkingDay() + " / " + value.getWorkingTime());
             }
             System.out.println();
         }
-        
-        
+
+
 
     }
 
     protected TimeRecordingDTO search(Long individualId) throws UniformInterfaceException, ClientHandlerException {
-        TimeRecordingQueryDTO query = new TimeRecordingQueryDTO();
-        query.setIndividualId(individualId);
-        Calendar c = Calendar.getInstance();
-        c.set(2012, 2, 1, 0, 0, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        query.setStartDate(c.getTime());
-        
-        c.set(Calendar.DAY_OF_MONTH, 31);
-        query.setEndDate(c.getTime());
-
-
 
         ClientResponse cr = webResource.path("time-acquisition")
+                .path(String.valueOf(individualId))
                 .path("search")
+                .queryParam("qStart", "2012-03-01")
+                .queryParam("qEnd", "2012-03-31")
                 .type("application/json")
                 .accept("application/json")
-                .put(ClientResponse.class, query);
+                .get(ClientResponse.class);
 
         TimeRecordingDTO tr = cr.getEntity(TimeRecordingDTO.class);
         System.out.println(tr.getIndividualId());
@@ -139,9 +130,9 @@ public class InitalizeSystem {
     private TimeRecordingDTO createTimeRecording(Individual user, ProjectInformation projectInfo) {
         TimeRecordingDTO timeRecording = new TimeRecordingDTO();
         timeRecording.setIndividualId(user.getId());
-        
+
         WorkPackage[] wp = projectInfo.getWorkPackages().toArray(new WorkPackage[]{});
-        
+
         List<TimeRecordingRowDTO> rowList = new ArrayList<>();
         timeRecording.setTimeRecordingRow(rowList);
 

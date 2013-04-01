@@ -4,13 +4,14 @@
  */
 package com.sourcecoding.pb.business.timerecording.boundary;
 
+import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.timerecording.control.TimeRecordingStore;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingDTO;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingQueryDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRowValueDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
@@ -18,7 +19,9 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -30,7 +33,7 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class TimeAcquisition {
-    
+
     @Inject
     TimeRecordingStore trs;
 
@@ -40,11 +43,18 @@ public class TimeAcquisition {
         trs.update(timeRecording);
         return timeRecording;
     }
-    
-    @PUT
-    @Path("/search")
-    public TimeRecordingDTO getTimeRecords(TimeRecordingQueryDTO query) {
-        return trs.get(query);
+
+    @GET
+    @Path("{individualId}/search")
+    public TimeRecordingDTO getTimeRecords(
+            @PathParam("individualId") Long individualId,
+            @QueryParam("qStart") String qStart,
+            @QueryParam("qEnd") String qEnd) {
+
+        Date startDate = DateParameter.valueOf(qStart);
+        Date endDate = DateParameter.valueOf(qEnd);
+
+        return trs.get(individualId, startDate, endDate);
     }
 
     @GET
