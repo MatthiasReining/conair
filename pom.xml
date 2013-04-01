@@ -33,9 +33,12 @@
             <version>2.3.2</version>
             <scope>provided</scope>
         </dependency>
-        
-        
-        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.10</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
@@ -48,10 +51,32 @@
             <artifactId>jersey-json</artifactId>
             <version>1.17.1</version>
         </dependency>
+        
+        
+        
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>1.17.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.14</version>
+                <configuration>
+                    <classpathDependencyExcludes>
+                        - exclude code absent api -
+                        <classpathDependencyExclude>javax:javaee-api</classpathDependencyExclude>
+                        <classpathDependencyExclude>javax:javaee-web-api</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

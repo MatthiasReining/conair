@@ -22,7 +22,8 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = TimeRecording.findUniqueTimeRecording, query = "SELECT tr FROM TimeRecording tr WHERE tr.workPackageDesciption = :"+ TimeRecording.findUniqueTimeRecording_Param_workPackageDesciption+" AND tr.user = :"+TimeRecording.findUniqueTimeRecording_Param_user+" AND tr.workingDay = :" + TimeRecording.findUniqueTimeRecording_Param_workingDay)
+    @NamedQuery(name = TimeRecording.findUniqueTimeRecording, query = "SELECT tr FROM TimeRecording tr WHERE tr.workPackageDesciption = :"+ TimeRecording.findUniqueTimeRecording_Param_workPackageDesciption+" AND tr.user = :"+TimeRecording.findUniqueTimeRecording_Param_user+" AND tr.workingDay = :" + TimeRecording.findUniqueTimeRecording_Param_workingDay),
+    @NamedQuery(name= TimeRecording.findTimeRecordingInRange, query = "SELECT tr FROM TimeRecording tr WHERE tr.user = :"+TimeRecording.findTimeRecordingInRange_Param_user +" AND tr.workingDay BETWEEN :"+TimeRecording.findTimeRecordingInRange_Param_startDate+" AND :"+TimeRecording.findTimeRecordingInRange_Param_endDate + " ORDER BY tr.workingDay, tr.workPackageDesciption.workPackage.projectInformation.projectKey, tr.workPackageDesciption.workPackage.wpName")
 })
 public class TimeRecording implements Serializable {
 
@@ -30,6 +31,12 @@ public class TimeRecording implements Serializable {
     public static final String findUniqueTimeRecording_Param_workPackageDesciption = "workPackageDesciption";
     public static final String findUniqueTimeRecording_Param_user = "user";
     public static final String findUniqueTimeRecording_Param_workingDay = "workingDay";
+    
+    public static final String findTimeRecordingInRange = "TimeRecording.findTimeRecordingInRange";
+    public static final String findTimeRecordingInRange_Param_user = "user";
+    public static final String findTimeRecordingInRange_Param_startDate = "startDate";
+    public static final String findTimeRecordingInRange_Param_endDate = "endDate";
+    //public static final String 
     
     
             

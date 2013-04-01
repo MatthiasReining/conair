@@ -5,16 +5,13 @@
 package com.sourcecoding.pb.business.timerecording.boundary;
 
 import com.sourcecoding.pb.business.timerecording.control.TimeRecordingStore;
-import com.sourcecoding.pb.business.timerecording.entity.TestDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingDTO;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingQueryDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawDTO;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecordingRawValueDTO;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -43,9 +40,15 @@ public class TimeAcquisition {
         trs.update(timeRecording);
         return timeRecording;
     }
+    
+    @PUT
+    @Path("/search")
+    public TimeRecordingDTO getTimeRecords(TimeRecordingQueryDTO query) {
+        return trs.get(query);
+    }
 
     @GET
-    public TimeRecordingDTO createOrReplaceTimeRecording() {
+    public TimeRecordingDTO getDummy() {
 
         TimeRecordingDTO timeRecording = new TimeRecordingDTO();
         timeRecording.setIndividualId(123L);

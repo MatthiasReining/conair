@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -22,6 +24,10 @@ public class WorkPackage implements Serializable {
     private Long id;
     
     private String wpName;
+    
+    @JsonIgnore
+    @ManyToOne
+    private ProjectInformation projectInformation;
 
     public Long getId() {
         return id;
@@ -38,5 +44,15 @@ public class WorkPackage implements Serializable {
     public void setWpName(String wpName) {
         this.wpName = wpName;
     }
+
+    public ProjectInformation getProjectInformation() {
+        return projectInformation;
+    }
+
+    public void setProjectInformation(ProjectInformation projectInformation) {
+        this.projectInformation = projectInformation;
+    }
+    
+    
 
 }
