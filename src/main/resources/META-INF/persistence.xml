@@ -3,10 +3,11 @@
   <persistence-unit name="com.sourcecoding_project-business_war_1.0-SNAPSHOTPU" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>jdbc/__default</jta-data-source>
+    <class>com.sourcecoding.pb.business.timerecording.entity.WorkingDay</class>
+    <class>com.sourcecoding.pb.business.timerecording.entity.WorkingTime</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
-      
       <property name="eclipselink.logging.level" value="FINE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
     </properties>

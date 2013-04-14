@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.timerecording.entity;
+package com.sourcecoding.pb.business.workinghours.entity;
 
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import java.io.Serializable;
@@ -58,4 +58,6 @@ public class WorkPackageDescription implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+    
+    
 }

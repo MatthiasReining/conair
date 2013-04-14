@@ -4,7 +4,6 @@
  */
 package com.sourcecoding.pb.business.user.entity;
 
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecording;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

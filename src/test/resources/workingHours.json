@@ -1,0 +1,55 @@
+{
+    "userId": 123,
+    "workingDayList": [
+        {
+            "date": "2012-03-12",
+            "state": "ok",
+            "workingTimeList": [
+                {
+                    "workingTime": 180,
+                    "descriptionId": 234
+                },
+                {
+                    "workingTime": 90,
+                    "descriptionId": 123
+                },
+                {
+                    "workingTime": 210,
+                    "descriptionId": 333
+                }
+            ]
+        },
+        {
+            "date": "2012-03-11",
+            "state": "ok",
+            "workingTimeList": [
+                {
+                    "workingTime": 60,
+                    "descriptionId": 234
+                },
+                {
+                    "workingTime": 360,
+                    "descriptionId": 123
+                },
+                {
+                    "workingTime": 90,
+                    "descriptionId": 333
+                }
+            ]
+        }
+    ],
+    "workPackageDescription": {
+        "234": { 
+                "workPackageId": 5,
+                "description": "doku gelesen"
+        },
+        "123": { 
+                "workPackageId": 5,
+                "description": "weitere doku gelesen"
+        },
+        "333": { 
+                "workPackageId": 6,
+                "description": "kill app entwickelt"
+        }
+    }
+}
