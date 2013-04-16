@@ -23,9 +23,9 @@ public class TimeRecordingStore {
     public List<WorkingDay> getWorkingTimePackage(Long individualId, Date from, Date until) {
 
         List<WorkingDay> workingDayList = em.createNamedQuery(WorkingDay.findWorkingDayRange, WorkingDay.class)
-                .setParameter(WorkingDay.findWorkingDayRange_Param_user, individualId)
-                .setParameter(WorkingDay.findWorkingDayRange_Param_startDate, from)
-                .setParameter(WorkingDay.findWorkingDayRange_Param_endDate, until)
+                .setParameter(WorkingDay.queryParam_user, individualId)
+                .setParameter(WorkingDay.queryParam_startDate, from)
+                .setParameter(WorkingDay.queryParam_endDate, until)
                 .getResultList();
 
         return workingDayList;

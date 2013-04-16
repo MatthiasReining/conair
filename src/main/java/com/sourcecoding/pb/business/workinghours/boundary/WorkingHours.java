@@ -8,7 +8,6 @@ import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.workinghours.control.JsonMapper;
 import com.sourcecoding.pb.business.workinghours.control.TimeRecordingStore;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
-import com.sourcecoding.pb.business.workinghours.entity.dto.WorkingDayDTO;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -43,11 +42,7 @@ public class WorkingHours {
     @Inject
     TimeRecordingStore trs;
 
-    @GET
-    @Path("{individualId}")
-    public List<WorkingDayDTO> getAllByUser(@PathParam("individualId") Long individualId) {
-        return null;
-    }
+  
 
     @GET
     @Path("{individualId}/range")

@@ -1,43 +1,23 @@
 {
-    "userId": 123,
-    "workingDayList": [
-        {
-            "date": "2012-03-12",
+    "userId": 4,
+    "workingDayMap": {
+        "2012-03-12": {
             "state": "ok",
-            "workingTimeList": [
-                {
-                    "workingTime": 180,
-                    "descriptionId": 234
-                },
-                {
-                    "workingTime": 90,
-                    "descriptionId": 123
-                },
-                {
-                    "workingTime": 210,
-                    "descriptionId": 333
-                }
-            ]
+            "workingTimeByDescriptionId": {
+                "234": 180,
+                "123": 90,
+                "333": 210
+            }              
         },
-        {
-            "date": "2012-03-11",
+        "2012-03-11": {
             "state": "ok",
-            "workingTimeList": [
-                {
-                    "workingTime": 60,
-                    "descriptionId": 234
-                },
-                {
-                    "workingTime": 360,
-                    "descriptionId": 123
-                },
-                {
-                    "workingTime": 90,
-                    "descriptionId": 333
-                }
-            ]
+            "workingTimeByDescriptionId": {
+                    "234": 60,
+                    "123": 360,
+                    "333": 90
+            }            
         }
-    ],
+    },
     "workPackageDescription": {
         "234": { 
                 "workPackageId": 5,
@@ -49,7 +29,7 @@
         },
         "333": { 
                 "workPackageId": 6,
-                "description": "kill app entwickelt"
+                "description": "killer app entwickelt"
         }
     }
 }

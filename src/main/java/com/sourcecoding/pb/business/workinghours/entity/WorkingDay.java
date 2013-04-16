@@ -8,6 +8,7 @@ import com.sourcecoding.pb.business.user.entity.Individual;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,15 +26,19 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = WorkingDay.findWorkingDayRange, query = "SELECT wd FROM WorkingDay wd WHERE wd.user = :" + WorkingDay.findWorkingDayRange_Param_user + " AND wd.workingDay BETWEEN :" + WorkingDay.findWorkingDayRange_Param_startDate + " AND :" + WorkingDay.findWorkingDayRange_Param_endDate + " ORDER BY wd.workingDay")
+    @NamedQuery(name = WorkingDay.findWorkingDayRange, query = "SELECT wd FROM WorkingDay wd WHERE wd.user = :" + WorkingDay.queryParam_user + " AND wd.workingDay BETWEEN :" + WorkingDay.queryParam_startDate + " AND :" + WorkingDay.queryParam_endDate + " ORDER BY wd.workingDay"),
+    @NamedQuery(name = WorkingDay.findWorkingDayForUser, query = "SELECT wd FROM WorkingDay wd WHERE wd.user = :"+ WorkingDay.queryParam_user + " AND wd.workingDay = :" + WorkingDay.queryParam_date )
 })
 public class WorkingDay implements Serializable {
 
     public static final String findWorkingDayRange = "WorkingDay.findWorkingDayRange";
-    public static final String findWorkingDayRange_Param_user = "user";
-    public static final String findWorkingDayRange_Param_startDate = "startDate";
-    public static final String findWorkingDayRange_Param_endDate = "endDate";
-
+    public static final String findWorkingDayForUser = "WorkingDay.findWorkingDayByUser";
+    
+    public static final String queryParam_user = "user";
+    public static final String queryParam_startDate = "startDate";
+    public static final String queryParam_endDate = "endDate";
+    public static final String queryParam_date = "date";
+    
     
     private static final long serialVersionUID = 1L;
     @Id
@@ -41,10 +46,9 @@ public class WorkingDay implements Serializable {
     private Long id;
     @ManyToOne
     private Individual user;
-    private int status; //TODO change to enum
-    @OneToMany(mappedBy = "workingDay")
+    private int status; //TODO change to enum and rename to state
+    @OneToMany(mappedBy = "workingDay", cascade = CascadeType.ALL)
     private List<WorkingTime> workingTimeList;
-
     @Temporal(TemporalType.DATE)
     private Date workingDay;
 
@@ -87,6 +91,4 @@ public class WorkingDay implements Serializable {
     public void setWorkingDay(Date workingDay) {
         this.workingDay = workingDay;
     }
-    
-    
 }
