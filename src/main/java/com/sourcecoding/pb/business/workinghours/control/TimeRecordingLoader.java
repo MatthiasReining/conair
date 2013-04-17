@@ -4,9 +4,13 @@
  */
 package com.sourcecoding.pb.business.workinghours.control;
 
+import com.sourcecoding.pb.business.project.entity.WorkPackage;
+import com.sourcecoding.pb.business.workinghours.entity.WorkPackageDescription;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -14,7 +18,7 @@ import javax.persistence.PersistenceContext;
  *
  * @author Matthias
  */
-public class TimeRecordingStore {
+public class TimeRecordingLoader {
 
     @PersistenceContext
     EntityManager em;

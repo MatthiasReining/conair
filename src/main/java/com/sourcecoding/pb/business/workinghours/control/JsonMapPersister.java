@@ -27,32 +27,24 @@ import org.codehaus.jackson.map.ObjectMapper;
  *
  * @author Matthias
  */
-public class JsonMapper {
+public class JsonMapPersister {
 
     @PersistenceContext
     EntityManager em;
 
-    public Object buildWorkingHoursEntities(Map<String, Object> data) {
-
+    public void update(Map<String, Object> data) {
 
         Long userId = ((Integer) data.get("userId")).longValue();
-        System.out.println("userId: " + userId);
         Individual individual = em.find(Individual.class, userId);
-        
-
-        Map<String, Map<String, Object>> workingDayMap = (Map<String, Map<String, Object>>) data.get("workingDayMap");
-        System.out.println("workingDayMap: " + workingDayMap);
-
-        Map<String, Object> workPackageDescriptionMap = (Map<String, Object>) data.get("workPackageDescription");
-        System.out.println("workPackageDescription: " + workPackageDescriptionMap);
-
-        Map<String, WorkPackageDescription> workPackageDescriptionMapByJsonId = createWorkPackageList(workPackageDescriptionMap);
-        System.out.println(workPackageDescriptionMapByJsonId);
 
 
-        createOrUpdateWorkingTime(workingDayMap, individual, workPackageDescriptionMapByJsonId);
+        Map<String, Map<String, Object>> workingDayMapByDay = (Map<String, Map<String, Object>>) data.get("workingDayMap");
+        Map<String, Object> workPackageDescriptionMapByJsonId = (Map<String, Object>) data.get("workPackageDescription");
 
-        return null;
+
+        Map<String, WorkPackageDescription> workPackageDescriptionEntiyMapByJsonId = createWorkPackageDescriptionEntityMap(workPackageDescriptionMapByJsonId);
+
+        createOrUpdateWorkingTime(individual, workingDayMapByDay, workPackageDescriptionEntiyMapByJsonId);
 
     }
 
@@ -135,7 +127,7 @@ public class JsonMapper {
         }
     }
 
-    private Map<String, WorkPackageDescription> createWorkPackageList(Map<String, Object> workPackageDescriptionMap) {
+    private Map<String, WorkPackageDescription> createWorkPackageDescriptionEntityMap(Map<String, Object> workPackageDescriptionMap) {
         Map<String, WorkPackageDescription> wpList2merge = new HashMap<>();
 
         for (Map.Entry<String, Object> wp : workPackageDescriptionMap.entrySet()) {
@@ -172,48 +164,25 @@ public class JsonMapper {
         return wpList2merge;
     }
 
-    private void createOrUpdateWorkingTime(Map<String, Map<String, Object>> workingDayJsonMap, Individual individual, Map<String, WorkPackageDescription> workPackageDescriptionMapByJsonId) {
+    private void createOrUpdateWorkingTime(Individual individual,
+            Map<String, Map<String, Object>> workingDayMapByDay,
+            Map<String, WorkPackageDescription> workPackageDescriptionEntiyMapByJsonId) {
 
-        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
         Map<Long, WorkPackageDescription> workPackageDescriptionByEntityId = new HashMap<>();
-        for (WorkPackageDescription wp : workPackageDescriptionMapByJsonId.values()) {
+        for (WorkPackageDescription wp : workPackageDescriptionEntiyMapByJsonId.values()) {
             workPackageDescriptionByEntityId.put(wp.getId(), wp);
         }
-        
-        System.out.println(workingDayJsonMap);
-        System.out.println("----");
-        System.out.println(workPackageDescriptionByEntityId);
-        System.out.println("----");
-        System.out.println(workPackageDescriptionMapByJsonId);
 
 
-        for (Map.Entry<String, Map<String, Object>> workingDayJsonEntry : workingDayJsonMap.entrySet()) {
-            System.out.println(workingDayJsonEntry);
-
+        for (Map.Entry<String, Map<String, Object>> workingDayJsonEntry : workingDayMapByDay.entrySet()) {
             String dateText = workingDayJsonEntry.getKey();
             //TODO state is ignored at the moment: String state = (String)workingDayMap.get("state");
             int state = 0;
             Map<String, Integer> workingTimeMapByJsonWPDescrId = (Map<String, Integer>) workingDayJsonEntry.getValue().get("workingTimeByDescriptionId");
-            
-            System.out.println("dateText: " + dateText);
-            System.out.println("workingTimeMapByJsonWPDescrId: "+ workingTimeMapByJsonWPDescrId);
-            
-            Map<Long, Integer> workingTimeMapByEntityWPDescrId = new HashMap<>();
-            for (Map.Entry<String, Integer> entry : workingTimeMapByJsonWPDescrId.entrySet()) {
-                Integer workingTime = entry.getValue();
-                String jsonWPDescrId = entry.getKey();
-                
-                WorkPackageDescription wpd = workPackageDescriptionMapByJsonId.get(jsonWPDescrId);
-                workingTimeMapByEntityWPDescrId.put(wpd.getId(), workingTime);
-            }
-            
-            Date workingDate;
-            try {
-                workingDate = dateFormatter.parse(dateText);
-            } catch (ParseException ex) {
-                throw new RuntimeException(ex);
-            }
+            Map<Long, Integer> workingTimeMapByEntityWPDescrId = buildWorkingTimeMapByEntityWPDescrId(workingTimeMapByJsonWPDescrId, workPackageDescriptionEntiyMapByJsonId);
+
+            Date workingDate = convertToWorkingDate(dateText);
 
             WorkingDay workingDay;
             try {
@@ -225,58 +194,85 @@ public class JsonMapper {
                 workingDay = new WorkingDay();
                 workingDay.setUser(individual);
                 workingDay.setWorkingDay(workingDate);
-            }    
-            
+            }
+
             workingDay.setStatus(state);
+            workingDay = em.merge(workingDay); //cascade.ALL - so WorkingTime has not to be saved separately
 
-            workingDay = em.merge(workingDay);
-
-            List<WorkingTime> wtEntityList = workingDay.getWorkingTimeList();
-            if (wtEntityList == null) {
-                wtEntityList = new ArrayList();
-                workingDay.setWorkingTimeList(wtEntityList);
-            }
-
-            //update and remove working Time
-            //iteratate overall existing time entries
-            List<Long> existingWorkingTimeByWPDescrId = new ArrayList<>();
-            List<WorkingTime> wt2Remove = new ArrayList<>();
-            for (WorkingTime wt : wtEntityList) {
-                existingWorkingTimeByWPDescrId.add(wt.getWorkPackageDescription().getId());
-                Integer workingTime = workingTimeMapByEntityWPDescrId.get(wt.getWorkPackageDescription().getId());
-                
-                if (workingTime == null) { //no new one definied - remove existing
-                    System.out.println("remove " + dateText + " -> wpid: " + wt.getWorkPackageDescription().getId() + ";time: " + workingTime);
-                    em.remove(wt);
-                    wt2Remove.add(wt);
-                    continue;
-                }
-                
-                if (wt.getWorkingTime().equals(workingTime)) //nothing changed - do nothing
-                    continue;
-                
-                //time has changed - update time
-                wt.setWorkingTime(workingTime);
-                System.out.println("update " + dateText + " -> wpid: " + wt.getWorkPackageDescription().getId() + ";new-time: " + workingTime);
-            }
-            wtEntityList.removeAll(wt2Remove);
+            List<Long> existingWorkingTimeByWPDescrId = updateAndRemoveExistingWorkingTimeEntities(workingDay.getWorkingTimeList(), workingTimeMapByEntityWPDescrId);
             
-            //create new one
-            for (Map.Entry<Long, Integer> entry : workingTimeMapByEntityWPDescrId.entrySet()) {
+            createWorkingTimeEntities(workingTimeMapByEntityWPDescrId, existingWorkingTimeByWPDescrId, workingDay, workPackageDescriptionByEntityId);
+        }
+    }
 
-                if (existingWorkingTimeByWPDescrId.contains(entry.getKey()))
-                    continue;
+    private Map<Long, Integer> buildWorkingTimeMapByEntityWPDescrId(Map<String, Integer> workingTimeMapByJsonWPDescrId, Map<String, WorkPackageDescription> workPackageDescriptionEntiyMapByJsonId) {
+        Map<Long, Integer> workingTimeMapByEntityWPDescrId = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : workingTimeMapByJsonWPDescrId.entrySet()) {
+            Integer workingTime = entry.getValue();
+            String jsonWPDescrId = entry.getKey();
 
-                WorkingTime newWt = new WorkingTime();
-                newWt.setWorkingDay(workingDay);
-                newWt.setWorkingTime(entry.getValue());
-                newWt.setWorkPackageDescription(workPackageDescriptionByEntityId.get(entry.getKey()));
+            WorkPackageDescription wpd = workPackageDescriptionEntiyMapByJsonId.get(jsonWPDescrId);
+            workingTimeMapByEntityWPDescrId.put(wpd.getId(), workingTime);
+        }
+        return workingTimeMapByEntityWPDescrId;
+    }
 
-                workingDay.getWorkingTimeList().add(newWt);
+    private Date convertToWorkingDate(String dateText) throws RuntimeException {
 
-                //em.merge(newWt);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
+        Date workingDate;
+        try {
+            workingDate = dateFormatter.parse(dateText);
+        } catch (ParseException ex) {
+            throw new RuntimeException(ex);
+        }
+        return workingDate;
+    }
+
+    private List<Long> updateAndRemoveExistingWorkingTimeEntities(List<WorkingTime> wtEntityList, Map<Long, Integer> workingTimeMapByEntityWPDescrId) {
+        //update and remove working Time
+        //iteratate overall existing time entries
+        List<Long> existingWorkingTimeByWPDescrId = new ArrayList<>();
+        List<WorkingTime> wt2Remove = new ArrayList<>();
+        for (WorkingTime wt : wtEntityList) {
+            existingWorkingTimeByWPDescrId.add(wt.getWorkPackageDescription().getId());
+            Integer workingTime = workingTimeMapByEntityWPDescrId.get(wt.getWorkPackageDescription().getId());
+
+            if (workingTime == null) { //no new one definied - remove existing
+                em.remove(wt);
+                wt2Remove.add(wt);
+                continue;
             }
+
+            if (wt.getWorkingTime().equals(workingTime)) //nothing changed - do nothing
+            {
+                continue;
+            }
+
+            //time has changed - update time
+            wt.setWorkingTime(workingTime);
+        }
+        wtEntityList.removeAll(wt2Remove);
+        return existingWorkingTimeByWPDescrId;
+    }
+
+    private void createWorkingTimeEntities(Map<Long, Integer> workingTimeMapByEntityWPDescrId, List<Long> existingWorkingTimeByWPDescrId, WorkingDay workingDay, Map<Long, WorkPackageDescription> workPackageDescriptionByEntityId) {
+        //create new one
+        for (Map.Entry<Long, Integer> entry : workingTimeMapByEntityWPDescrId.entrySet()) {
+
+            if (existingWorkingTimeByWPDescrId.contains(entry.getKey()))
+                continue;
+
+            WorkingTime newWt = new WorkingTime();
+            newWt.setWorkingDay(workingDay);
+            newWt.setWorkingTime(entry.getValue());
+            newWt.setWorkPackageDescription(workPackageDescriptionByEntityId.get(entry.getKey()));
+
+            workingDay.getWorkingTimeList().add(newWt);
+
+            //em.merge(newWt);
+
         }
     }
 }

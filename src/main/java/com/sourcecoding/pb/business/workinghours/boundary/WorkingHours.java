@@ -5,8 +5,8 @@
 package com.sourcecoding.pb.business.workinghours.boundary;
 
 import com.sourcecoding.pb.business.restconfig.DateParameter;
-import com.sourcecoding.pb.business.workinghours.control.JsonMapper;
-import com.sourcecoding.pb.business.workinghours.control.TimeRecordingStore;
+import com.sourcecoding.pb.business.workinghours.control.JsonMapPersister;
+import com.sourcecoding.pb.business.workinghours.control.TimeRecordingLoader;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,9 +38,9 @@ public class WorkingHours {
     @PersistenceContext
     EntityManager em;
     @Inject
-    JsonMapper jsonMapper;
+    JsonMapPersister jsonMapPersister;
     @Inject
-    TimeRecordingStore trs;
+    TimeRecordingLoader trl;
 
   
 
@@ -54,17 +54,18 @@ public class WorkingHours {
         Date from = DateParameter.valueOf(qStart);
         Date until = DateParameter.valueOf(qEnd);
 
-        List<WorkingDay> entites = trs.getWorkingTimePackage(individualId, from, until);
+        List<WorkingDay> entites = trl.getWorkingTimePackage(individualId, from, until);
 
-        String json = jsonMapper.buildWorkingTimePackage(entites);
+        String json = jsonMapPersister.buildWorkingTimePackage(entites);
         return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
     @PUT
     public Response createOrReplaceWorkingHours(HashMap<String,Object> data) {
         
+        
         System.out.println( data );
-        jsonMapper.buildWorkingHoursEntities(data);
+        jsonMapPersister.update(data);
         //FIXME trs.update(timeRecording);
         //return timeRecording;
         return Response.ok().build();
