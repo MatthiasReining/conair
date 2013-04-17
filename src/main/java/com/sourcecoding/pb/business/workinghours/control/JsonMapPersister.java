@@ -6,6 +6,7 @@ package com.sourcecoding.pb.business.workinghours.control;
 
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
+import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sourcecoding.pb.business.workinghours.entity.WorkPackageDescription;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
@@ -63,23 +64,17 @@ public class JsonMapPersister {
 
             Map<String, Object> data;
             Map<String, Object> wdData = new HashMap<>();
+            
+            String workingDay = DateParameter.valueOf( wd.getWorkingDay() );
 
-            String workingDay = wd.getWorkingDay().toString();
-
-            wdData.put("date", workingDay);
             wdData.put("state", wd.getStatus());
-            wdData.put("userId", wd.getUser().getId());
-            wdData.put("workingTimeList", new ArrayList<Map<String, Object>>());
+            wdData.put("workingTimeByDescriptionId", new HashMap<String, Integer>());
             outputWorkingDay.put(workingDay, wdData);
 
             for (WorkingTime wt : wd.getWorkingTimeList()) {
-
-                data = new HashMap<>();
-                data.put("workingTime", wt.getWorkingTime());
-                data.put("wpDescriptionId", wt.getWorkPackageDescription().getId());
-
-                List<Map<String, Object>> wtList = (List<Map<String, Object>>) wdData.get("workingTimeList");
-                wtList.add(data);
+                
+                Map<String, Integer> wtTimeByDescrIdMap = (Map<String, Integer>) wdData.get("workingTimeByDescriptionId");
+                wtTimeByDescrIdMap.put(String.valueOf(wt.getWorkPackageDescription().getId()), wt.getWorkingTime());
 
                 WorkPackageDescription wpDescr = wt.getWorkPackageDescription();
                 if (!outputWorkPackageDescription.containsKey(wpDescr.getId())) {

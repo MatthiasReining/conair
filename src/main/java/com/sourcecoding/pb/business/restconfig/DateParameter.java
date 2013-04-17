@@ -18,13 +18,18 @@ import java.util.logging.Logger;
  */
 public class DateParameter implements Serializable {
 
-    static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     public static Date valueOf(String dateString) {
+        System.out.println( "convert date: " + dateString);
         try {
             return DATE_FORMAT.parse(dateString);
         } catch (ParseException ex) {
             throw new RuntimeException("'" + dateString + "' cannot be parsed (pattern: 'yyyy-mm-dd')", ex);
         }
+    }
+    
+    public static String valueOf(Date date) {
+        return DATE_FORMAT.format(date);
     }
 }

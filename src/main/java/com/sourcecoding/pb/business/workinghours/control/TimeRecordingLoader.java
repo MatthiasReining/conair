@@ -4,13 +4,10 @@
  */
 package com.sourcecoding.pb.business.workinghours.control;
 
-import com.sourcecoding.pb.business.project.entity.WorkPackage;
-import com.sourcecoding.pb.business.workinghours.entity.WorkPackageDescription;
+import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -25,9 +22,11 @@ public class TimeRecordingLoader {
 
 
     public List<WorkingDay> getWorkingTimePackage(Long individualId, Date from, Date until) {
+        
+        Individual individual = em.find(Individual.class, individualId);
 
         List<WorkingDay> workingDayList = em.createNamedQuery(WorkingDay.findWorkingDayRange, WorkingDay.class)
-                .setParameter(WorkingDay.queryParam_user, individualId)
+                .setParameter(WorkingDay.queryParam_user, individual)
                 .setParameter(WorkingDay.queryParam_startDate, from)
                 .setParameter(WorkingDay.queryParam_endDate, until)
                 .getResultList();
