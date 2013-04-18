@@ -1,0 +1,63 @@
+/* 
+    Document   : style
+    Created on : 18.04.2013, 16:58:01
+    Author     : Matthias
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+body {
+    font-family: sans-serif;
+    font-size: 1em;
+    background-color: white;
+    height:100%;
+    width: 100%;
+    
+}
+
+body>header {
+    height: 90px;
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    margin: -10px;
+    margin-bottom: 10px;
+
+    background-color: black;
+    border-bottom: gray 4px solid;
+}
+
+body>section {
+    position: absolute;
+    top: 90px;
+    
+}
+
+body>footer{
+    height: 50px;
+    width: 100%;
+    position: fixed;
+    bottom:0px;
+    margin: -10px;
+    margin-top: 10px;
+        
+    background-color: black;
+    border-top: gray 4px solid;
+}
+
+#timerecording {
+    overflow: hidden;
+    width: 2000px;
+}
+
+#descr-block {
+    border: 1px solid red;
+    width: 200px;
+    float: left;
+}
+
+.time-block {
+    border: 1px solid green;
+    width: 100px;
+    float: left;
+}
