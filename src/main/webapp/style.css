@@ -24,6 +24,7 @@ body>header {
     margin-bottom: 10px;
 
     background-color: black;
+    background-image: url('bg-footer-noise.jpg');
     border-bottom: gray 4px solid;
 }
 
@@ -42,6 +43,7 @@ body>footer{
     margin-top: 10px;
         
     background-color: black;
+    background-image: url('bg-footer-noise.jpg');
     border-top: gray 4px solid;
 }
 
@@ -60,4 +62,10 @@ body>footer{
     border: 1px solid green;
     width: 100px;
     float: left;
+}
+
+.wt-field {
+    width: 50px;
+    text-align: right;  
+    font-size: 1.2em;
 }

@@ -178,6 +178,9 @@ public class JsonMapPersister {
             Map<Long, Integer> workingTimeMapByEntityWPDescrId = buildWorkingTimeMapByEntityWPDescrId(workingTimeMapByJsonWPDescrId, workPackageDescriptionEntiyMapByJsonId);
 
             Date workingDate = convertToWorkingDate(dateText);
+            
+            System.out.println("wtTimeDebug: "+ workingTimeMapByJsonWPDescrId);
+            System.out.println("wtTimeDebug1: "+ workingTimeMapByJsonWPDescrId.size());
 
             WorkingDay workingDay;
             try {
@@ -186,6 +189,8 @@ public class JsonMapPersister {
                         .setParameter(WorkingDay.queryParam_date, workingDate)
                         .getSingleResult();
             } catch (NoResultException e) {
+                //if no dataset exists and no new one is available -> continue
+                if (workingTimeMapByJsonWPDescrId.isEmpty()) continue;
                 workingDay = new WorkingDay();
                 workingDay.setUser(individual);
                 workingDay.setWorkingDay(workingDate);

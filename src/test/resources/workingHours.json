@@ -7,36 +7,41 @@
                 "234": 180,
                 "123": 120,
                 "333": 210
-            }              
+            }
         },
         "2012-03-11": {
             "state": "ok",
             "workingTimeByDescriptionId": {
-                    "234": 60,
-                    "123": 360,
-                    "333": 90
-            }            
+                "234": 60,
+                "123": 360,
+                "333": 90
+            }
         },
         "2012-03-10": {
             "state": "ok",
             "workingTimeByDescriptionId": {
-                    "234": 60,
-                    "123": 180
-            }            
+                "234": 60,
+                "123": 180
+            }
+        },
+        "2012-03-09": {
+            "state": "ok",
+            "workingTimeByDescriptionId": {
+            }
         }
     },
     "workPackageDescription": {
-        "234": { 
-                "workPackageId": 5,
-                "description": "doku gelesen"
+        "234": {
+            "workPackageId": 5,
+            "description": "doku gelesen"
         },
-        "123": { 
-                "workPackageId": 5,
-                "description": "weitere doku gelesen"
+        "123": {
+            "workPackageId": 5,
+            "description": "weitere doku gelesen"
         },
-        "333": { 
-                "workPackageId": 6,
-                "description": "killer app entwickelt"
+        "333": {
+            "workPackageId": 6,
+            "description": "killer app entwickelt"
         }
     }
 }
