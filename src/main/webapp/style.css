@@ -67,7 +67,7 @@ body>footer{
 }
 
 #working-time-table td {
-    border: 3px solid cyan;
+    border: 1px solid lightgrey;
     padding: 4px;
     margin: 0px;
 }
@@ -75,4 +75,11 @@ body>footer{
 #working-time-table .wt-field {
     width: 40px;
     text-align: right;
+}
+
+.focus-highlight {
+    background-color: lightpink;
+}
+.focus-highlight-field {
+    background-color: red;
 }

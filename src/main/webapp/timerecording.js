@@ -12,6 +12,18 @@ $(function() {
     $('#send-timerecording').click(function() {
         timeRecording.updateServer();
     });
+    
+    
+    $('#timerecording').on('focus', 'input', function(event) {
+        $('#timerecording td').removeClass('focus-highlight');
+        $('#timerecording td').removeClass('focus-highlight-field');
+        var id = $(this).attr('id');
+        var descrId = id.split('-')[3];
+        var dateText = id.substring(0,10);
+        $('.row-' + descrId).addClass('focus-highlight');
+        $('.column-' + dateText).addClass('focus-highlight');
+        $('#cell-'+id).addClass('focus-highlight-field');
+    });
 
     //initial load
     var individualId = 4;
@@ -132,7 +144,6 @@ TimeRecording = function() {
 
         var html = '<table id="working-time-table">';
 
-console.log('in render Table');
         console.log(dateArray);
         //table header 
         var wtMonth = {};
@@ -154,7 +165,7 @@ console.log('in render Table');
         html += '<tr>';
         html += '<td class="wt-description">description</td>';
         $.each(dateArray, function(index, dateText) {
-            html += '<td>' + renderWorkingTableDateFormat(dateText) + '</td>';
+            html += '<td class="column-'+dateText+'">' + renderWorkingTableDateFormat(dateText) + '</td>';
         });
         html += '</tr>';
 
@@ -167,9 +178,9 @@ console.log('in render Table');
         console.log(wpDescrObj);
         $.each(wpDescrObj, function(key, value) {
             html += '<tr>';
-            html += '<td class="wt-description">' + renderDescriptionTextField(value.id, value.description) + '</td>';
+            html += '<td class="wt-description row-'+value.id+'">' + renderDescriptionTextField(value.id, value.description) + '</td>';
             $.each(dateArray, function(index, dateText) {
-                html += '<td class="wt-td-'+dateText +'">' + renderWorkingTimeTextField(dateText, value.id) + '</td>';
+                html += '<td id="cell-'+dateText+'-'+value.id+'" class="row-'+value.id+' column-'+dateText+'">' + renderWorkingTimeTextField(dateText, value.id) + '</td>';
             });
             html += '</tr>';
         });
