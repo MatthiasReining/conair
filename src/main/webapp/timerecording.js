@@ -3,38 +3,49 @@
  * and open the template in the editor.
  */
 $(function() {
-    var timeRecording;
+    var timeRecording = new TimeRecording();
     $('#show-timerecording').click(function() {
-        var from = $('#from').val();
-        var until = $('#until').val();
-        var startDate = $('#startDate').val();
-        var endDate = $('#endDate').val();
-
         var individualId = 4;
-
-        $.get('rest/working-hours/' + individualId + '/range?qStart=' + from + '&qEnd=' + until)
-                .done(function(data) {
-            timeRecording = new TimeRecording(individualId, startDate, endDate, data);
-            timeRecording.paint();
-        });
-
+        timeRecording.load(individualId, $('#from').val(), $('#until').val(), $('#startDate').val(), $('#endDate').val());
     });
 
     $('#send-timerecording').click(function() {
         timeRecording.updateServer();
     });
 
+    //initial load
+    var individualId = 4;
+    timeRecording.load(individualId, $('#from').val(), $('#until').val(), $('#startDate').val(), $('#endDate').val());
+
 
 });
 
-TimeRecording = function(individualIdParam, startDateParam, endDateParam, jsonDataParam) {
-    var individualId = individualIdParam;
-    var startDate = startDateParam;
-    var endDate = endDateParam;
-    var jsonData = jsonDataParam;
-    var dateArray = new Array();
+TimeRecording = function() {
+    var individualId;
+    var startDate;
+    var endDate;
+    var jsonData;
+    var dateArray;
+
+    this.load = function(individualIdParam, fromParam, untilParam, startDateParam, endDateParam) {
+        individualId = individualIdParam;
+        startDate = startDateParam;
+        endDate = endDateParam;
+
+        $.get('rest/working-hours/' + individualId + '/range?qStart=' + fromParam + '&qEnd=' + untilParam, {
+            'cache': false
+        }).done(function(data) {
+            jsonData = data;
+            buildDateArray();
+            paint();
+        });
+
+
+    };
 
     buildDateArray = function() {
+        dateArray = new Array();
+        console.log(startDate);
         var tmp = startDate.split("-");
         var startDateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
         tmp = endDate.split("-");
@@ -56,14 +67,17 @@ TimeRecording = function(individualIdParam, startDateParam, endDateParam, jsonDa
         return str.substring(pos);
     };
 
-    this.paint = function() {
-        console.log(jsonData);
-
-        var html = this.renderTable();
-
+    paint = function() {
+        var html = renderTable();
+        
+        //$('#timerecording').hide();
         $('#timerecording').html(html);
+        //$('#timerecording').show();
 
-        this.updateTableData();
+        var trWidth = parseFloat($('#working-time-table').css('width'));
+        $('#timerecording').css('width', (trWidth + 600) + 'px');
+
+        updateTableData();
     };
 
     this.show = function() {
@@ -71,63 +85,127 @@ TimeRecording = function(individualIdParam, startDateParam, endDateParam, jsonDa
     };
 
     renderWorkingTimeTextField = function(dateText, descrId) {
-        return '<input type="text" class="wt-field active ' + dateText + '" name="' + dateText + '-' + descrId + '" id="' + dateText + '-' + descrId + '"/>';
+        return '<input type="text" class="wt-field active" name="' + dateText + '-' + descrId + '" id="' + dateText + '-' + descrId + '"/>';
     };
 
     renderDescriptionTextField = function(descrId, description) {
-        return '<input type="text" class="descr" name="descr-' + descrId + '" value="' + description + '"/>';
+        return '<input type="text" class="descr-field" name="descr-' + descrId + '" value="' + description + '"/>';
     };
 
-    this.renderTable = function() {
+    renderWorkingTableDateFormat = function(dateText) {
+        var tmp = dateText.split('-');
+        //var dateObj = new Date([0], tmp[1] - 1, tmp[2], 0, 0, 0);
+        return tmp[2];
+    };
+
+    renderMonthName = function(monthText) {
+        switch (monthText) {
+            case '01':
+                return 'January';
+            case '02':
+                return 'February';
+            case '03':
+                return 'March';
+            case '04':
+                return 'April';
+            case '05':
+                return 'May';
+            case '06':
+                return 'June';
+            case '07':
+                return 'July';
+            case '08':
+                return 'August';
+            case '09':
+                return 'September';
+            case '10':
+                return 'October';
+            case '11':
+                return 'November';
+            case '12':
+                return 'December';
+        }
+    };
+
+    renderTable = function() {
         var wpDescrObj = jsonData.workPackageDescription;
 
-        var html = '<table border="1">';
+        var html = '<table id="working-time-table">';
 
-        html += '<tr>';
-        html += '<td>description</td>';
+console.log('in render Table');
+        console.log(dateArray);
+        //table header 
+        var wtMonth = {};
         $.each(dateArray, function(index, dateText) {
-            html += '<td>' + dateText + '</td>';
+            var m = dateText.split('-')[1];
+            if (!(m in wtMonth))
+                wtMonth[m] = 0;
+            wtMonth[m] = wtMonth[m] + 1;
+        });
+
+        html += '<tr><td class="wt-description"></td>';
+        $.each(wtMonth, function(month, days) {
+            html += '<td class="working-table-month" colspan="' + days + '">';
+            html += renderMonthName(month);
+            html += '</td>';
         });
         html += '</tr>';
 
+        html += '<tr>';
+        html += '<td class="wt-description">description</td>';
+        $.each(dateArray, function(index, dateText) {
+            html += '<td>' + renderWorkingTableDateFormat(dateText) + '</td>';
+        });
+        html += '</tr>';
 
         //build description and fields
+        //add two new descr. fields
+        var newDescrId = uniqueId();
+        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
+        newDescrId = uniqueId();
+        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
+        console.log(wpDescrObj);
         $.each(wpDescrObj, function(key, value) {
             html += '<tr>';
-            html += '<td>' + renderDescriptionTextField(value.id, value.description) + '</td>';
+            html += '<td class="wt-description">' + renderDescriptionTextField(value.id, value.description) + '</td>';
             $.each(dateArray, function(index, dateText) {
-                html += '<td>' + renderWorkingTimeTextField(dateText, value.id) + '</td>';
+                html += '<td class="wt-td-'+dateText +'">' + renderWorkingTimeTextField(dateText, value.id) + '</td>';
             });
             html += '</tr>';
         });
 
         html += '</table>';
+
         return html;
     };
 
 
-    this.renderDIVTable = function() {
+    renderDIVTable = function() {
         var wpDescrObj = jsonData.workPackageDescription;
 
         var html = '';
-        html += '<div id="descr-block">';
-        html += '<div>description</div>';
+        html += '<div id="working-time-table2"> ';
+        html += '<div id="descr-block block">';
+        html += '<div class="descr label">description</div>';
         $.each(wpDescrObj, function(key, value) {
-            html += '<div>' + renderDescriptionTextField(value.id, value.description) + '</div>';
+            html += '<div class="descr">' + renderDescriptionTextField(value.id, value.description) + '</div>';
         });
         html += '</div>';
+        
         $.each(dateArray, function(index, dateText) {
             html += '<div class="time-block time-block-' + dateText + '">';
-            html += '<div>' + dateText + '</div>';
+            html += '<div>' + renderWorkingTableDateFormat(dateText) + '</div>';
             $.each(wpDescrObj, function(key, value) {
                 html += '<div>' + renderWorkingTimeTextField(dateText, value.id) + '</div>';
             });
             html += '</div>';
         });
+
+        html += '</div>';
         return html;
     };
 
-    this.updateTableData = function() {
+    updateTableData = function() {
         //set existing values
         var wdList = jsonData.workDayList;
         $.each(wdList, function(dateText, value) {
@@ -142,7 +220,7 @@ TimeRecording = function(individualIdParam, startDateParam, endDateParam, jsonDa
     this.readData = function() {
         //read work package description
         var workPackageDescription = {};
-        $.each(($('.descr')), function(id, value) {
+        $.each(($('.descr-field')), function(id, value) {
             var wpDescrId = value.name.split('-')[1];
             var descr = $(value).val();
             var wpId = 5;
@@ -191,6 +269,10 @@ TimeRecording = function(individualIdParam, startDateParam, endDateParam, jsonDa
 
     };
 
-    //call after obj is initalized
-    buildDateArray();
+};
+
+
+var idCounter = 0;
+uniqueId = function() {
+    return '*' + (++idCounter);
 };

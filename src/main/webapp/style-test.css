@@ -43,36 +43,39 @@ body>footer{
 
 #timerecording {
     overflow: hidden;
-    width: 2000px;
+    width: 2500px;
 }
 
-.time-block {
-    border: 1px solid green;
-    width: 55px;
+#timerecording .block {
+    border: 1px solid red;
+    padding: 2px;
+    margin: 2px;
+    float: left;    
+}
+
+#timerecording .block .descr {
+    width: 200px;
+    background-color: beige;
+}
+
+#timerecording .block .descr input {
+    width: 180px;
+    background-color: bisque;
+}
+
+#timerecording .wd input {
+    width: 40px;
+    background-color: cornsilk;
+}
+
+#timerecording #block-descr .label {
+    height: 60px;
+}
+
+.month {
+    border: 1px solid blue;    
     float: left;
 }
-
-
-
-.working-table-month {
-    text-align: center;
-}
-
-
-#working-time-table {
-    border: 1px solid blue;
-    padding: 0px;
-    margin: 0px;
-    border-collapse: collapse;
-}
-
-#working-time-table td {
-    border: 3px solid cyan;
-    padding: 4px;
-    margin: 0px;
-}
-
-#working-time-table .wt-field {
-    width: 40px;
-    text-align: right;
+.wd-section-month {
+    float: none;
 }
