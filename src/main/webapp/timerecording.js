@@ -4,30 +4,50 @@
  */
 $(function() {
     var timeRecording = new TimeRecording();
+    var individualId = 4;
+
     $('#show-timerecording').click(function() {
-        var individualId = 4;
-        timeRecording.load(individualId, $('#from').val(), $('#until').val(), $('#startDate').val(), $('#endDate').val());
+
+        timeRecording.load(individualId, $('#startDate').val(), $('#endDate').val());
     });
 
     $('#send-timerecording').click(function() {
         timeRecording.updateServer();
     });
-    
-    
+
+    $('.week-selector').click(function() {
+        var startDateText = timeRecording.getStartDate().split('-');
+        var week = 7 * parseInt($(this).attr('data-week'));
+        var startDateObj = new Date(startDateText[0], startDateText[1] - 1, startDateText[2], 0, 0, 0);
+        var endDateObj = new Date(startDateText[0], startDateText[1] - 1, startDateObj.getDate() + week, 0, 0, 0);
+
+
+        timeRecording.load(individualId, startDateObj.getText(), endDateObj.getText());
+
+    });
+
+
+    $('#timerecording').on('blur', 'input', function(event) {
+        recalcSums();
+    });
+
     $('#timerecording').on('focus', 'input', function(event) {
         $('#timerecording td').removeClass('focus-highlight');
         $('#timerecording td').removeClass('focus-highlight-field');
         var id = $(this).attr('id');
         var descrId = id.split('-')[3];
-        var dateText = id.substring(0,10);
+        var dateText = id.substring(0, 10);
         $('.row-' + descrId).addClass('focus-highlight');
         $('.column-' + dateText).addClass('focus-highlight');
-        $('#cell-'+id).addClass('focus-highlight-field');
+        $('#cell-' + id).addClass('focus-highlight-field');
     });
+
+    $('#today-text').html(new Date().getText());
 
     //initial load
     var individualId = 4;
-    timeRecording.load(individualId, $('#from').val(), $('#until').val(), $('#startDate').val(), $('#endDate').val());
+    timeRecording.load(individualId, $('#startDate').val(), $('#endDate').val());
+
 
 
 });
@@ -39,12 +59,12 @@ TimeRecording = function() {
     var jsonData;
     var dateArray;
 
-    this.load = function(individualIdParam, fromParam, untilParam, startDateParam, endDateParam) {
+    this.load = function(individualIdParam, startDateParam, endDateParam) {
         individualId = individualIdParam;
         startDate = startDateParam;
         endDate = endDateParam;
 
-        $.get('rest/working-hours/' + individualId + '/range?qStart=' + fromParam + '&qEnd=' + untilParam, {
+        $.get('rest/working-hours/' + individualId + '/range?qStart=' + startDate + '&qEnd=' + endDate, {
             'cache': false
         }).done(function(data) {
             jsonData = data;
@@ -53,6 +73,10 @@ TimeRecording = function() {
         });
 
 
+    };
+
+    this.getStartDate = function() {
+        return startDate;
     };
 
     buildDateArray = function() {
@@ -73,15 +97,9 @@ TimeRecording = function() {
         }
     };
 
-    String.prototype.left = function(length) {
-        var str = this;
-        var pos = (length > str.length) ? 0 : (str.length - length);
-        return str.substring(pos);
-    };
-
     paint = function() {
         var html = renderTable();
-        
+
         //$('#timerecording').hide();
         $('#timerecording').html(html);
         //$('#timerecording').show();
@@ -106,8 +124,30 @@ TimeRecording = function() {
 
     renderWorkingTableDateFormat = function(dateText) {
         var tmp = dateText.split('-');
-        //var dateObj = new Date([0], tmp[1] - 1, tmp[2], 0, 0, 0);
-        return tmp[2];
+        var dateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
+        var weekDayNumber = dateObj.getDay();
+
+        return '(' + renderWeekyDayAbbreviation(weekDayNumber) + ') ' + tmp[2];
+    };
+
+
+    renderWeekyDayAbbreviation = function(weekDayNumber) {
+        switch (weekDayNumber) {
+            case 0:
+                return 'SU';
+            case 1:
+                return 'MO';
+            case 2:
+                return 'TU';
+            case 3:
+                return 'WE';
+            case 4:
+                return 'TH';
+            case 5:
+                return 'FR';
+            case 6:
+                return 'SA';
+        }
     };
 
     renderMonthName = function(monthText) {
@@ -165,7 +205,14 @@ TimeRecording = function() {
         html += '<tr>';
         html += '<td class="wt-description">description</td>';
         $.each(dateArray, function(index, dateText) {
-            html += '<td class="column-'+dateText+'">' + renderWorkingTableDateFormat(dateText) + '</td>';
+            html += '<td class="column-' + dateText + '">' + renderWorkingTableDateFormat(dateText) + '</td>';
+        });
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<td>sum</td>';
+        $.each(dateArray, function(index, dateText) {
+            html += '<td id="sum-' + dateText + '"></td>';
         });
         html += '</tr>';
 
@@ -178,9 +225,9 @@ TimeRecording = function() {
         console.log(wpDescrObj);
         $.each(wpDescrObj, function(key, value) {
             html += '<tr>';
-            html += '<td class="wt-description row-'+value.id+'">' + renderDescriptionTextField(value.id, value.description) + '</td>';
+            html += '<td class="wt-description row-' + value.id + '">' + renderDescriptionTextField(value.id, value.description) + '</td>';
             $.each(dateArray, function(index, dateText) {
-                html += '<td id="cell-'+dateText+'-'+value.id+'" class="row-'+value.id+' column-'+dateText+'">' + renderWorkingTimeTextField(dateText, value.id) + '</td>';
+                html += '<td id="cell-' + dateText + '-' + value.id + '" class="row-' + value.id + ' column-' + dateText + '">' + renderWorkingTimeTextField(dateText, value.id) + '</td>';
             });
             html += '</tr>';
         });
@@ -202,7 +249,7 @@ TimeRecording = function() {
             html += '<div class="descr">' + renderDescriptionTextField(value.id, value.description) + '</div>';
         });
         html += '</div>';
-        
+
         $.each(dateArray, function(index, dateText) {
             html += '<div class="time-block time-block-' + dateText + '">';
             html += '<div>' + renderWorkingTableDateFormat(dateText) + '</div>';
@@ -226,6 +273,31 @@ TimeRecording = function() {
                 $('#' + fieldId).val(workingTime);
             });
         });
+        recalcSums();
+    };
+
+    recalcSums = function() {
+        var wdList = jsonData.workDayList;
+        var sumByDate = {};
+
+        $.each(dateArray, function(index, dateText) {
+            $.each($('.column-' + dateText + ' .wt-field'), function(index, field) {
+                var workingTime = $(field).val();
+                if (workingTime !== '') {
+                    //TODO check for number;
+                    workingTime = parseInt( workingTime);
+                    if (!sumByDate[dateText])
+                        sumByDate[dateText] = workingTime;
+                    else
+                        sumByDate[dateText] = sumByDate[dateText] + workingTime;
+                }
+            });
+        });
+
+        $.each(wdList, function(dateText, value) {
+            console.log(dateText + ' ' + sumByDate[dateText]);
+            $('#sum-' + dateText).html(sumByDate[dateText]);
+        });
     };
 
     this.readData = function() {
@@ -247,9 +319,13 @@ TimeRecording = function() {
             workingDayMap[dateText] = {"state": "ok"};
             workingDayMap[dateText]['workingTimeByDescriptionId'] = {};
 
-            $.each(($('.wt-field.active.' + dateText)), function(id, value) {
-                var wpDescrId = value.name.split('-')[3];
-                var timeValue = $(value).val();
+            $.each(($('.descr-field')), function(id, value) {
+                var wpDescrId = value.name.split('-')[1];
+
+                //$.each(($('.wt-field .active .' + dateText)), function(id, value) {
+                //    var wpDescrId = value.name.split('-')[3];
+                var timeValue = $('#' + dateText + '-' + wpDescrId).val();
+                //var timeValue = $(value).val();
                 if (!(timeValue === '')) {
                     timeValue = parseInt(timeValue);
                     workingDayMap[dateText]['workingTimeByDescriptionId'][wpDescrId] = timeValue;
@@ -285,5 +361,19 @@ TimeRecording = function() {
 
 var idCounter = 0;
 uniqueId = function() {
-    return '*' + (++idCounter);
+    return 'new' + (++idCounter);
+};
+
+
+String.prototype.left = function(length) {
+    var str = this;
+    var pos = (length > str.length) ? 0 : (str.length - length);
+    return str.substring(pos);
+};
+
+Date.prototype.getText = function() {
+    var year = '' + (1900 + this.getYear());
+    var month = ('0' + (this.getMonth() + 1)).left(2);
+    var day = ('0' + (this.getDate())).left(2);
+    return year + '-' + month + '-' + day;
 };

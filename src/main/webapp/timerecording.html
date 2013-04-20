@@ -7,6 +7,8 @@
         <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
         <script src="jquery-1.9.1.min.js"></script>
         <script src="timerecording.js"></script>
+        
+        <script src="/jquery.datetimeentry.package-1.1.1/jquery.datetimeentry-fr.js"></script>
 
         <link rel="stylesheet" href="style.css">
 
@@ -17,15 +19,15 @@
         </header>
 
         <section id="main-section">
-            <div>TODO write content</div>
-            from <input type="date" id="from" value="2012-03-01"/>
-            until <input type="date" id="until" value="2012-04-01"/><br>
-            show from <input type="date" id="startDate" value="2012-03-01"/>
-            show until <input type="date" id="endDate" value="2012-04-01"/><br>
+            heute: <span id="today-text"></span>
+            <input type="button" value="1 week" data-week="1" class="week-selector"/>
+            <input type="button" value="2 weeks" data-week="2" class="week-selector"/>
+            <input type="button" value="3 weeks" data-week="3" class="week-selector"/>
+            <input type="button" value="4 weeks" data-week="4" class="week-selector"/>
+            show from <input type="date" id="startDate" value="2013-04-01"/>
+            show until <input type="date" id="endDate" value="2013-05-01"/><br>
             <input type="button" value="show" id="show-timerecording" />
             <input type="button" value="send" id="send-timerecording" />
-            <br>
-            <input type="button" value="test" onclick="alert(window.innerWidth);" />
             <br>
             <div id="timerecording">
             </div>
