@@ -71,35 +71,9 @@ TimeRecording = function() {
             jsonData = data;
             buildDateArray();
             paint();
-
-            //paintHandleBar();
-            
         });
-
-
     };
 
-    function paintHandleBar() {
-        //test with handlebar
-        var source = $("#entry-template").html();
-        var template = Handlebars.compile(source);
-
-        console.log('----');
-         
-        var data = {"key1": "value1", "key2": "value2"};
-        var container = {};
-        container.data = data;
-        container.jsonData = jsonData;
-        container.dateArray = dateArray;
-        container.dateArrayLength = dateArray.length;
-        container.fnTest = that.renderWorkingTableDateFormat;
-        container.workPackageDescription = jsonData.workPackageDescription;
-        
-        var html = template(container);
-        $('#hb-test').html(html);
-
-    };
-    
     function renderTableUnderscore() {
         
         var wpDescrObj = jsonData.workPackageDescription;
@@ -139,79 +113,21 @@ TimeRecording = function() {
     this.getWorkPackageDescription = function() {
         return jsonData.workPackageDescription;
     };
+    
+    this.getWorkingTimeMonths = function() {
+        var wtMonth = {};
+        $.each(dateArray, function(index, dateText) {
+            var m = dateText.split('-')[1];
+            if (!(m in wtMonth))
+                wtMonth[m] = 0;
+            wtMonth[m] = wtMonth[m] + 1;
+        });
+        return wtMonth;
 
-    buildDateArray = function() {
-        dateArray = new Array();
-        console.log(startDate);
-        var tmp = startDate.split("-");
-        var startDateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
-        tmp = endDate.split("-");
-        var endDateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
-
-        while (startDateObj.getTime() < endDateObj.getTime()) {
-            var year = (1900 + startDateObj.getYear());
-            var month = ('0' + (startDateObj.getMonth() + 1)).left(2);
-            var day = ('0' + startDateObj.getDate()).left(2);
-            var dateText = year + '-' + month + '-' + day;
-            dateArray.push(dateText);
-            startDateObj.setDate(startDateObj.getDate() + 1);
-        }
+       
     };
-
-    paint = function() {
-        var html = renderTableUnderscore(); //renderTable();
-
-        //$('#timerecording').hide();
-        $('#timerecording').html(html);
-        //$('#timerecording').show();
-
-        var trWidth = parseFloat($('#working-time-table').css('width'));
-        $('#timerecording').css('width', (trWidth + 600) + 'px');
-
-        updateTableData();
-    };
-
-    this.show = function() {
-        alert(dateArray);
-    };
-
-    renderWorkingTimeTextField = function(dateText, descrId) {
-        return '<input type="text" class="wt-field active" name="' + dateText + '-' + descrId + '" id="' + dateText + '-' + descrId + '"/>';
-    };
-
-    renderDescriptionTextField = function(descrId, description) {
-        return '<input type="text" class="descr-field" name="descr-' + descrId + '" value="' + description + '"/>';
-    };
-
-    this.renderWorkingTableDateFormat = function(dateText) {
-        var tmp = dateText.split('-');
-        var dateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
-        var weekDayNumber = dateObj.getDay();
-
-        return '(' + renderWeekyDayAbbreviation(weekDayNumber) + ') ' + tmp[2];
-    };
-
-
-    renderWeekyDayAbbreviation = function(weekDayNumber) {
-        switch (weekDayNumber) {
-            case 0:
-                return 'SU';
-            case 1:
-                return 'MO';
-            case 2:
-                return 'TU';
-            case 3:
-                return 'WE';
-            case 4:
-                return 'TH';
-            case 5:
-                return 'FR';
-            case 6:
-                return 'SA';
-        }
-    };
-
-    renderMonthName = function(monthText) {
+    
+    this.renderMonthName = function(monthText) {
         switch (monthText) {
             case '01':
                 return 'January';
@@ -240,91 +156,100 @@ TimeRecording = function() {
         }
     };
 
-    renderTable = function() {
-        var wpDescrObj = jsonData.workPackageDescription;
+    buildDateArray = function() {
+        dateArray = new Array();
+        console.log(startDate);
+        var tmp = startDate.split("-");
+        var startDateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
+        tmp = endDate.split("-");
+        var endDateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
 
-        var html = '<table id="working-time-table">';
+        while (startDateObj.getTime() < endDateObj.getTime()) {
+            var year = (1900 + startDateObj.getYear());
+            var month = ('0' + (startDateObj.getMonth() + 1)).left(2);
+            var day = ('0' + startDateObj.getDate()).left(2);
+            var dateText = year + '-' + month + '-' + day;
+            dateArray.push(dateText);
+            startDateObj.setDate(startDateObj.getDate() + 1);
+        }
+    };
 
-        console.log(dateArray);
-        //table header 
-        var wtMonth = {};
-        $.each(dateArray, function(index, dateText) {
-            var m = dateText.split('-')[1];
-            if (!(m in wtMonth))
-                wtMonth[m] = 0;
-            wtMonth[m] = wtMonth[m] + 1;
-        });
+    function paint() {
+        var html = renderTableUnderscore();
 
-        html += '<tr><td class="wt-description"></td>';
-        $.each(wtMonth, function(month, days) {
-            html += '<td class="working-table-month" colspan="' + days + '">';
-            html += renderMonthName(month);
-            html += '</td>';
-        });
-        html += '</tr>';
+        //$('#timerecording').hide();
+        $('#timerecording').html(html);
+        //$('#timerecording').show();
 
-        html += '<tr>';
-        html += '<td class="wt-description">description</td>';
-        $.each(dateArray, function(index, dateText) {
-            html += '<td class="column-' + dateText + '">' + that.renderWorkingTableDateFormat(dateText) + '</td>';
-        });
-        html += '</tr>';
+        var trWidth = parseFloat($('#working-time-table').css('width'));
+        $('#timerecording').css('width', (trWidth + 600) + 'px');
 
-        html += '<tr>';
-        html += '<td>sum</td>';
-        $.each(dateArray, function(index, dateText) {
-            html += '<td id="sum-' + dateText + '"></td>';
-        });
-        html += '</tr>';
+        updateTableData();
+    };
 
-        //build description and fields
-        //add two new descr. fields
-        var newDescrId = uniqueId();
-        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
-        newDescrId = uniqueId();
-        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
-        console.log(wpDescrObj);
-        $.each(wpDescrObj, function(key, value) {
-            html += '<tr>';
-            html += '<td class="wt-description row-' + value.id + '">' + renderDescriptionTextField(value.id, value.description) + '</td>';
-            $.each(dateArray, function(index, dateText) {
-                html += '<td id="cell-' + dateText + '-' + value.id + '" class="row-' + value.id + ' column-' + dateText + '">' + renderWorkingTimeTextField(dateText, value.id) + '</td>';
-            });
-            html += '</tr>';
-        });
+    this.show = function() {
+        alert(dateArray);
+    };
 
-        html += '</table>';
+    this.renderWorkingTableDateFormat = function(dateText) {
+        var tmp = dateText.split('-');
+        var dateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
+        var weekDayNumber = dateObj.getDay();
 
-        return html;
+        return '(' + renderWeekyDayAbbreviation(weekDayNumber) + ') ' + tmp[2];
     };
 
 
-    renderDIVTable = function() {
-        var wpDescrObj = jsonData.workPackageDescription;
-
-        var html = '';
-        html += '<div id="working-time-table2"> ';
-        html += '<div id="descr-block block">';
-        html += '<div class="descr label">description</div>';
-        $.each(wpDescrObj, function(key, value) {
-            html += '<div class="descr">' + renderDescriptionTextField(value.id, value.description) + '</div>';
-        });
-        html += '</div>';
-
-        $.each(dateArray, function(index, dateText) {
-            html += '<div class="time-block time-block-' + dateText + '">';
-            html += '<div>' + renderWorkingTableDateFormat(dateText) + '</div>';
-            $.each(wpDescrObj, function(key, value) {
-                html += '<div>' + renderWorkingTimeTextField(dateText, value.id) + '</div>';
-            });
-            html += '</div>';
-        });
-
-        html += '</div>';
-        return html;
+    function renderWeekyDayAbbreviation(weekDayNumber) {
+        switch (weekDayNumber) {
+            case 0:
+                return 'SU';
+            case 1:
+                return 'MO';
+            case 2:
+                return 'TU';
+            case 3:
+                return 'WE';
+            case 4:
+                return 'TH';
+            case 5:
+                return 'FR';
+            case 6:
+                return 'SA';
+        }
     };
 
-    updateTableData = function() {
+    this.getMonthName = function(monthText) {
+        switch (monthText) {
+            case '01':
+                return 'January';
+            case '02':
+                return 'February';
+            case '03':
+                return 'March';
+            case '04':
+                return 'April';
+            case '05':
+                return 'May';
+            case '06':
+                return 'June';
+            case '07':
+                return 'July';
+            case '08':
+                return 'August';
+            case '09':
+                return 'September';
+            case '10':
+                return 'October';
+            case '11':
+                return 'November';
+            case '12':
+                return 'December';
+        }
+    };
+
+    
+    function updateTableData() {
         //set existing values
         var wdList = jsonData.workDayList;
         $.each(wdList, function(dateText, value) {
@@ -361,7 +286,7 @@ TimeRecording = function() {
         });
     };
 
-    this.readData = function() {
+    function readData() {
         //read work package description
         var workPackageDescription = {};
         $.each(($('.descr-field')), function(id, value) {
@@ -403,7 +328,7 @@ TimeRecording = function() {
     };
 
     this.updateServer = function() {
-        var jsonData = this.readData();
+        var jsonData = readData();
 
         $.ajax({
             type: "PUT",

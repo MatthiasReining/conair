@@ -34,45 +34,15 @@
             <br>
             <hr>
 
-
-	<script id="entry-template" type="text/x-handlebars-template">
-	    {{#eachMapEntries data}}
-	        key: {{this.key}} / value: {{this.value}} <br>
-	    {{/eachMapEntries}}
-            
-	    <hr>
-            
-            {{# fnTest 2012-02-03}}
-            <table id="working-time-table">
-                <tbody>
-                    <tr>
-			<td class="wt-description"></td>
-			<td class="working-table-month" colspan="{{dateArray.length}}">April</td>
-                    </tr>
-                    <tr>
-			<td class="wt-description">description</td>
-                        {{#each dateArray}}
-			<td class="column-{{this}}">(MO) 01</td>
-                        {{/each}}
-                    </tr>                        
-                </tbody>
-            </table>
-            <hr>
-            {{#eachMapEntries workPackageDescription}}
-	        key: {{this.key}} / value: {{this.value.description}} <br>
-	    {{/eachMapEntries}}
-            
-            <hr>
-	</script>
-        
-        
-        <script type="text/template" id="underscore-template">
+            <script type="html/template" id="underscore-template">
  
              <table id="working-time-table">
                 <tbody>
                     <tr>
 			<td class="wt-description"></td>
-			<td class="working-table-month" colspan="<%- data.getDateArray().length %>">April</td>
+                        <% _.each( data.getWorkingTimeMonths(), function( value, key ){ %>
+                            <td class="working-table-month" colspan="<%- value %>"><%- data.renderMonthName(key) %></td>
+                        <% }); %>
                     </tr>
                     <tr>
 			<td class="wt-description">description</td>
@@ -101,11 +71,8 @@
             </table>
             <hr>
         
-        </script>
+            </script>
     
-
-            <div id="hb-test"></div>
-            <hr>
             <div id="timerecording">
             </div>
         </section>
