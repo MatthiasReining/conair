@@ -49,15 +49,16 @@ $(function() {
     timeRecording.load(individualId, $('#startDate').val(), $('#endDate').val());
 
 
-
 });
 
 TimeRecording = function() {
+    var that = this;
     var individualId;
     var startDate;
     var endDate;
     var jsonData;
     var dateArray;
+
 
     this.load = function(individualIdParam, startDateParam, endDateParam) {
         individualId = individualIdParam;
@@ -70,13 +71,73 @@ TimeRecording = function() {
             jsonData = data;
             buildDateArray();
             paint();
+
+            //paintHandleBar();
+            
         });
 
 
     };
 
+    function paintHandleBar() {
+        //test with handlebar
+        var source = $("#entry-template").html();
+        var template = Handlebars.compile(source);
+
+        console.log('----');
+         
+        var data = {"key1": "value1", "key2": "value2"};
+        var container = {};
+        container.data = data;
+        container.jsonData = jsonData;
+        container.dateArray = dateArray;
+        container.dateArrayLength = dateArray.length;
+        container.fnTest = that.renderWorkingTableDateFormat;
+        container.workPackageDescription = jsonData.workPackageDescription;
+        
+        var html = template(container);
+        $('#hb-test').html(html);
+
+    };
+    
+    function renderTableUnderscore() {
+        
+        var wpDescrObj = jsonData.workPackageDescription;
+   
+        //build description and fields
+        //add two new descr. fields
+        var newDescrId = _.uniqueId('new');
+        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
+        newDescrId = _.uniqueId('new');
+        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
+     
+     
+         _.templateSettings.variable = "data";
+ 
+        // Grab the HTML out of our template tag and pre-compile it.
+        var template = _.template(
+            $( "#underscore-template" ).html()
+        );
+            
+        var container = {};
+        container.jsonData = jsonData;
+        container.dateArray = dateArray;
+        container.workPackageDescription = jsonData.workPackageDescription;
+     
+            
+        return template( that );
+    }
+
     this.getStartDate = function() {
         return startDate;
+    };
+
+    this.getDateArray = function() {
+        return dateArray;
+    };
+    
+    this.getWorkPackageDescription = function() {
+        return jsonData.workPackageDescription;
     };
 
     buildDateArray = function() {
@@ -98,7 +159,7 @@ TimeRecording = function() {
     };
 
     paint = function() {
-        var html = renderTable();
+        var html = renderTableUnderscore(); //renderTable();
 
         //$('#timerecording').hide();
         $('#timerecording').html(html);
@@ -122,7 +183,7 @@ TimeRecording = function() {
         return '<input type="text" class="descr-field" name="descr-' + descrId + '" value="' + description + '"/>';
     };
 
-    renderWorkingTableDateFormat = function(dateText) {
+    this.renderWorkingTableDateFormat = function(dateText) {
         var tmp = dateText.split('-');
         var dateObj = new Date(tmp[0], tmp[1] - 1, tmp[2], 0, 0, 0);
         var weekDayNumber = dateObj.getDay();
@@ -205,7 +266,7 @@ TimeRecording = function() {
         html += '<tr>';
         html += '<td class="wt-description">description</td>';
         $.each(dateArray, function(index, dateText) {
-            html += '<td class="column-' + dateText + '">' + renderWorkingTableDateFormat(dateText) + '</td>';
+            html += '<td class="column-' + dateText + '">' + that.renderWorkingTableDateFormat(dateText) + '</td>';
         });
         html += '</tr>';
 
@@ -285,7 +346,7 @@ TimeRecording = function() {
                 var workingTime = $(field).val();
                 if (workingTime !== '') {
                     //TODO check for number;
-                    workingTime = parseInt( workingTime);
+                    workingTime = parseInt(workingTime);
                     if (!sumByDate[dateText])
                         sumByDate[dateText] = workingTime;
                     else
@@ -377,3 +438,17 @@ Date.prototype.getText = function() {
     var day = ('0' + (this.getDate())).left(2);
     return year + '-' + month + '-' + day;
 };
+
+
+
+Handlebars.registerHelper('eachMapEntries', function(context, options) {
+    console.log('in eachMapEnries');
+    console.log(context);
+    console.log(options);
+    var ret = "";
+    $.each(context, function(key, value) {
+        var entry = {"key": key, "value": value};
+        ret = ret + options.fn(entry);
+    });
+    return ret;
+});

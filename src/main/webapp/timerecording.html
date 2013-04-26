@@ -5,10 +5,13 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
         <!--<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
-        <script src="jquery-1.9.1.min.js"></script>
-        <script src="timerecording.js"></script>
+        <script src="jquery-1.9.1.min.js"></script>       
+        <!--<script src="handlebar-1.0.0-rc3.js"></script>-->
+        <script src="underscore-1.4.4-min.js"></script>
         
-        <script src="/jquery.datetimeentry.package-1.1.1/jquery.datetimeentry-fr.js"></script>
+        <script src="timerecording.js"></script>
+
+
 
         <link rel="stylesheet" href="style.css">
 
@@ -29,6 +32,80 @@
             <input type="button" value="show" id="show-timerecording" />
             <input type="button" value="send" id="send-timerecording" />
             <br>
+            <hr>
+
+
+	<script id="entry-template" type="text/x-handlebars-template">
+	    {{#eachMapEntries data}}
+	        key: {{this.key}} / value: {{this.value}} <br>
+	    {{/eachMapEntries}}
+            
+	    <hr>
+            
+            {{# fnTest 2012-02-03}}
+            <table id="working-time-table">
+                <tbody>
+                    <tr>
+			<td class="wt-description"></td>
+			<td class="working-table-month" colspan="{{dateArray.length}}">April</td>
+                    </tr>
+                    <tr>
+			<td class="wt-description">description</td>
+                        {{#each dateArray}}
+			<td class="column-{{this}}">(MO) 01</td>
+                        {{/each}}
+                    </tr>                        
+                </tbody>
+            </table>
+            <hr>
+            {{#eachMapEntries workPackageDescription}}
+	        key: {{this.key}} / value: {{this.value.description}} <br>
+	    {{/eachMapEntries}}
+            
+            <hr>
+	</script>
+        
+        
+        <script type="text/template" id="underscore-template">
+ 
+             <table id="working-time-table">
+                <tbody>
+                    <tr>
+			<td class="wt-description"></td>
+			<td class="working-table-month" colspan="<%- data.getDateArray().length %>">April</td>
+                    </tr>
+                    <tr>
+			<td class="wt-description">description</td>
+                        <% _.each( data.getDateArray(), function( dateText ){ %>
+                            <td class="column-<%- dateText %>">   <%- data.renderWorkingTableDateFormat( dateText ) %> </td>
+                         <% }); %>
+                    </tr>
+                    <tr>
+			<td>sum</td>
+                        <% _.each( data.getDateArray(), function( dateText ){ %>
+                            <td id="sum-<%- dateText %>"></td>
+                        <% }); %>
+                    </tr>
+                    
+                    <% _.each( data.getWorkPackageDescription(), function( wpdValue, wpdKey ){ %>                        
+                    <tr>
+			<td class="wt-description row-<%- wpdKey %>"><input type="text" class="descr-field" name="descr-<%- wpdKey %>" value="<%- wpdValue.description %>"></td>
+                        <% _.each( data.getDateArray(), function( dateText ){ %>
+                            <td id="cell-<%- dateText %>-<%- wpdKey %>" class="row-<%- wpdKey %> column-<%- dateText %>"><input type="text" class="wt-field active" name="<%- dateText %>-15" id="<%- dateText %>-<%- wpdKey %>"></td>
+			
+                        <% }); %>
+		    </tr>                    
+                    <% }); %>	
+                    
+                </tbody>
+            </table>
+            <hr>
+        
+        </script>
+    
+
+            <div id="hb-test"></div>
+            <hr>
             <div id="timerecording">
             </div>
         </section>
