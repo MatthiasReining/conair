@@ -114,6 +114,14 @@ TimeRecording = function() {
         return jsonData.workPackageDescription;
     };
     
+    this.getWorkPackage = function() {
+        return jsonData.workPackage;
+    };
+    
+    this.getProjectInformation = function() {
+        return jsonData.projectInformation;
+    };
+    
     this.getWorkingTimeMonths = function() {
         var wtMonth = {};
         $.each(dateArray, function(index, dateText) {
@@ -365,15 +373,3 @@ Date.prototype.getText = function() {
 };
 
 
-
-Handlebars.registerHelper('eachMapEntries', function(context, options) {
-    console.log('in eachMapEnries');
-    console.log(context);
-    console.log(options);
-    var ret = "";
-    $.each(context, function(key, value) {
-        var entry = {"key": key, "value": value};
-        ret = ret + options.fn(entry);
-    });
-    return ret;
-});

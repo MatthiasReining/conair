@@ -39,26 +39,47 @@
              <table id="working-time-table">
                 <tbody>
                     <tr>
+                        <td></td>
+                        <td></td>
 			<td class="wt-description"></td>
                         <% _.each( data.getWorkingTimeMonths(), function( value, key ){ %>
                             <td class="working-table-month" colspan="<%- value %>"><%- data.renderMonthName(key) %></td>
                         <% }); %>
                     </tr>
                     <tr>
+                        <td>project</td>
+                        <td>work package</td>
 			<td class="wt-description">description</td>
                         <% _.each( data.getDateArray(), function( dateText ){ %>
                             <td class="column-<%- dateText %>">   <%- data.renderWorkingTableDateFormat( dateText ) %> </td>
                          <% }); %>
                     </tr>
                     <tr>
+                        <td></td>
+                        <td></td>
 			<td>sum</td>
                         <% _.each( data.getDateArray(), function( dateText ){ %>
                             <td id="sum-<%- dateText %>"></td>
                         <% }); %>
                     </tr>
                     
-                    <% _.each( data.getWorkPackageDescription(), function( wpdValue, wpdKey ){ %>                        
+                    <% _.each( data.getWorkPackageDescription(), function( wpdValue, wpdKey ){ 
+                        var workPackage = data.getWorkPackage()[wpdValue.wpId];
+                        var projectInformation = {"name":""};
+                        if (workPackage)
+                            projectInformation = data.getProjectInformation()[workPackage.projectId];
+                        %>
                     <tr>
+                        <td>
+                            <select>
+                                <% _.each( data.getProjectInformation(), function( value, key ){ %>
+                                    <option value="<%- key %>"><%- value.key %> - <%- value.name %></option>
+                                <% }); %>
+                            </select>
+                        </td>
+                        <td><%- workPackage.name %>
+                            FIXME
+                        </td>
 			<td class="wt-description row-<%- wpdKey %>"><input type="text" class="descr-field" name="descr-<%- wpdKey %>" value="<%- wpdValue.description %>"></td>
                         <% _.each( data.getDateArray(), function( dateText ){ %>
                             <td id="cell-<%- dateText %>-<%- wpdKey %>" class="row-<%- wpdKey %> column-<%- dateText %>"><input type="text" class="wt-field active" name="<%- dateText %>-15" id="<%- dateText %>-<%- wpdKey %>"></td>
