@@ -49,6 +49,11 @@ $(function() {
     timeRecording.load(individualId, $('#startDate').val(), $('#endDate').val());
 
 
+    var pi = new ProjectInfo();
+    pi.load();
+    
+
+
 });
 
 TimeRecording = function() {
@@ -75,31 +80,31 @@ TimeRecording = function() {
     };
 
     function renderTableUnderscore() {
-        
+
         var wpDescrObj = jsonData.workPackageDescription;
-   
+
         //build description and fields
         //add two new descr. fields
         var newDescrId = _.uniqueId('new');
         wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
         newDescrId = _.uniqueId('new');
         wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
-     
-     
-         _.templateSettings.variable = "data";
- 
+
+
+        _.templateSettings.variable = "data";
+
         // Grab the HTML out of our template tag and pre-compile it.
         var template = _.template(
-            $( "#underscore-template" ).html()
-        );
-            
+                $("#underscore-template").html()
+                );
+
         var container = {};
         container.jsonData = jsonData;
         container.dateArray = dateArray;
         container.workPackageDescription = jsonData.workPackageDescription;
-     
-            
-        return template( that );
+
+
+        return template(that);
     }
 
     this.getStartDate = function() {
@@ -109,19 +114,19 @@ TimeRecording = function() {
     this.getDateArray = function() {
         return dateArray;
     };
-    
+
     this.getWorkPackageDescription = function() {
         return jsonData.workPackageDescription;
     };
-    
+
     this.getWorkPackage = function() {
         return jsonData.workPackage;
     };
-    
+
     this.getProjectInformation = function() {
         return jsonData.projectInformation;
     };
-    
+
     this.getWorkingTimeMonths = function() {
         var wtMonth = {};
         $.each(dateArray, function(index, dateText) {
@@ -132,9 +137,9 @@ TimeRecording = function() {
         });
         return wtMonth;
 
-       
+
     };
-    
+
     this.renderMonthName = function(monthText) {
         switch (monthText) {
             case '01':
@@ -193,7 +198,8 @@ TimeRecording = function() {
         $('#timerecording').css('width', (trWidth + 600) + 'px');
 
         updateTableData();
-    };
+    }
+    ;
 
     this.show = function() {
         alert(dateArray);
@@ -225,7 +231,8 @@ TimeRecording = function() {
             case 6:
                 return 'SA';
         }
-    };
+    }
+    ;
 
     this.getMonthName = function(monthText) {
         switch (monthText) {
@@ -256,7 +263,7 @@ TimeRecording = function() {
         }
     };
 
-    
+
     function updateTableData() {
         //set existing values
         var wdList = jsonData.workDayList;
@@ -268,7 +275,8 @@ TimeRecording = function() {
             });
         });
         recalcSums();
-    };
+    }
+    ;
 
     recalcSums = function() {
         var wdList = jsonData.workDayList;
@@ -333,7 +341,8 @@ TimeRecording = function() {
             "workPackageDescription": workPackageDescription
         };
         return data;
-    };
+    }
+    ;
 
     this.updateServer = function() {
         var jsonData = readData();
@@ -373,3 +382,30 @@ Date.prototype.getText = function() {
 };
 
 
+ProjectInfo = function() {
+    this.projectInfo;
+    var that = this;
+
+    this.load = function() {
+        $.get('rest/projects', {
+            'cache': true
+        }).done(function(data) {
+            console.log(data);
+            that.projectInfo = data;            
+            alert( that.renderProjectSelectField());
+
+        });
+    };
+
+    this.renderProjectSelectField = function(fieldname) {
+        var html = '';
+        html += '<SELECT>';
+        $.each(that.projectInfo, function(key, value) {
+             html += '<OPTION id="' + key+ '">' + value.name + '</OPTION>';
+        });
+                
+        return html;
+    };
+
+
+};

@@ -20,12 +20,14 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQueries({
+    @NamedQuery(name = ProjectInformation.findAllValidProjects, query = "SELECT pi FROM ProjectInformation pi"),
     @NamedQuery(name = ProjectInformation.findByKey, query = "SELECT pi FROM ProjectInformation pi WHERE pi.projectKey= :"+ ProjectInformation.findByKey_Param_Key),
 })
 public class ProjectInformation implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
+    public static final String findAllValidProjects = "ProjectInformation#findAll";
     public static final String findByKey = "ProjectInformation#findByKey";
     public static final String findByKey_Param_Key = "key";
     
