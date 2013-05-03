@@ -5,10 +5,10 @@
 $(function() {
     var timeRecording = new TimeRecording();
     var individualId = 4;
-    
+
     projectInfo = new ProjectInfo(); //global scope
     projectInfo.load();
-   
+
 
     $('#show-timerecording').click(function() {
 
@@ -45,9 +45,15 @@ $(function() {
         $('.column-' + dateText).addClass('focus-highlight');
         $('#cell-' + id).addClass('focus-highlight-field');
     });
-    
+
     $('#timerecording').on('change', '.projectInfoSelecter', function(event) {
-       alert( $(this).val() ); 
+        var wpdId = $(this).attr('id').split('-')[3];
+        var projectId = $(this).val();
+        
+        var wpSelectField =  $('#workpackage-wpd-id-' + wpdId);
+        var workPackages = projectInfo.projectInfo[projectId].workPackages;
+   
+        timeRecording.createOptions(workPackages, wpSelectField);
     });
 
     $('#today-text').html(new Date().getText());
@@ -181,8 +187,8 @@ TimeRecording = function() {
 
         while (startDateObj.getTime() < endDateObj.getTime()) {
             var year = (1900 + startDateObj.getYear());
-            var month = ('0' + (startDateObj.getMonth() + 1)).left(2);
-            var day = ('0' + startDateObj.getDate()).left(2);
+            var month = ('0' + (startDateObj.getMonth() + 1)).right(2);
+            var day = ('0' + startDateObj.getDate()).right(2);
             var dateText = year + '-' + month + '-' + day;
             dateArray.push(dateText);
             startDateObj.setDate(startDateObj.getDate() + 1);
@@ -194,6 +200,8 @@ TimeRecording = function() {
 
         //$('#timerecording').hide();
         $('#timerecording').html(html);
+        updateProjectWorkPackageSelectFields();
+
         //$('#timerecording').show();
 
         var trWidth = parseFloat($('#working-time-table').css('width'));
@@ -202,6 +210,40 @@ TimeRecording = function() {
         updateTableData();
     }
     ;
+
+    updateProjectWorkPackageSelectFields = function() {
+        $.each(jsonData.workPackageDescription, function(wpdKey, wpdValue) {
+
+            var wpId = wpdValue.wpId;
+            var projectId = jsonData.workPackage[wpId].projectId;
+
+            that.createOptions(projectInfo.projectInfo, $('#project-wpd-id-' + wpdKey), projectId);
+            
+            var workPackages = projectInfo.projectInfo[projectId].workPackages;
+            that.createOptions(workPackages, $('#workpackage-wpd-id-' + wpdKey), wpId);
+   
+        });
+
+    };
+
+    this.createOptions = function(mapValues, selectField, selectedValue) {
+
+        $(selectField).empty();
+        var l = new Array();
+        $.each(mapValues, function(key, value) {
+            var optElem = $("<option/>").val(key).text(value.name);
+            if (key === ''+selectedValue)
+                optElem.attr('selected',true);
+            l.push(optElem);
+        });
+        l.sort(function(a, b) {
+            return a.text() > b.text();
+        });
+        $.each(l, function(index, option) {
+            option.appendTo(selectField);
+        });
+
+    };
 
     this.show = function() {
         alert(dateArray);
@@ -370,7 +412,7 @@ uniqueId = function() {
 };
 
 
-String.prototype.left = function(length) {
+String.prototype.right = function(length) {
     var str = this;
     var pos = (length > str.length) ? 0 : (str.length - length);
     return str.substring(pos);
@@ -378,8 +420,8 @@ String.prototype.left = function(length) {
 
 Date.prototype.getText = function() {
     var year = '' + (1900 + this.getYear());
-    var month = ('0' + (this.getMonth() + 1)).left(2);
-    var day = ('0' + (this.getDate())).left(2);
+    var month = ('0' + (this.getMonth() + 1)).right(2);
+    var day = ('0' + (this.getDate())).right(2);
     return year + '-' + month + '-' + day;
 };
 
@@ -387,7 +429,7 @@ Date.prototype.getText = function() {
 ProjectInfo = function() {
     this.projectInfo;
     var that = this;
-    
+
     var htmlProjectSelectField;
 
     this.load = function() {
@@ -395,21 +437,43 @@ ProjectInfo = function() {
             'cache': true
         }).done(function(data) {
             console.log(data);
-            that.projectInfo = data;            
+            that.projectInfo = data;
         });
     };
 
-    this.renderProjectSelectField = function(fieldname) {
-        if (undefined !== htmlProjectSelectField)
-            return htmlProjectSelectField;
+    this.renderProjectSelectField = function(wpdId, selectedProjectId) {
+        //if (undefined !== htmlProjectSelectField)
+        //    return htmlProjectSelectField;
         var html = '';
-        html += '<SELECT class="projectInfoSelecter">';
+        selectedProjectId = '' + selectedProjectId;
+        html += '<SELECT class="projectInfoSelecter" id="project-wpd-id-' + wpdId + '">';
         $.each(that.projectInfo, function(key, value) {
-             html += '<OPTION id="' + key+ '">' + value.name + '</OPTION>';
+            var selected = '';
+            if (key === selectedProjectId)
+                selected = ' selected ';
+            html += '<OPTION value="' + key + '"' + selected + '>' + value.name + '</OPTION>';
         });
-        htmlProjectSelectField = html;
-                
-        return htmlProjectSelectField;
+        return html;
+        //htmlProjectSelectField = html;
+
+        //return htmlProjectSelectField;
+    };
+
+    this.renderWorkPackageSelectField = function(wpdId, projectId, selectedWpId) {
+        $('#workpackage-wpd-id-' + wpdId).empty();
+
+        var project = that.projectInfo[projectId];
+
+        var l = new Array();
+        $.each(project.workPackages, function(key, value) {
+            l.push($("<option/>").val(key).text(value.name));
+        });
+        l.sort(function(a, b) {
+            return a.text() > b.text();
+        });
+        $.each(l, function(index, option) {
+            option.appendTo('#workpackage-wpd-id-' + wpdId);
+        });
     };
 
 

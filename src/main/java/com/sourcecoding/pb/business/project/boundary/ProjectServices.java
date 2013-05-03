@@ -9,6 +9,7 @@ import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,11 +98,13 @@ public class ProjectServices {
 
             result.put(String.valueOf(projectEntity.getId()), project);
 
-            List<Map> workPackages = new ArrayList<>();
+            Map<String, Map> workPackages = new HashMap<>();
             project.put("workPackages", workPackages);
             for (WorkPackage wpEntity : projectEntity.getWorkPackages()) {
                 Map<String, Object> wp = new HashMap<>();
-                workPackages.add(wp);
+                System.out.println( wpEntity.getWpName() );
+                workPackages.put(String.valueOf( wpEntity.getId()), wp);
+                //XXX maybe a key will be added
                 wp.put("id", wpEntity.getId());
                 wp.put("name", wpEntity.getWpName());
             }

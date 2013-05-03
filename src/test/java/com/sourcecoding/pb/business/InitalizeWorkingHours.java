@@ -4,20 +4,13 @@
  */
 package com.sourcecoding.pb.business;
 
-import com.sourcecoding.pb.business.project.entity.ProjectInformation;
-import com.sourcecoding.pb.business.project.entity.WorkPackage;
-import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 

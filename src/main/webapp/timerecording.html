@@ -71,12 +71,10 @@
                         %>
                     <tr>
                         <td>
-                            <%= projectInfo.renderProjectSelectField() %>
+                            <select class="projectInfoSelecter" id="project-wpd-id-<%=wpdKey%>"></select>
                         </td>
                         <td>
-                            <select class="workPackageSelectField"></select>
-                            <%- workPackage.name %>
-                            FIXME
+                            <select class="workPackageSelectField" id="workpackage-wpd-id-<%=wpdKey %>"></select>                           
                         </td>
 			<td class="wt-description row-<%- wpdKey %>"><input type="text" class="descr-field" name="descr-<%- wpdKey %>" value="<%- wpdValue.description %>"></td>
                         <% _.each( data.getDateArray(), function( dateText ){ %>
