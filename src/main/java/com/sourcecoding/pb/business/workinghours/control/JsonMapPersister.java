@@ -64,15 +64,15 @@ public class JsonMapPersister {
 
             Map<String, Object> data;
             Map<String, Object> wdData = new HashMap<>();
-            
-            String workingDay = DateParameter.valueOf( wd.getWorkingDay() );
+
+            String workingDay = DateParameter.valueOf(wd.getWorkingDay());
 
             wdData.put("state", wd.getStatus());
             wdData.put("workingTimeByDescriptionId", new HashMap<String, Integer>());
             outputWorkingDay.put(workingDay, wdData);
 
             for (WorkingTime wt : wd.getWorkingTimeList()) {
-                
+
                 Map<String, Integer> wtTimeByDescrIdMap = (Map<String, Integer>) wdData.get("workingTimeByDescriptionId");
                 wtTimeByDescrIdMap.put(String.valueOf(wt.getWorkPackageDescription().getId()), wt.getWorkingTime());
 
@@ -178,9 +178,9 @@ public class JsonMapPersister {
             Map<Long, Integer> workingTimeMapByEntityWPDescrId = buildWorkingTimeMapByEntityWPDescrId(workingTimeMapByJsonWPDescrId, workPackageDescriptionEntiyMapByJsonId);
 
             Date workingDate = convertToWorkingDate(dateText);
-            
-            System.out.println("wtTimeDebug: "+ workingTimeMapByJsonWPDescrId);
-            System.out.println("wtTimeDebug1: "+ workingTimeMapByJsonWPDescrId.size());
+
+            System.out.println("wtTimeDebug: " + workingTimeMapByJsonWPDescrId);
+            System.out.println("wtTimeDebug1: " + workingTimeMapByJsonWPDescrId.size());
 
             WorkingDay workingDay;
             try {
@@ -190,7 +190,9 @@ public class JsonMapPersister {
                         .getSingleResult();
             } catch (NoResultException e) {
                 //if no dataset exists and no new one is available -> continue
-                if (workingTimeMapByJsonWPDescrId.isEmpty()) continue;
+                if (workingTimeMapByJsonWPDescrId.isEmpty()) {
+                    continue;
+                }
                 workingDay = new WorkingDay();
                 workingDay.setUser(individual);
                 workingDay.setWorkingDay(workingDate);
@@ -200,7 +202,7 @@ public class JsonMapPersister {
             workingDay = em.merge(workingDay); //cascade.ALL - so WorkingTime has not to be saved separately
 
             List<Long> existingWorkingTimeByWPDescrId = updateAndRemoveExistingWorkingTimeEntities(workingDay.getWorkingTimeList(), workingTimeMapByEntityWPDescrId);
-            
+
             createWorkingTimeEntities(workingTimeMapByEntityWPDescrId, existingWorkingTimeByWPDescrId, workingDay, workPackageDescriptionByEntityId);
         }
     }
@@ -261,14 +263,15 @@ public class JsonMapPersister {
         //create new one
         for (Map.Entry<Long, Integer> entry : workingTimeMapByEntityWPDescrId.entrySet()) {
 
-            if (existingWorkingTimeByWPDescrId.contains(entry.getKey()))
+            if (existingWorkingTimeByWPDescrId.contains(entry.getKey())) {
                 continue;
+            }
 
             WorkingTime newWt = new WorkingTime();
             newWt.setWorkingDay(workingDay);
             newWt.setWorkingTime(entry.getValue());
             newWt.setWorkPackageDescription(workPackageDescriptionByEntityId.get(entry.getKey()));
-
+            newWt.setWorkPackage(workPackageDescriptionByEntityId.get(entry.getKey()).getWorkPackage());
             workingDay.getWorkingTimeList().add(newWt);
 
             //em.merge(newWt);

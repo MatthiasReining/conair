@@ -5,6 +5,10 @@
 $(function() {
     var timeRecording = new TimeRecording();
     var individualId = 4;
+    
+    projectInfo = new ProjectInfo(); //global scope
+    projectInfo.load();
+   
 
     $('#show-timerecording').click(function() {
 
@@ -41,18 +45,16 @@ $(function() {
         $('.column-' + dateText).addClass('focus-highlight');
         $('#cell-' + id).addClass('focus-highlight-field');
     });
+    
+    $('#timerecording').on('change', '.projectInfoSelecter', function(event) {
+       alert( $(this).val() ); 
+    });
 
     $('#today-text').html(new Date().getText());
 
     //initial load
     var individualId = 4;
     timeRecording.load(individualId, $('#startDate').val(), $('#endDate').val());
-
-
-    var pi = new ProjectInfo();
-    pi.load();
-    
-
 
 });
 
@@ -385,6 +387,8 @@ Date.prototype.getText = function() {
 ProjectInfo = function() {
     this.projectInfo;
     var that = this;
+    
+    var htmlProjectSelectField;
 
     this.load = function() {
         $.get('rest/projects', {
@@ -392,19 +396,20 @@ ProjectInfo = function() {
         }).done(function(data) {
             console.log(data);
             that.projectInfo = data;            
-            alert( that.renderProjectSelectField());
-
         });
     };
 
     this.renderProjectSelectField = function(fieldname) {
+        if (undefined !== htmlProjectSelectField)
+            return htmlProjectSelectField;
         var html = '';
-        html += '<SELECT>';
+        html += '<SELECT class="projectInfoSelecter">';
         $.each(that.projectInfo, function(key, value) {
              html += '<OPTION id="' + key+ '">' + value.name + '</OPTION>';
         });
+        htmlProjectSelectField = html;
                 
-        return html;
+        return htmlProjectSelectField;
     };
 
 

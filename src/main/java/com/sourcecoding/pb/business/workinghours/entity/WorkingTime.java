@@ -4,6 +4,7 @@
  */
 package com.sourcecoding.pb.business.workinghours.entity;
 
+import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,7 +19,7 @@ import javax.persistence.NamedQuery;
  * @author Matthias
  */
 @NamedQueries({
-    @NamedQuery(name = WorkingTime.findWorkingTimeRange, query = "SELECT wt FROM WorkingTime wt WHERE wt.workingDay.user = :" + WorkingTime.findWorkingTimeRange_Param_user + " AND wt.workingDay.workingDay BETWEEN :" + WorkingTime.findWorkingTimeRange_Param_startDate + " AND :" + WorkingTime.findWorkingTimeRange_Param_endDate )
+    @NamedQuery(name = WorkingTime.findWorkingTimeRange, query = "SELECT wt FROM WorkingTime wt WHERE wt.workingDay.user = :" + WorkingTime.findWorkingTimeRange_Param_user + " AND wt.workingDay.workingDay BETWEEN :" + WorkingTime.findWorkingTimeRange_Param_startDate + " AND :" + WorkingTime.findWorkingTimeRange_Param_endDate)
 })
 @Entity
 public class WorkingTime implements Serializable {
@@ -28,7 +29,6 @@ public class WorkingTime implements Serializable {
     public static final String findWorkingTimeRange_Param_startDate = "startDate";
     public static final String findWorkingTimeRange_Param_endDate = "endDate";
     private static final long serialVersionUID = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -37,7 +37,10 @@ public class WorkingTime implements Serializable {
     @ManyToOne
     private WorkPackageDescription workPackageDescription;
     private Integer workingTime;
+    @ManyToOne
+    private WorkPackage workPackage;
 
+    
     public Long getId() {
         return id;
     }
@@ -69,4 +72,13 @@ public class WorkingTime implements Serializable {
     public void setWorkingTime(Integer workingTime) {
         this.workingTime = workingTime;
     }
+    
+    public WorkPackage getWorkPackage() {
+        return workPackage;
+    }
+
+    public void setWorkPackage(WorkPackage workPackage) {
+        this.workPackage = workPackage;
+    }
+
 }

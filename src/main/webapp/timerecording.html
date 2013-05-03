@@ -71,13 +71,11 @@
                         %>
                     <tr>
                         <td>
-                            <select>
-                                <% _.each( data.getProjectInformation(), function( value, key ){ %>
-                                    <option value="<%- key %>"><%- value.key %> - <%- value.name %></option>
-                                <% }); %>
-                            </select>
+                            <%= projectInfo.renderProjectSelectField() %>
                         </td>
-                        <td><%- workPackage.name %>
+                        <td>
+                            <select class="workPackageSelectField"></select>
+                            <%- workPackage.name %>
                             FIXME
                         </td>
 			<td class="wt-description row-<%- wpdKey %>"><input type="text" class="descr-field" name="descr-<%- wpdKey %>" value="<%- wpdValue.description %>"></td>
