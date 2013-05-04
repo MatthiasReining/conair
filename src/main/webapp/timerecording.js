@@ -20,10 +20,10 @@ $(function() {
     });
 
     $('.week-selector').click(function() {
-        var startDateText = timeRecording.getStartDate().split('-');
-        var week = 7 * parseInt($(this).attr('data-week'));
-        var startDateObj = new Date(startDateText[0], startDateText[1] - 1, startDateText[2], 0, 0, 0);
-        var endDateObj = new Date(startDateText[0], startDateText[1] - 1, startDateObj.getDate() + week, 0, 0, 0);
+        var endDateText = timeRecording.getEndDate().split('-');
+        var week = -7 * parseInt($(this).attr('data-week'));
+        var endDateObj = new Date(endDateText[0], endDateText[1] - 1, endDateText[2], 0, 0, 0);
+        var startDateObj = new Date(endDateText[0], endDateText[1] - 1, endDateObj.getDate() + week, 0, 0, 0);
 
 
         timeRecording.load(individualId, startDateObj.getText(), endDateObj.getText());
@@ -59,8 +59,8 @@ $(function() {
     $('#today-text').html(new Date().getText());
 
     //initial load
-    var individualId = 4;
-    timeRecording.load(individualId, $('#startDate').val(), $('#endDate').val());
+    timeRecording.loadCurrentWorkingTime(individualId, 3);
+    //timeRecording.load(individualId, $('#startDate').val(), $('#endDate').val());
 
 });
 
@@ -72,6 +72,13 @@ TimeRecording = function() {
     var jsonData;
     var dateArray;
 
+    this.loadCurrentWorkingTime = function(individualIdParam, weeks) {
+        var now = new Date();
+        var endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() + 8); //+8 starts with son
+        var startDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate() - (7*weeks));
+        
+        that.load(individualIdParam, startDate.getText(), endDate.getText());
+    }
 
     this.load = function(individualIdParam, startDateParam, endDateParam) {
         individualId = individualIdParam;
@@ -117,6 +124,10 @@ TimeRecording = function() {
 
     this.getStartDate = function() {
         return startDate;
+    };
+    
+    this.getEndDate = function() {
+        return endDate;
     };
 
     this.getDateArray = function() {

@@ -58,30 +58,6 @@ public class ProjectServices {
     }
 
     @GET
-    @Path("/dummy")
-    public ProjectInformation getProject() {
-        ProjectInformation pi = new ProjectInformation();
-
-        pi.setProjectKey("E221");
-        pi.setName("Direkt Line Deutschland");
-
-        Set<WorkPackage> s = new HashSet<>();
-        pi.setWorkPackages(s);
-        WorkPackage wp = new WorkPackage();
-        wp.setProjectInformation(pi);
-        wp.setWpName("Analyse");
-        s.add(wp);
-
-        wp = new WorkPackage();
-        wp.setWpName("Entwicklung");
-        wp.setProjectInformation(pi);
-        s.add(wp);
-
-        return pi;
-
-    }
-
-    @GET
     public Map<String, Object> getProjects() {
 
         List<ProjectInformation> projects = em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class)

@@ -8,6 +8,8 @@ import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.workinghours.control.JsonMapPersister;
 import com.sourcecoding.pb.business.workinghours.control.TimeRecordingLoader;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,7 +44,23 @@ public class WorkingHours {
     @Inject
     TimeRecordingLoader trl;
 
-  
+    @GET
+    @Path("{individualId}/current-range/{weeks}")
+    public Response getCurrentWorkingHours(@PathParam("individualId") Long individualId, @PathParam("weeks") int weeks) {
+
+        Calendar c = Calendar.getInstance();
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        c.add(Calendar.DATE, (-1 * dayOfWeek)+7);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        
+        String qEnd = dateFormatter.format(c.getTime());
+        c.add(Calendar.DATE, -7*weeks);
+
+
+        String qStart = dateFormatter.format(c.getTime());
+        
+        return getWorkingHoursWithRange(individualId, qStart, qEnd);
+    }
 
     @GET
     @Path("{individualId}/range")
@@ -61,10 +79,10 @@ public class WorkingHours {
     }
 
     @PUT
-    public Response createOrReplaceWorkingHours(HashMap<String,Object> data) {
-        
-        
-        System.out.println( data );
+    public Response createOrReplaceWorkingHours(HashMap<String, Object> data) {
+
+
+        System.out.println(data);
         jsonMapPersister.update(data);
         //FIXME trs.update(timeRecording);
         //return timeRecording;
