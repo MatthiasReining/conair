@@ -101,9 +101,9 @@ TimeRecording = function() {
         //build description and fields
         //add two new descr. fields
         var newDescrId = _.uniqueId('new');
-        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
+        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 0};
         newDescrId = _.uniqueId('new');
-        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 5}; //FIXME WorkPackage hard coded
+        wpDescrObj[newDescrId] = {'description': '', 'id': newDescrId, 'wpId': 0};
 
 
         _.templateSettings.variable = "data";
@@ -226,11 +226,17 @@ TimeRecording = function() {
         $.each(jsonData.workPackageDescription, function(wpdKey, wpdValue) {
 
             var wpId = wpdValue.wpId;
-            var projectId = jsonData.workPackage[wpId].projectId;
+            
+            var projectId = 0;
+            if (wpId !== 0)
+                projectId = jsonData.workPackage[wpId].projectId;
 
             that.createOptions(projectInfo.projectInfo, $('#project-wpd-id-' + wpdKey), projectId);
             
-            var workPackages = projectInfo.projectInfo[projectId].workPackages;
+            var workPackages = 0;
+            if (wpId !== 0)
+                workPackages = projectInfo.projectInfo[projectId].workPackages;
+            
             that.createOptions(workPackages, $('#workpackage-wpd-id-' + wpdKey), wpId);
    
         });
@@ -241,6 +247,7 @@ TimeRecording = function() {
 
         $(selectField).empty();
         var l = new Array();
+        //TODO insert empty line
         $.each(mapValues, function(key, value) {
             var optElem = $("<option/>").val(key).text(value.name);
             if (key === ''+selectedValue)
@@ -363,8 +370,9 @@ TimeRecording = function() {
         $.each(($('.descr-field')), function(id, value) {
             var wpDescrId = value.name.split('-')[1];
             var descr = $(value).val();
-            var wpId = 5;
-            workPackageDescription[wpDescrId] = {"workPackageId": wpId, "description": descr};
+            var wpId = parseInt( $('#workpackage-wpd-id-' + wpDescrId).val() );
+            if (!(isNaN(wpId)))
+                workPackageDescription[wpDescrId] = {"workPackageId": wpId, "description": descr};
         });
 
         //read all working hours by working day
@@ -409,6 +417,7 @@ TimeRecording = function() {
             contentType: "application/json",
             data: JSON.stringify(jsonData)
         }).done(function(data) {
+            //TODO function is not called...?!!?
             alert('am server');
         });
 
