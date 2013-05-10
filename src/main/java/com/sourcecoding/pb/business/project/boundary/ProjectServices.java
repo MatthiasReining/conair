@@ -8,11 +8,8 @@ import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -84,6 +81,32 @@ public class ProjectServices {
                 wp.put("id", wpEntity.getId());
                 wp.put("name", wpEntity.getWpName());
             }
+        }
+
+        return result;
+    }
+    
+    
+    /**
+     * used for project-list.html
+     * @return 
+     */
+    @GET
+    @Path("list")
+    public List<Object> getProjectList() {
+
+        List<ProjectInformation> projects = em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class)
+                .getResultList();
+
+        List<Object> result = new ArrayList<>();
+
+        for (ProjectInformation projectEntity : projects) {
+            Map<String, Object> project = new HashMap<>();
+
+            project.put("id", projectEntity.getId());
+            project.put("name", projectEntity.getName());
+            project.put("key", projectEntity.getProjectKey());
+            result.add( project);
         }
 
         return result;
