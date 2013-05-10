@@ -1,24 +1,29 @@
-ProjectList = function() {
-    var that = this;
-    var template;
-
-    var postConstruct = function() {
-        template = loadTemplate('snippets/project-list.html');
-    }();
-
-    this.load = function(htmlTarget) {
-        $.get('rest/projects/list/', {
-            'cache': false
-        }).done(function(data) {
-            var htmlContent = template(data);
-            htmlTarget.html(htmlContent);
-            
-            $('#project-list-data a').click( function() {
-                
-                loadObject($(this).attr('href'));
-                return false;
-            });
+ProjectListModel = Backbone.Model.extend({
+    url: "rest/projects/list",
+    refresh: function() {
+        this.fetch({
+            success: function(data) {
+                projectListView.render();
+            }
         });
+    }
+});
 
-    };
-};
+ProjectListView = Backbone.View.extend({
+    template: loadTemplate('snippets/project-list.html'),
+    initialize: function() {
+        //this.render();
+    },
+    render: function() {
+        _.templateSettings.variable = "data";
+        this.$el.html(this.template(this.model.toJSON()));
+    }
+});
+
+
+window.projectList = new ProjectListModel();
+
+new ProjectListView({
+    el: $("#main-content"),
+    model: window.projectList
+});

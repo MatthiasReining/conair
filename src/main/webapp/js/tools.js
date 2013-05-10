@@ -4,6 +4,7 @@ String.prototype.toCamel = function() {
     });
 };
 
+
 loadTemplate = function(path) {
     var template;
     $.ajax(path, {
