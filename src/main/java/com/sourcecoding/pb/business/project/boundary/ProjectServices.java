@@ -6,7 +6,9 @@ package com.sourcecoding.pb.business.project.boundary;
 
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
+import com.sourcecoding.pb.business.restconfig.DateParameter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -35,12 +38,36 @@ public class ProjectServices {
     EntityManager em;
 
     @PUT
-    @Path("{key}")
+    @Path("v0.1/{key}")
     public ProjectInformation createOrUpdate(@PathParam("key") String key, ProjectInformation pi) {
 
         for (WorkPackage wp : pi.getWorkPackages()) {
             wp.setProjectInformation(pi);
         }
+        pi = em.merge(pi);
+
+        return pi;
+    }
+
+    @PUT
+    @Path("{key}")
+    public ProjectInformation update(@PathParam("key") String key, Map<String, Object> map) {
+
+        long id = (int) map.get("id");
+        ProjectInformation pi = em.find(ProjectInformation.class, id);
+        pi.setName(String.valueOf(map.get("name")));
+        
+        //projectStart
+        String dateText = String.valueOf(map.get("projectStart"));
+        Date dateValue = (dateText == null || dateText.isEmpty()) ? null : DateParameter.valueOf(dateText);
+        pi.setProjectStart(dateValue);
+        
+        //projectEnd
+        dateText = String.valueOf(map.get("projectEnd"));
+        dateValue = (dateText == null || dateText.isEmpty()) ? null : DateParameter.valueOf(dateText);
+        pi.setProjectEnd(dateValue);
+
+        
         pi = em.merge(pi);
 
         return pi;
@@ -75,8 +102,8 @@ public class ProjectServices {
             project.put("workPackages", workPackages);
             for (WorkPackage wpEntity : projectEntity.getWorkPackages()) {
                 Map<String, Object> wp = new HashMap<>();
-                System.out.println( wpEntity.getWpName() );
-                workPackages.put(String.valueOf( wpEntity.getId()), wp);
+                System.out.println(wpEntity.getWpName());
+                workPackages.put(String.valueOf(wpEntity.getId()), wp);
                 //XXX maybe a key will be added
                 wp.put("id", wpEntity.getId());
                 wp.put("name", wpEntity.getWpName());
@@ -85,11 +112,11 @@ public class ProjectServices {
 
         return result;
     }
-    
-    
+
     /**
      * used for project-list.html
-     * @return 
+     *
+     * @return
      */
     @GET
     @Path("list")
@@ -106,7 +133,7 @@ public class ProjectServices {
             project.put("id", projectEntity.getId());
             project.put("name", projectEntity.getName());
             project.put("key", projectEntity.getProjectKey());
-            result.add( project);
+            result.add(project);
         }
 
         return result;

@@ -1,0 +1,16 @@
+{
+    "id": 7,
+    "projectKey": "E227",
+    "name": "DirektLine Deutschland",
+    "projectStart": "2013-02-01",
+    "projectEnd": "",
+    "workPackages": [
+        {
+            "id": 6,
+            "wpName": "Entwicklung"
+        }, {
+            "id": 5,
+            "wpName": "Analyse"
+        }
+    ]
+}

@@ -32,4 +32,5 @@ public class DateParameter implements Serializable {
     public static String valueOf(Date date) {
         return DATE_FORMAT.format(date);
     }
+    
 }

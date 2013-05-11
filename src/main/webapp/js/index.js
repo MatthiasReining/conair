@@ -14,7 +14,15 @@ ProjectView = Backbone.View.extend({
     template: loadTemplate('snippets/project.html'),
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
+
+        //init click events
+        $('.datepicker').datetimepicker({
+            pickTime: false
+        });
+        
         return this;
+    },
+    events: {
     }
 });
 
@@ -42,6 +50,15 @@ ProjectListView = Backbone.View.extend({
 });
 
 
+var selectCurrentNavi = function(page) {
+    $('.navi li').removeClass('current');
+    $.each($('.navi li'), function(index, key) {
+        var href = $(key).find('a').attr('href');
+        if (href.indexOf('#/' + page) > -1) {
+            $(key).addClass('current');
+        }
+    });
+};
 
 //Routing
 
@@ -53,40 +70,6 @@ var AppRouter = Backbone.Router.extend({
         "*actions": "defaultRoute" // matches http://example.com/#anything-here
     }
 });
-// Initiate the router
-var app_router = new AppRouter;
-
-app_router.on('route:defaultRoute', function(actions) {
-    alert(actions);
-});
-
-app_router.on('route:loadPage', function(page) {
-    //select navigation entry
-    $('.navi li').removeClass('current');
-    $.each($('.navi li'), function(index, key) {
-        var href = $(key).find('a').attr('href');
-        if (href.indexOf('#/' + page) > -1) {
-            $(key).addClass('current');
-        }
-    });
-
-    projectList.refresh();
-    //loadObject(page);
-});
-
-
-app_router.on('route:loadProjectList', function() {
-    window.projectList.refresh();
-});
-
-app_router.on('route:loadProject', function(projectKey) {
-    alert(projectKey);
-    window.project.refresh(projectKey);
-});
-
-
-// Start Backbone history a necessary step for bookmarkable URL's
-Backbone.history.start();
 
 
 $(function() {
@@ -103,6 +86,34 @@ $(function() {
         el: $("#main-content"),
         model: window.projectList
     });
+
+
+    // Initiate the router
+    var app_router = new AppRouter;
+
+    app_router.on('route:defaultRoute', function(actions) {
+        alert(actions);
+    });
+
+    app_router.on('route:loadPage', function(page) {
+        selectCurrentNavi(page);
+        window.projectList.refresh();
+    });
+
+
+    app_router.on('route:loadProjectList', function() {
+        selectCurrentNavi("project-list");
+        window.projectList.refresh();
+    });
+
+    app_router.on('route:loadProject', function(projectKey) {
+        selectCurrentNavi("project");
+        window.project.refresh(projectKey);
+    });
+
+
+    // Start Backbone history a necessary step for bookmarkable URL's
+    Backbone.history.start();
 
 
 });

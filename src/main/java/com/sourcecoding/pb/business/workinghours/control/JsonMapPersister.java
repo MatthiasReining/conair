@@ -177,7 +177,7 @@ public class JsonMapPersister {
             Map<String, Integer> workingTimeMapByJsonWPDescrId = (Map<String, Integer>) workingDayJsonEntry.getValue().get("workingTimeByDescriptionId");
             Map<Long, Integer> workingTimeMapByEntityWPDescrId = buildWorkingTimeMapByEntityWPDescrId(workingTimeMapByJsonWPDescrId, workPackageDescriptionEntiyMapByJsonId);
 
-            Date workingDate = convertToWorkingDate(dateText);
+            Date workingDate = DateParameter.valueOf(dateText);
 
             System.out.println("wtTimeDebug: " + workingTimeMapByJsonWPDescrId);
             System.out.println("wtTimeDebug1: " + workingTimeMapByJsonWPDescrId.size());
@@ -217,19 +217,6 @@ public class JsonMapPersister {
             workingTimeMapByEntityWPDescrId.put(wpd.getId(), workingTime);
         }
         return workingTimeMapByEntityWPDescrId;
-    }
-
-    private Date convertToWorkingDate(String dateText) throws RuntimeException {
-
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-
-        Date workingDate;
-        try {
-            workingDate = dateFormatter.parse(dateText);
-        } catch (ParseException ex) {
-            throw new RuntimeException(ex);
-        }
-        return workingDate;
     }
 
     private List<Long> updateAndRemoveExistingWorkingTimeEntities(List<WorkingTime> wtEntityList, Map<Long, Integer> workingTimeMapByEntityWPDescrId) {

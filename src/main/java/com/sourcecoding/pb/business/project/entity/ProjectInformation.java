@@ -5,6 +5,7 @@
 package com.sourcecoding.pb.business.project.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -21,21 +24,23 @@ import javax.persistence.OneToMany;
 @Entity
 @NamedQueries({
     @NamedQuery(name = ProjectInformation.findAllValidProjects, query = "SELECT pi FROM ProjectInformation pi"),
-    @NamedQuery(name = ProjectInformation.findByKey, query = "SELECT pi FROM ProjectInformation pi WHERE pi.projectKey= :"+ ProjectInformation.findByKey_Param_Key),
-})
+    @NamedQuery(name = ProjectInformation.findByKey, query = "SELECT pi FROM ProjectInformation pi WHERE pi.projectKey= :" + ProjectInformation.findByKey_Param_Key),})
 public class ProjectInformation implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     public static final String findAllValidProjects = "ProjectInformation#findAllValidProjects";
     public static final String findByKey = "ProjectInformation#findByKey";
     public static final String findByKey_Param_Key = "key";
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String projectKey;
     private String name;
+    @Temporal(TemporalType.DATE)
+    private Date projectStart;
+    @Temporal(TemporalType.DATE)
+    private Date projectEnd;
+    
     @OneToMany(mappedBy = "projectInformation")
     private Set<WorkPackage> workPackages;
 
@@ -63,7 +68,6 @@ public class ProjectInformation implements Serializable {
         this.projectKey = projectKey;
     }
 
-
     public Set<WorkPackage> getWorkPackages() {
         return workPackages;
     }
@@ -71,4 +75,22 @@ public class ProjectInformation implements Serializable {
     public void setWorkPackages(Set<WorkPackage> workPackages) {
         this.workPackages = workPackages;
     }
+
+    public Date getProjectStart() {
+        return projectStart;
+    }
+
+    public void setProjectStart(Date projectStart) {
+        this.projectStart = projectStart;
+    }
+
+    public Date getProjectEnd() {
+        return projectEnd;
+    }
+
+    public void setProjectEnd(Date projectEnd) {
+        this.projectEnd = projectEnd;
+    }
+    
+    
 }

@@ -106,7 +106,7 @@ public class InitalizeSystem {
             s.add(wp);
         }
 
-        ClientResponse cr = webResource.path("projects")
+        ClientResponse cr = webResource.path("projects/v0.1")
                 .path(pi.getProjectKey())
                 .type("application/json")
                 .accept("application/json")
