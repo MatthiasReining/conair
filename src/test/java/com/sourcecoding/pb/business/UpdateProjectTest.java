@@ -12,12 +12,14 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.json.JSONConfiguration;
 import java.io.InputStream;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
  * @author Matthias
  */
+@Ignore
 public class UpdateProjectTest {
 
     private static final String REST_ROOT = "http://localhost:8080/project-business-time-recording/rest";

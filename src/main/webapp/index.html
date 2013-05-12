@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html data-ng-app="pbtr">
     <head>
         <title>ProjectList</title>
 
@@ -39,6 +39,51 @@
         <link rel="shortcut icon" href="img/favicon/favicon.png">
         <link rel="stylesheet" href="style/style.css" type="text/css"/>
 
+
+          <!-- JS -->
+        <!--<script src="js/lib/jquery.js"></script> --> <!-- jQuery -->
+       
+        <script src="js/lib/jquery-1.9.1.min.js"></script> <!-- jQuery -->
+        <script src="js/lib/bootstrap.js"></script> <!-- Bootstrap -->
+        <script src="js/lib/jquery-ui-1.10.2.custom.min.js"></script> <!-- jQuery UI -->
+        <script src="js/lib/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+        <script src="js/lib/jquery.rateit.min.js"></script> <!-- RateIt - Star rating -->
+        <script src="js/lib/jquery.prettyPhoto.js"></script> <!-- prettyPhoto -->
+
+        <!-- jQuery Flot -->
+        <script src="js/lib/excanvas.min.js"></script>
+        <script src="js/lib/jquery.flot.js"></script>
+        <script src="js/lib/jquery.flot.resize.js"></script>
+        <script src="js/lib/jquery.flot.pie.js"></script>
+        <script src="js/lib/jquery.flot.stack.js"></script>
+
+        <script src="js/lib/jquery.gritter.min.js"></script> <!-- jQuery Gritter -->
+        <script src="js/lib/sparklines-2.1.1.min.js"></script> <!-- Sparklines -->
+        <!-- <script src="js/lib/jquery.cleditor.min.js"></script>--> <!-- CLEditor -->
+        
+        <!-- Date picker -->
+        <!--<script src="js/lib/bootstrap-datetimepicker.min.js"></script>-->
+        <script src="js/lib/bootstrap-datepicker.js"></script>
+        
+        <script src="js/lib/jquery.toggle.buttons.js"></script> <!-- Bootstrap Toggle -->
+        <script src="js/lib/filter.js"></script> <!-- Filter for support page -->
+       <!-- <script src="js/lib/custom.js"></script> <!-- Custom codes -->
+        <script src="js/lib/charts.js"></script> <!-- Custom chart codes -->
+
+        <!-- my libs / no bootstrap -->
+        <script src="http://code.angularjs.org/1.0.6/angular.min.js"></script>
+   <!--     <script src="js/lib/angular-strap-0.7.3.min.js"></script>-->
+   
+       
+        <script src="js/app.js"></script>
+        <script src="js/controller.js"></script>
+
+<!--
+        <script src="js/lib/underscore-1.4.4.min.js"></script>
+        <script src="js/lib/backbone-1.0.0.min.js"></script>
+
+-->    
+   
 
     </head>
 
@@ -114,7 +159,7 @@
 
                         <li class="nred"><a href="#/dashboard"><i class="icon-desktop"></i> Dashboard</a></li>
 
-                        <li class="norange current"><a href="#/project-list"><i class="icon-list"></i> Projects</a></li>
+                        <li class="norange current"><a href="#/projects"><i class="icon-list"></i> Projects</a></li>
 
                         <li class="nlightblue"><a href="timer-recording.html"><i class="icon-table"></i> Time Recording</a></li>
 
@@ -152,7 +197,7 @@
             <!-- Main bar -->
             <div class="mainbar" id="main-content">
 
-
+<div data-ng-view></div>
             </div>
 
             <!-- Mainbar ends -->	    	
@@ -165,40 +210,6 @@
         <!-- Scroll to top -->
         <span class="totop"><a href="#"><i class="icon-chevron-up"></i></a></span> 
 
-        <!-- JS -->
-        <!--<script src="js/lib/jquery.js"></script> --> <!-- jQuery -->
-        <script src="js/lib/jquery-1.9.1.min.js"></script> <!-- jQuery -->
-        <script src="js/lib/bootstrap.js"></script> <!-- Bootstrap -->
-        <script src="js/lib/jquery-ui-1.10.2.custom.min.js"></script> <!-- jQuery UI -->
-        <script src="js/lib/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
-        <script src="js/lib/jquery.rateit.min.js"></script> <!-- RateIt - Star rating -->
-        <script src="js/lib/jquery.prettyPhoto.js"></script> <!-- prettyPhoto -->
-
-        <!-- jQuery Flot -->
-        <script src="js/lib/excanvas.min.js"></script>
-        <script src="js/lib/jquery.flot.js"></script>
-        <script src="js/lib/jquery.flot.resize.js"></script>
-        <script src="js/lib/jquery.flot.pie.js"></script>
-        <script src="js/lib/jquery.flot.stack.js"></script>
-
-        <script src="js/lib/jquery.gritter.min.js"></script> <!-- jQuery Gritter -->
-        <script src="js/lib/sparklines-2.1.1.min.js"></script> <!-- Sparklines -->
-        <!-- <script src="js/lib/jquery.cleditor.min.js"></script>--> <!-- CLEditor -->
-        <script src="js/lib/bootstrap-datetimepicker.min.js"></script> <!-- Date picker -->
-        <script src="js/lib/jquery.toggle.buttons.js"></script> <!-- Bootstrap Toggle -->
-        <script src="js/lib/filter.js"></script> <!-- Filter for support page -->
-        <script src="js/lib/custom.js"></script> <!-- Custom codes -->
-        <script src="js/lib/charts.js"></script> <!-- Custom chart codes -->
-
-        <!-- my libs / no bootstrap -->
-        <script src="js/lib/underscore-1.4.4.min.js"></script>
-        <script src="js/lib/backbone-1.0.0.min.js"></script>
-        
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
-        
-
-        <script src="js/tools.js"></script> <!-- controller index page -->
-        <script src="js/index.js"></script> <!-- controller index page -->
-
+      
     </body>
 </html>

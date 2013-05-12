@@ -48,13 +48,11 @@
                                     <th>name</th>
                                 </tr> 
                             </thead>
-                            <tbody id="project-list-data">
-                                <% _.each( data, function(project, index){ %>           
+                            <tbody id="project-list-data" data-ng-repeat="project in projects">
                                 <tr>
-                                    <td><a href="#/project/<%- project.key %>"><%- project.key %></a></td>
-                                    <td><%- project.name %></td>
+                                    <td><a href="#/projects/{{project.key}}">{{project.key}}</a></td>
+                                    <td>{{project.name}}</td>
                                 </tr>
-                                <% }); %>
                                 <tr>
                             </tbody>
                         </table>

@@ -1,176 +1,175 @@
-<!-- Page heading -->
-<div class="page-head">
+<div >
+
     <!-- Page heading -->
-    <h2 class="pull-left">Project: <%- data.projectKey %> - <%- data.name %>
-        <!-- page meta -->
-        <span class="page-meta">Project details</span>
-    </h2>
+    <div class="page-head">
+        <!-- Page heading -->
+        <h2 class="pull-left">Project: {{project.projectKey}} - {{project.name}}
+            <!-- page meta -->
+            <span class="page-meta">Project details</span>
+        </h2>
 
 
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/project-list" class="bread-current">Projects</a>
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/project/{{-data.projectKey}}" class="bread-current"><%- data.projectKey %></a>
+        <!-- Breadcrumb -->
+        <div class="bread-crumb pull-right">
+            <a href="#/"><i class="icon-home"></i> Home</a> 
+            <!-- Divider -->
+            <span class="divider">/</span> 
+            <a href="#/projects" class="bread-current">Projects</a>
+            <!-- Divider -->
+            <span class="divider">/</span> 
+            <a href="#/projects/{{project.projectKey}}" class="bread-current">{{project.projectKey}}</a>
+        </div>
+
+        <div class="clearfix"></div>
+
     </div>
+    <!-- Page heading ends -->
 
-    <div class="clearfix"></div>
+    <!-- Matter -->
 
-</div>
-<!-- Page heading ends -->
+    <div class="matter">
+        <div class="container-fluid">
+            <div class="row-fluid">
+                <div class="span12">
 
-<!-- Matter -->
+                    <div class="widget worange">
 
-<div class="matter">
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span12">
+                        <div class="widget-head">
+                            <div class="pull-left">{{project.projectKey}} - {{project.name}} | {{project.projectState}}</div>
+                            <div class="clearfix"></div>
+                        </div>
 
-                <div class="widget worange">
+                        <div class="widget-content">
+                            <div class="tabbable">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#general-information" data-toggle="tab">General Information</a></li>
+                                    <li><a href="#work-packages" data-toggle="tab">Work Packages</a></li>
+                                    <li><a href="#access" data-toggle="tab">Access</a></li>
+                                </ul>
+                                <div class="tab-content">
 
-                    <div class="widget-head">
-                        <div class="pull-left"><%-data.projectKey%> - <%-data.name%> | <%-data.state%> </div>
-                        <div class="clearfix"></div>
-                    </div>
+                                    <div class="tab-pane active" id="general-information">
 
-                    <div class="widget-content">
+                                        <div class="padd">
 
+                                            <h6>General Information</h6>
+                                            <hr />
 
-                        <div class="tabbable">
-                            <ul class="nav nav-tabs">
-                                <li class="active"><a href="#general-information" data-toggle="tab">General Information</a></li>
-                                <li><a href="#work-packages" data-toggle="tab">Work Packages</a></li>
-                                <li><a href="#access" data-toggle="tab">Access</a></li>
-                            </ul>
-                            <div class="tab-content">
+                                            <div class="form profile">
+                                                <form class="form-horizontal" id="form-general-information">
+                                                    <div class="row-fluid">
+                                                        <div class="span5" >            
+                                                            <!-- ProjectKey -->
+                                                            <div class="control-group">
+                                                                <label class="control-label" for="projectKey">Key</label>
+                                                                <div class="controls">
+                                                                    <span class="input-mini uneditable-input">{{project.projectKey}}</span>
+                                                                </div>
+                                                            </div>   
 
-                                <div class="tab-pane active" id="general-information">
-
-                                    <div class="padd">
-
-                                        <h6>General Information</h6>
-                                        <hr />
-
-                                        <div class="form profile">
-                                            <form class="form-horizontal" id="form-general-information">
-                                                <div class="row-fluid">
-                                                    <div class="span5" >            
-                                                        <!-- ProjectKey -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="projectKey">Key</label>
-                                                            <div class="controls">
-                                                                <span class="input-mini uneditable-input"><%-data.projectKey%></span>
+                                                            <!-- ProjectName -->
+                                                            <div class="control-group">
+                                                                <label class="control-label" for="name">Project name</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="input-large" name="name" data-ng-model="project.name" placeholder="Enter project name">
+                                                                </div>
                                                             </div>
-                                                        </div>   
 
-                                                        <!-- ProjectName -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="name">Project name</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="input-large" name="name" value="<%-data.name%>" placeholder="Enter project name">
-                                                            </div>
+                                                            <!-- Project Manager -->
+                                                            <div class="control-group">
+                                                                <label style="width:auto" class="control-label" for="projectManager">Project manager</label>
+                                                                <div class="controls">
+                                                                    <input type="text" class="input-large" name="projectManager" data-ng-model="project.projectManager" placeholder="Enter a valid user id">
+                                                                </div>
+                                                            </div>  
+
                                                         </div>
 
-                                                        <!-- Project Manager -->
-                                                        <div class="control-group">
-                                                            <label style="width:auto" class="control-label" for="projectManager">Project manager</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="input-large" name="projectManager" value="<%-data.projectManager%>" placeholder="Enter a valid user id">
-                                                            </div>
-                                                        </div>  
-
-                                                        <input type="button" onclick="window.project.set({'name': 'test'});
-                                                                return false;" value="change"/>
-                                                        <input type="button" onclick="window.project.updateModelFromClient();
-                                                                return false;" value="read"/>
-                                                    </div>
-
-                                                    <div class="span7" >            
-                                                        <!-- Project Start -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="projectStart">Project start</label>
-                                                            <div class="controls">
-                                                                <div class="input-append" id="project-start-area">
-                                                                    <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectStart" value="<%-data.projectStart%>">
-                                                                    <span class="add-on">
-                                                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                                                    </span>
+                                                        <div class="span7" >            
+                                                            <!-- Project Start -->
+                                                            <div class="control-group">
+                                                                <label class="control-label" for="projectStart">Project start</label>
+                                                                <div class="controls">
+                                                                    <div class="input-append" id="project-start-area">
+                                                                        <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectStart" data-ng-model="project.projectStart">
+                                                                        <span class="add-on">
+                                                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>  
+                                                            </div>  
 
-                                                        <!-- Project End -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="projectEnd">Project end</label>
-                                                            <div class="controls">
-                                                                <div class="input-append" id="project-end-area">
-                                                                    <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectEnd">
-                                                                    <span class="add-on">
-                                                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                                                    </span>
+                                                            <!-- Project End -->
+                                                            <div class="control-group">
+                                                                <label class="control-label" for="projectEnd">Project end</label>
+                                                                <div class="controls">
+                                                                    <div class="input-append datetimepicker" id="project-end-area">
+                                                                        <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectEnd" data-ng-model="project.projectEnd">
+                                                                        <span class="add-on">
+                                                                            <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </div>  
+                                                            </div>  
+                                                        </div>
+
                                                     </div>
+                                                    <div class="form-actions">
+                                                        <!-- Buttons -->
+                                                        <button class="btn btn-success" data-ng-click="sendToServer()">Update</button>
+                                                        <button class="btn">Reset</button>
+                                                    </div>
+                                                </form>
 
-                                                </div>
-                                                <div class="form-actions">
-                                                    <!-- Buttons -->
-                                                    <button type="submit" class="btn btn-success">Update</button>
-                                                    <button type="reset" class="btn">Reset</button>
-                                                </div>
-                                            </form>
 
+                                            </div>
 
                                         </div>
+
+
+
+
+
+
+
+
+
+
 
                                     </div>
 
 
+                                    <div class="tab-pane" id="work-packages">
+                                        <p>Howdy, I'm in Section 2.</p>
+                                    </div>
 
-
-
-
-
-
-
-
-
-                                </div>
-
-
-                                <div class="tab-pane" id="work-packages">
-                                    <p>Howdy, I'm in Section 2.</p>
-                                </div>
-
-                                <div class="tab-pane" id="access">
-                                    <p>What up girl, this is Section 3.</p>
+                                    <div class="tab-pane" id="access">
+                                        <p>What up girl, this is Section 3.</p>
+                                    </div>
                                 </div>
                             </div>
+
                         </div>
 
+                        <div class="widget-foot">
+
+                        </div>
                     </div>
+
 
                     <div class="widget-foot">
+                        <!-- Footer goes here -->
 
                     </div>
-                </div>
+                </div>  
 
 
-                <div class="widget-foot">
-                    <!-- Footer goes here -->
-
-                </div>
-            </div>  
-
+            </div>
 
         </div>
-
     </div>
-</div>
 
-<!-- Matter ends -->
+    <!-- Matter ends -->
+
+
+</div>

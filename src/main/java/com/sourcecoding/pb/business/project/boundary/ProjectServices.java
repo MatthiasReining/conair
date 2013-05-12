@@ -51,7 +51,7 @@ public class ProjectServices {
 
     @PUT
     @Path("{key}")
-    public ProjectInformation update(@PathParam("key") String key, Map<String, Object> map) {
+    public Map<String,Object> update(@PathParam("key") String key, Map<String, Object> map) {
 
         ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
@@ -70,8 +70,8 @@ public class ProjectServices {
 
 
         pi = em.merge(pi);
-
-        return pi;
+        
+        return convertProjectInformation2Map(pi);
     }
 
     @GET
@@ -80,14 +80,7 @@ public class ProjectServices {
         ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();
-        Map<String,Object> result = new HashMap<>();
-        result.put("projectKey", pi.getProjectKey());
-        result.put("name", pi.getName());
-        result.put("id", pi.getId());
-        result.put("projectStart", DateParameter.valueOf(pi.getProjectStart()));
-        result.put("projectEnd", DateParameter.valueOf(pi.getProjectEnd()));
-        
-        return result;
+        return convertProjectInformation2Map(pi);
     }
 
     @GET
@@ -153,6 +146,16 @@ public class ProjectServices {
             result.add(project);
         }
 
+        return result;
+    }
+
+    private Map<String, Object> convertProjectInformation2Map(ProjectInformation pi) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("projectKey", pi.getProjectKey());
+        result.put("name", pi.getName());
+        result.put("id", pi.getId());
+        result.put("projectStart", DateParameter.valueOf(pi.getProjectStart()));
+        result.put("projectEnd", DateParameter.valueOf(pi.getProjectEnd()));
         return result;
     }
 }
