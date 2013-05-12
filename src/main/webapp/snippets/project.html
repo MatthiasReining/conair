@@ -82,9 +82,11 @@
                                                                 <input type="text" class="input-large" name="projectManager" value="<%-data.projectManager%>" placeholder="Enter a valid user id">
                                                             </div>
                                                         </div>  
-                                                        
-                                                        <input type="button" onclick="window.project.set({'name':'test'});return false;" value="change"/>
-                                                        <input type="button" onclick="window.project.updateModelFromClient(); return false;" value="read"/>
+
+                                                        <input type="button" onclick="window.project.set({'name': 'test'});
+                                                                return false;" value="change"/>
+                                                        <input type="button" onclick="window.project.updateModelFromClient();
+                                                                return false;" value="read"/>
                                                     </div>
 
                                                     <div class="span7" >            
@@ -100,7 +102,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>  
-                                                        
+
                                                         <!-- Project End -->
                                                         <div class="control-group">
                                                             <label class="control-label" for="projectEnd">Project end</label>
