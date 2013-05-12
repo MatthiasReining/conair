@@ -53,21 +53,22 @@ public class ProjectServices {
     @Path("{key}")
     public ProjectInformation update(@PathParam("key") String key, Map<String, Object> map) {
 
-        long id = (int) map.get("id");
-        ProjectInformation pi = em.find(ProjectInformation.class, id);
+        ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
+                .setParameter(ProjectInformation.findByKey_Param_Key, key)
+                .getSingleResult();
         pi.setName(String.valueOf(map.get("name")));
-        
+
         //projectStart
         String dateText = String.valueOf(map.get("projectStart"));
         Date dateValue = (dateText == null || dateText.isEmpty()) ? null : DateParameter.valueOf(dateText);
         pi.setProjectStart(dateValue);
-        
+
         //projectEnd
         dateText = String.valueOf(map.get("projectEnd"));
         dateValue = (dateText == null || dateText.isEmpty()) ? null : DateParameter.valueOf(dateText);
         pi.setProjectEnd(dateValue);
 
-        
+
         pi = em.merge(pi);
 
         return pi;
@@ -75,7 +76,23 @@ public class ProjectServices {
 
     @GET
     @Path("{key}")
-    public ProjectInformation getProject(@PathParam("key") String key) {
+    public Map<String, Object> getProject(@PathParam("key") String key) {
+        ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
+                .setParameter(ProjectInformation.findByKey_Param_Key, key)
+                .getSingleResult();
+        Map<String,Object> result = new HashMap<>();
+        result.put("projectKey", pi.getProjectKey());
+        result.put("name", pi.getName());
+        result.put("id", pi.getId());
+        result.put("projectStart", DateParameter.valueOf(pi.getProjectStart()));
+        result.put("projectEnd", DateParameter.valueOf(pi.getProjectEnd()));
+        
+        return result;
+    }
+
+    @GET
+    @Path("v0.1/{key}")
+    public ProjectInformation getProjectv2(@PathParam("key") String key) {
         return em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();

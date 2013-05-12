@@ -56,22 +56,22 @@
                                         <hr />
 
                                         <div class="form profile">
-                                            <form class="form-horizontal">
+                                            <form class="form-horizontal" id="form-general-information">
                                                 <div class="row-fluid">
                                                     <div class="span5" >            
                                                         <!-- ProjectKey -->
                                                         <div class="control-group">
                                                             <label class="control-label" for="projectKey">Key</label>
                                                             <div class="controls">
-                                                                <span class="input-mini uneditable-input">E227</span>
+                                                                <span class="input-mini uneditable-input"><%-data.projectKey%></span>
                                                             </div>
                                                         </div>   
 
                                                         <!-- ProjectName -->
                                                         <div class="control-group">
-                                                            <label class="control-label" for="projectName">Project name</label>
+                                                            <label class="control-label" for="name">Project name</label>
                                                             <div class="controls">
-                                                                <input type="text" class="input-large" id="projectName" placeholder="Enter project name">
+                                                                <input type="text" class="input-large" name="name" value="<%-data.name%>" placeholder="Enter project name">
                                                             </div>
                                                         </div>
 
@@ -79,19 +79,21 @@
                                                         <div class="control-group">
                                                             <label style="width:auto" class="control-label" for="projectManager">Project manager</label>
                                                             <div class="controls">
-                                                                <input type="text" class="input-large" id="projectManager" placeholder="Enter a valid user id">
+                                                                <input type="text" class="input-large" name="projectManager" value="<%-data.projectManager%>" placeholder="Enter a valid user id">
                                                             </div>
                                                         </div>  
-
+                                                        
+                                                        <input type="button" onclick="window.project.set({'name':'test'});return false;" value="change"/>
+                                                        <input type="button" onclick="window.project.updateModelFromClient(); return false;" value="read"/>
                                                     </div>
 
                                                     <div class="span7" >            
                                                         <!-- Project Start -->
                                                         <div class="control-group">
-                                                            <label class="control-label" for="projectManager">Project start</label>
+                                                            <label class="control-label" for="projectStart">Project start</label>
                                                             <div class="controls">
-                                                                <div class="input-append datepicker">
-                                                                    <input data-format="yyyy-MM-dd" type="text" name="projectStart">
+                                                                <div class="input-append" id="project-start-area">
+                                                                    <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectStart" value="<%-data.projectStart%>">
                                                                     <span class="add-on">
                                                                         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
                                                                     </span>
@@ -101,10 +103,10 @@
                                                         
                                                         <!-- Project End -->
                                                         <div class="control-group">
-                                                            <label class="control-label" for="projectManager">Project end</label>
+                                                            <label class="control-label" for="projectEnd">Project end</label>
                                                             <div class="controls">
-                                                                <div class="input-append datepicker">
-                                                                    <input data-format="yyyy-MM-dd" type="text" name="projectEnd">
+                                                                <div class="input-append" id="project-end-area">
+                                                                    <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectEnd">
                                                                     <span class="add-on">
                                                                         <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
                                                                     </span>

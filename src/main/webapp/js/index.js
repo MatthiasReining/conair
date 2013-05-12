@@ -1,28 +1,48 @@
 ProjectModel = Backbone.Model.extend({
-    url: "rest/projects/[projectKey]",
+    baseUrl: "rest/projects/[projectKey]",
     refresh: function(projectKey) {
-        this.url = this.url.replace('[projectKey]', projectKey);
-        this.fetch({
-            success: function(data) {
-                window.projectView.render();
-            }
-        });
+        this.url = this.baseUrl.replace('[projectKey]', projectKey);
+        this.fetch();
     }
 });
 
 ProjectView = Backbone.View.extend({
     template: loadTemplate('snippets/project.html'),
+    initialize: function() {        
+        this.model.on('change', this.render, this);
+    },
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
 
         //init click events
-        $('.datepicker').datetimepicker({
+        $('#project-start-area').datetimepicker({
             pickTime: false
         });
-        
+        $('#project-end-area').datetimepicker({
+            pickTime: false
+        });
+
         return this;
     },
     events: {
+        "click #form-general-information button[type='submit']": "sendToServer"
+    },
+    sendToServer: function() {
+        alert(this.model.url);
+        var jsonData = $('#form-general-information').serializeObject();
+        console.log(JSON.stringify(jsonData));
+        $.ajax({
+            type: "PUT",
+            url: this.model.url,
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify(jsonData)
+        }).done(function(data) {
+            //TODO daten sind doppelt da (POST und anschl. GET)            
+            console.log('projectKey: ' + jsonData.projectKey);
+            window.project.refresh(jsonData.projectKey);
+        });
+        return false;
     }
 });
 
@@ -41,7 +61,7 @@ ProjectListModel = Backbone.Model.extend({
 ProjectListView = Backbone.View.extend({
     template: loadTemplate('snippets/project-list.html'),
     initialize: function() {
-        //this.render();
+        this.render();
     },
     render: function() {
         _.templateSettings.variable = "data";
@@ -88,6 +108,7 @@ $(function() {
     });
 
 
+
     // Initiate the router
     var app_router = new AppRouter;
 
@@ -114,6 +135,7 @@ $(function() {
 
     // Start Backbone history a necessary step for bookmarkable URL's
     Backbone.history.start();
+
 
 
 });

@@ -30,6 +30,7 @@ public class DateParameter implements Serializable {
     }
     
     public static String valueOf(Date date) {
+        if (date == null) return "";
         return DATE_FORMAT.format(date);
     }
     
