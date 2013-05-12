@@ -4,9 +4,11 @@
  */
 package com.sourcecoding.pb.business.project.entity;
 
+import com.sourcecoding.pb.business.restconfig.JsonDateAdapter;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
@@ -36,12 +39,20 @@ public class ProjectInformation implements Serializable {
     private Long id;
     private String projectKey;
     private String name;
-    @Temporal(TemporalType.DATE)
-    private Date projectStart;
-    @Temporal(TemporalType.DATE)
-    private Date projectEnd;
     
-    @OneToMany(mappedBy = "projectInformation")
+    @Temporal(TemporalType.DATE)
+    @XmlJavaTypeAdapter(JsonDateAdapter.class)
+    private Date projectStart;
+    
+    @Temporal(TemporalType.DATE)
+    @XmlJavaTypeAdapter(JsonDateAdapter.class)
+    private Date projectEnd;
+    private Integer limitForWorkingHours;
+    /**
+     * TODO link to user
+     */
+    private String projectManager;
+    @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL)
     private Set<WorkPackage> workPackages;
 
     public Long getId() {
@@ -91,6 +102,20 @@ public class ProjectInformation implements Serializable {
     public void setProjectEnd(Date projectEnd) {
         this.projectEnd = projectEnd;
     }
-    
-    
+
+    public String getProjectManager() {
+        return projectManager;
+    }
+
+    public void setProjectManager(String projectManager) {
+        this.projectManager = projectManager;
+    }
+
+    public Integer getLimitForWorkingHours() {
+        return limitForWorkingHours;
+    }
+
+    public void setLimitForWorkingHours(Integer limitForWorkingHours) {
+        this.limitForWorkingHours = limitForWorkingHours;
+    }
 }

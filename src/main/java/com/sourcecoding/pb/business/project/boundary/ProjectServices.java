@@ -41,22 +41,27 @@ public class ProjectServices {
     @Path("v0.1/{key}")
     public ProjectInformation createOrUpdate(@PathParam("key") String key, ProjectInformation pi) {
 
-        for (WorkPackage wp : pi.getWorkPackages()) {
-            wp.setProjectInformation(pi);
-        }
         pi = em.merge(pi);
-
         return pi;
+    }
+
+    @GET
+    @Path("v0.1/{key}")
+    public ProjectInformation getProjectv2(@PathParam("key") String key) {
+        return em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
+                .setParameter(ProjectInformation.findByKey_Param_Key, key)
+                .getSingleResult();
     }
 
     @PUT
     @Path("{key}")
-    public Map<String,Object> update(@PathParam("key") String key, Map<String, Object> map) {
+    public Map<String, Object> update(@PathParam("key") String key, Map<String, Object> map) {
 
         ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();
         pi.setName(String.valueOf(map.get("name")));
+        pi.setProjectManager(String.valueOf(map.get("projectManager")));
 
         //projectStart
         String dateText = String.valueOf(map.get("projectStart"));
@@ -70,7 +75,7 @@ public class ProjectServices {
 
 
         pi = em.merge(pi);
-        
+
         return convertProjectInformation2Map(pi);
     }
 
@@ -81,14 +86,6 @@ public class ProjectServices {
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();
         return convertProjectInformation2Map(pi);
-    }
-
-    @GET
-    @Path("v0.1/{key}")
-    public ProjectInformation getProjectv2(@PathParam("key") String key) {
-        return em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
-                .setParameter(ProjectInformation.findByKey_Param_Key, key)
-                .getSingleResult();
     }
 
     @GET
@@ -156,6 +153,7 @@ public class ProjectServices {
         result.put("id", pi.getId());
         result.put("projectStart", DateParameter.valueOf(pi.getProjectStart()));
         result.put("projectEnd", DateParameter.valueOf(pi.getProjectEnd()));
+        result.put("projectManager", pi.getProjectManager());
         return result;
     }
 }
