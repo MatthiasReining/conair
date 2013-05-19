@@ -65,12 +65,12 @@ public class ProjectServices {
 
         //projectStart
         String dateText = String.valueOf(map.get("projectStart"));
-        Date dateValue = (dateText == null || dateText.isEmpty()) ? null : DateParameter.valueOf(dateText);
+        Date dateValue = (dateText == null || dateText.isEmpty() || "null".equals(dateText)) ? null : DateParameter.valueOf(dateText);
         pi.setProjectStart(dateValue);
 
         //projectEnd
         dateText = String.valueOf(map.get("projectEnd"));
-        dateValue = (dateText == null || dateText.isEmpty()) ? null : DateParameter.valueOf(dateText);
+        dateValue = (dateText == null || dateText.isEmpty() || "null".equals(dateText)) ? null : DateParameter.valueOf(dateText);
         pi.setProjectEnd(dateValue);
 
 

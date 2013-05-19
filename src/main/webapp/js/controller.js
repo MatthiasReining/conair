@@ -2,6 +2,12 @@
 
 var serviceBaseUrl = 'http://localhost:8080/project-business-time-recording/rest/';
 
+function NaviCtrl($scope, $location) {
+    $scope.isActive = function(route) {
+        return ($location.path().indexOf( route ) > -1);
+    };
+};
+
 function ProjectListCtrl($scope, $http) {
     $http.get(serviceBaseUrl + 'projects/list').success(function(data) {
         console.log(data);
@@ -30,7 +36,7 @@ function ProjectCtrl($scope, $routeParams, $http) {
         data.projectEnd = new Date(data.projectEnd).getText();
         $scope.project = data;
     });
-    
+
     $scope.selectWP = function(workPackage) {
         console.log(workPackage);
         $scope.currentWP = workPackage;
@@ -41,9 +47,27 @@ function ProjectCtrl($scope, $routeParams, $http) {
         console.log($scope.project);
 
         $http.put(serviceURL, $scope.project).success(function(data) {
-            console.log('<--fromServer');        
+            console.log('<--fromServer');
             console.log(data);
             $scope.project = data;
         });
     };
 }
+
+
+function TravelCostsListCtrl($scope, $http) {
+    $http.get(serviceBaseUrl + 'travel-costs').success(function(data) {
+        console.log(data);
+        $scope.travelCosts = data;
+    });
+}
+
+function TravelCostsCtrl($scope, $http) {
+    //selectCurrentNavi('travel-costs');
+    //$http.get(serviceBaseUrl + 'travel-costs').success(function(data) {
+    //    console.log(data);
+    //    $scope.travelCosts = data;
+    //});
+}
+
+

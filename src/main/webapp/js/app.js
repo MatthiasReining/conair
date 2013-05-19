@@ -31,5 +31,22 @@ angular.module('pbtr', []).
         $routeProvider.
                 when('/projects', {templateUrl: 'snippets/project-list.html', controller: ProjectListCtrl}).
                 when('/projects/:projectKey', {templateUrl: 'snippets/project.html', controller: ProjectCtrl}).
+                when('/travel-costs-list', {templateUrl: 'snippets/travel-costs-list.html', controller: TravelCostsListCtrl}).
+                when('/travel-costs', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
                 otherwise({redirectTo: '/projects'});
+
+        
     }]);
+
+
+
+
+var selectCurrentNavi = function(page) {
+    $('.navi li').removeClass('current');
+    $.each($('.navi li'), function(index, key) {
+        var href = $(key).find('a').attr('href');
+        if (href.indexOf('#/' + page) > -1) {
+            $(key).addClass('current');
+        }
+    });
+};

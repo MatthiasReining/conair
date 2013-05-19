@@ -67,7 +67,7 @@
         
         <script src="js/lib/jquery.toggle.buttons.js"></script> <!-- Bootstrap Toggle -->
         <script src="js/lib/filter.js"></script> <!-- Filter for support page -->
-       <!-- <script src="js/lib/custom.js"></script> <!-- Custom codes -->
+       <!-- <script src="js/lib/custom.js"></script>--> <!-- Custom codes -->
         <script src="js/lib/charts.js"></script> <!-- Custom chart codes -->
 
         <!-- my libs / no bootstrap -->
@@ -137,7 +137,7 @@
             <div class="sidebar">
                 <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
 
-                <div class="sidebar-inner">
+                <div class="sidebar-inner" data-ng-controller="NaviCtrl">
 
 
 
@@ -159,12 +159,16 @@
 
                         <li class="nred"><a href="#/dashboard"><i class="icon-desktop"></i> Dashboard</a></li>
 
-                        <li class="norange current"><a href="#/projects"><i class="icon-list"></i> Projects</a></li>
+                        <li class="norange" data-ng-class="{current:isActive('/projects')}"><a href="#/projects"><i class="icon-list"></i> Projects</a></li>
 
                         <li class="nlightblue"><a href="timer-recording.html"><i class="icon-table"></i> Time Recording</a></li>
 
-                        <li class="nviolet"><a href="#/vacation"><i class="icon-glass"></i> Vacation</a></li>
+                        <li class="nviolet" data-ng-class="{current:isActive('/vacation')}"><a href="#/vacation"><i class="icon-glass"></i> Vacation</a></li>
 
+                        <li class="ngreen" data-ng-class="{current:isActive('/travel-costs')}"><a href="#/travel-costs"><i class="icon-plane"></i> Travel Costs</a></li>
+
+                        
+                        
                         <!-- Menu with sub menu -->
                         <li class="has_submenu nlightblue">
                             <a href="#">
