@@ -10,13 +10,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 /**
  *
  * @author Matthias
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = TravelExpensesRate.findByDate, query = "SELECT o FROM TravelExpensesRate o ORDER BY o.country")
+})
 public class TravelExpensesRate implements Serializable {
+    
+    public static final String findByDate = "TravelExpensesRate#findByDate";
 
     private static final long serialVersionUID = 1L;
     @Id

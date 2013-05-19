@@ -9,6 +9,7 @@ import com.sourcecoding.pb.business.user.entity.Individual;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,7 +32,7 @@ public class PerDiem implements Serializable {
     @ManyToOne
     private Individual individual;
     @ManyToOne
-    ChargesMonth chargesMonth;
+    private ChargesMonth chargesMonth;
     @Temporal(TemporalType.DATE)
     private Date perDiemDate;
     @Temporal(TemporalType.TIME)
@@ -43,6 +44,7 @@ public class PerDiem implements Serializable {
     private ProjectInformation project;
     @ManyToOne
     private TravelExpensesRate travelExpensesRate;
+    @Column(precision = 6, scale = 2)
     private BigDecimal charges; //FIXME decimal places!
 
     public Long getId() {
@@ -115,5 +117,13 @@ public class PerDiem implements Serializable {
 
     public void setPerDiemDate(Date perDiemDate) {
         this.perDiemDate = perDiemDate;
+    }
+
+    public ChargesMonth getChargesMonth() {
+        return chargesMonth;
+    }
+
+    public void setChargesMonth(ChargesMonth chargesMonth) {
+        this.chargesMonth = chargesMonth;
     }
 }

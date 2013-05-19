@@ -40,9 +40,9 @@
         <link rel="stylesheet" href="style/style.css" type="text/css"/>
 
 
-          <!-- JS -->
+        <!-- JS -->
         <!--<script src="js/lib/jquery.js"></script> --> <!-- jQuery -->
-       
+
         <script src="js/lib/jquery-1.9.1.min.js"></script> <!-- jQuery -->
         <script src="js/lib/bootstrap.js"></script> <!-- Bootstrap -->
         <script src="js/lib/jquery-ui-1.10.2.custom.min.js"></script> <!-- jQuery UI -->
@@ -60,30 +60,30 @@
         <script src="js/lib/jquery.gritter.min.js"></script> <!-- jQuery Gritter -->
         <script src="js/lib/sparklines-2.1.1.min.js"></script> <!-- Sparklines -->
         <!-- <script src="js/lib/jquery.cleditor.min.js"></script>--> <!-- CLEditor -->
-        
+
         <!-- Date picker -->
         <!--<script src="js/lib/bootstrap-datetimepicker.min.js"></script>-->
         <script src="js/lib/bootstrap-datepicker.js"></script>
-        
+
         <script src="js/lib/jquery.toggle.buttons.js"></script> <!-- Bootstrap Toggle -->
         <script src="js/lib/filter.js"></script> <!-- Filter for support page -->
-       <!-- <script src="js/lib/custom.js"></script>--> <!-- Custom codes -->
+        <!-- <script src="js/lib/custom.js"></script>--> <!-- Custom codes -->
         <script src="js/lib/charts.js"></script> <!-- Custom chart codes -->
 
         <!-- my libs / no bootstrap -->
         <script src="http://code.angularjs.org/1.0.6/angular.min.js"></script>
-   <!--     <script src="js/lib/angular-strap-0.7.3.min.js"></script>-->
-   
-       
+        <!--     <script src="js/lib/angular-strap-0.7.3.min.js"></script>-->
+
+
         <script src="js/app.js"></script>
         <script src="js/controller.js"></script>
 
-<!--
-        <script src="js/lib/underscore-1.4.4.min.js"></script>
-        <script src="js/lib/backbone-1.0.0.min.js"></script>
+        <!--
+                <script src="js/lib/underscore-1.4.4.min.js"></script>
+                <script src="js/lib/backbone-1.0.0.min.js"></script>
+        
+        -->    
 
--->    
-   
 
     </head>
 
@@ -165,10 +165,18 @@
 
                         <li class="nviolet" data-ng-class="{current:isActive('/vacation')}"><a href="#/vacation"><i class="icon-glass"></i> Vacation</a></li>
 
-                        <li class="ngreen" data-ng-class="{current:isActive('/travel-costs')}"><a href="#/travel-costs"><i class="icon-plane"></i> Travel Costs</a></li>
+                        <li class="has_submenu ngreen" >
+                            <a href="#">
+                                <i class="icon-plane"></i> Travel Costs
+                                <span class="pull-right"><i class="icon-angle-right"></i></span>
+                            </a>
+                            <ul>
+                                <li class="ngreen" data-ng-class="{current:isActive('/per-diems-selector')}"><a href="#/per-diems-selector">Per Diems</a></li>
+                                <li class="ngreen" data-ng-class="{current:isActive('/travel-costs')}"><a href="#/travel-costs"> Travel Costs</a></li>
+                            </ul>
+                        </li>
 
-                        
-                        
+
                         <!-- Menu with sub menu -->
                         <li class="has_submenu nlightblue">
                             <a href="#">
@@ -201,7 +209,7 @@
             <!-- Main bar -->
             <div class="mainbar" id="main-content">
 
-<div data-ng-view></div>
+                <div data-ng-view></div>
             </div>
 
             <!-- Mainbar ends -->	    	
@@ -210,10 +218,9 @@
         </div>
         <!-- Content ends -->
 
-
         <!-- Scroll to top -->
         <span class="totop"><a href="#"><i class="icon-chevron-up"></i></a></span> 
 
-      
+
     </body>
 </html>

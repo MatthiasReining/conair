@@ -19,6 +19,7 @@ import org.junit.Test;
  *
  * @author Matthias
  */
+@Ignore
 public class UpdatePerDiemTest {
 
     private static final String REST_ROOT = "http://localhost:8080/project-business-time-recording/rest";

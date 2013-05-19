@@ -81,6 +81,7 @@ public class PerDiemService {
             if (pd == null) {
                 pd = new PerDiem();
                 cm.getPerDiems().add(pd);
+                pd.setChargesMonth(cm);
                 pd.setPerDiemDate(DateParameter.valueOf(day));
             }
 
@@ -124,6 +125,12 @@ public class PerDiemService {
         return Response.ok().build();
     }
 
+    @GET
+    @Path("travel-expenses-rates")
+    public List<TravelExpensesRate> getTravelExpensesRate() {
+        return em.createNamedQuery(TravelExpensesRate.findByDate, TravelExpensesRate.class).getResultList();
+    }
+
     private Map<String, Object> buildDTMap(Long individualId, String byMonth, ChargesMonth cm) {
         String year = byMonth.split("-")[0];
         String month = byMonth.split("-")[1];
@@ -158,8 +165,8 @@ public class PerDiemService {
 
         if (cm != null) {
             for (PerDiem pd : cm.getPerDiems()) {
-                System.out.println( DateParameter.valueOf(pd.getPerDiemDate()));
-                System.out.println( days );
+                System.out.println(DateParameter.valueOf(pd.getPerDiemDate()));
+                System.out.println(days);
                 Map<String, Object> dayValues = (Map<String, Object>) days.get(DateParameter.valueOf(pd.getPerDiemDate()));
                 if (dayValues == null) {
                     throw new RuntimeException("Month match failed! (" + pd.getPerDiemDate() + ")");

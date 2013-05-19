@@ -4,7 +4,6 @@
  */
 package com.sourcecoding.pb.business.perdiemcharges.entity;
 
-import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import java.io.Serializable;
 import java.util.List;
