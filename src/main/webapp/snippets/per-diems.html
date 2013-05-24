@@ -27,7 +27,7 @@
 
 <!-- Matter -->
 
-<div class="matter">
+<div class="matter per-diems">
     <div class="container-fluid">
 
         <div class="row-fluid">
@@ -46,21 +46,31 @@
                     </div>
 
                     <div class="widget-content" >
+
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Project</th>
-                                    <th>Destination</th>
-                                    <th>Fulltime</th>
-                                    <th>From</th>
-                                    <th>To</th>
-                                    <th>Per Diem</th>
+                                    <th class="pd-date-column">Date</th>
+                                    <th class="pd-action-column"></th>
+                                    <th class="pd-project-column">Project</th>
+                                    <th class="pd-destination-column">Destination</th>
+                                    <th class="pd-fulltime-column" title="full-time">Ft</th>
+                                    <th class="pd-from-column">From</th>
+                                    <th class="pd-to-column">To</th>
+                                    <th class="pd-charges-column">Per Diem</th>
                                 </tr> 
                             </thead>
-                            <tbody id="project-list-data" data-ng-repeat="perDiem in perDiemsData.perDiems">
+                            <tbody data-ng-repeat="perDiem in perDiemsData.perDiems">
                                 <tr>
-                                    <td>{{perDiem.day}}</td>
+                                    <td class="pd-date-column">{{perDiem.day | date:'EEE, dd. MMM yyyy'}}</td>
+                                    <td>
+                                        <span style="width:25px; display:inline-block; text-align: center;">
+                                            <i class="icon-arrow-down" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index-1])" data-ng-hide="$first"></i>
+                                        </span>|
+                                        <span style="width:25px; display:inline-block; text-align: center;">
+                                            <i class="icon-remove" data-ng-click="removePerDiem(perDiem)"></i>
+                                        </span>
+                                    </td>
                                     <td><select data-ng-model="perDiem.projectId" data-ng-options="project.id as project.name for project in projects"></select></td>
                                     <td>
                                         <select data-ng-model="perDiem.travelExpensesRateId" data-ng-change="calcPerDiem(perDiem);" data-ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
@@ -69,18 +79,10 @@
                                         <input type="checkbox" data-ng-model="perDiem.fullTime" data-ng-change="calcPerDiem(perDiem);">
                                     </td>
                                     <td>
-                                        {{perDiem.inServiceFrom}}
-                                        <div id="datetimepicker2" class="input-append">
-                                            <input data-format="hh:mm:ss" type="text">
-                                            <span class="add-on">
-                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                                                </i>
-                                            </span>
-                                        </div>
-
+                                        <input data-ng-model="perDiem.inServiceFrom" data-ng-hide="perDiem.fullTime" data-ng-change="calcPerDiem(perDiem);" type="time">
                                     </td>
-                                    <td>{{perDiem.inServiceTo}}</td>
-                                    <td>{{perDiem.charges}}</td>
+                                    <td><input data-ng-model="perDiem.inServiceTo" data-ng-hide="perDiem.fullTime" data-ng-change="calcPerDiem(perDiem);" type="time"></td>
+                                    <td class="pd-charges-column"><span data-ng-hide="perDiem.charges==''">{{perDiem.charges | currency:'€'}}</span></td>
                                 </tr>
                             </tbody>
                         </table>

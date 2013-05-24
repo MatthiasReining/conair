@@ -67,6 +67,8 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
     $http.get(serviceURL).success(function(data) {
         console.log(data);
         $scope.perDiemsData = data;
+
+
     });
 
     //load destination list
@@ -82,16 +84,52 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
     });
     $http.get(serviceBaseUrl + 'projects/list').success(function(data) {
         console.log(data);
-        $scope.projects= data;
+        $scope.projects = data;
     });
+
+    $scope.removePerDiem = function(perDiem) {
+        perDiem.projectId = '';
+        perDiem.travelExpensesRateId = '';        
+        perDiem.fullTime = '';
+        perDiem.inServiceFrom = '';
+        perDiem.inServiceTo = '';
+        perDiem.charges = '';
+    };
     
+    $scope.copyPerDiem = function(targetPerDiem, sourcePerDiem) {
+        targetPerDiem.projectId = sourcePerDiem.projectId;
+        targetPerDiem.travelExpensesRateId = sourcePerDiem.travelExpensesRateId;
+        targetPerDiem.fullTime = sourcePerDiem.fullTime;
+        targetPerDiem.inServiceFrom = sourcePerDiem.inServiceFrom;
+        targetPerDiem.inServiceTo = sourcePerDiem.inServiceTo;
+        targetPerDiem.charges = sourcePerDiem.charges;
+    }
+
     $scope.calcPerDiem = function(perDiem) {
+        perDiem.charges = '';
         var terId = perDiem.travelExpensesRateId;
         var fullTime = perDiem.fullTime;
         if (fullTime) {
             perDiem.charges = $scope.travelExpensesRatesById[terId].rate24h;
+            perDiem.inServiceFrom = '';
+            perDiem.inServiceTo = '';
+        } else {
+            if (perDiem.inServiceFrom != null && perDiem.inServiceTo != null) {
+                var from = perDiem.inServiceFrom.split(':');
+                var to = perDiem.inServiceTo.split(':');
+                var fromMinutes = (parseInt(from[0]) * 60) + (parseInt(from[1]));
+                var toMinutes = (parseInt(to[0]) * 60) + (parseInt(to[1]));
+                var length = (toMinutes - fromMinutes) / 60;
+                if (length >= 14)
+                    perDiem.charges = $scope.travelExpensesRatesById[terId].rateFrom14To24;
+                else if (length > 8 && length <= 14) //TODO >8 or >=8?
+                    perDiem.charges = $scope.travelExpensesRatesById[terId].rateFrom8To14;
+                else
+                    perDiem.charges = '';
+            }
+
         }
-        
+
     };
 
     $scope.sendToServer = function() {
@@ -104,6 +142,7 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
             $scope.perDiemsData = data;
         });
     };
+
 }
 
 

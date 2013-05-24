@@ -1,0 +1,43 @@
+
+
+/* PER DIEMS */
+/* ========= */
+.per-diems input[type="time"] {
+    width: 60px;
+}
+
+.per-diems .table td {
+    padding-top: 1px;
+    padding-bottom: 1px;
+    vertical-align: middle;
+}
+
+.per-diems select, .per-diems input {
+    margin-bottom: 0px;
+}
+
+.per-diems .pd-action-column {
+    width: 57px;
+}
+
+.per-diems .pd-project-column, .per-diems .pd-destination-column {
+    width: 230px;
+}
+
+.per-diems .pd-from-column, .per-diems .pd-to-column {
+    width: 85px;
+}
+
+.per-diems .pd-date-column {
+    width: 120px;
+}
+
+.per-diems td.pd-date-column {
+    text-align: right;
+}
+
+
+.per-diems td.pd-charges-column {
+    text-align: right;
+}
+
