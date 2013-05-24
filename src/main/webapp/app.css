@@ -24,6 +24,10 @@
     width: 230px;
 }
 
+.per-diems .pd-fulltime-column {
+    width: 15px;
+}
+
 .per-diems .pd-from-column, .per-diems .pd-to-column {
     width: 85px;
 }
