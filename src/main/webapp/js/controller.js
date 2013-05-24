@@ -67,6 +67,7 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
     $http.get(serviceURL).success(function(data) {
         console.log(data);
         $scope.perDiemsData = data;
+        calcSum();
 
 
     });
@@ -75,7 +76,6 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
     //FIXME cache
     $scope.travelExpensesRatesById = {};
     $http.get(serviceBaseUrl + 'per-diem/travel-expenses-rates').success(function(data) {
-        console.log(data);
         $scope.travelExpensesRates = data;
         $.map(data, function(entry) { //use also as map object;
             $scope.travelExpensesRatesById[entry.id] = entry;
@@ -89,13 +89,13 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
 
     $scope.removePerDiem = function(perDiem) {
         perDiem.projectId = '';
-        perDiem.travelExpensesRateId = '';        
+        perDiem.travelExpensesRateId = '';
         perDiem.fullTime = '';
         perDiem.inServiceFrom = '';
         perDiem.inServiceTo = '';
         perDiem.charges = '';
     };
-    
+
     $scope.copyPerDiem = function(targetPerDiem, sourcePerDiem) {
         targetPerDiem.projectId = sourcePerDiem.projectId;
         targetPerDiem.travelExpensesRateId = sourcePerDiem.travelExpensesRateId;
@@ -114,7 +114,7 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
             perDiem.inServiceFrom = '';
             perDiem.inServiceTo = '';
         } else {
-            if (perDiem.inServiceFrom != null && perDiem.inServiceTo != null) {
+            if (perDiem.inServiceFrom !== null && perDiem.inServiceTo !== null) {
                 var from = perDiem.inServiceFrom.split(':');
                 var to = perDiem.inServiceTo.split(':');
                 var fromMinutes = (parseInt(from[0]) * 60) + (parseInt(from[1]));
@@ -129,7 +129,16 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
             }
 
         }
-
+        calcSum();
+        
+    };
+    
+    var calcSum = function() {
+         var sum = 0;
+        angular.forEach($scope.perDiemsData.perDiems, function(value, key) {
+            if (angular.isNumber(value.charges)) sum += value.charges;
+        });
+        $scope.perDiemsData.sum = sum;
     };
 
     $scope.sendToServer = function() {
