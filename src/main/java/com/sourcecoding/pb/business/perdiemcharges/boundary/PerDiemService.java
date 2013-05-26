@@ -74,6 +74,7 @@ public class PerDiemService {
             PerDiem pd = pdEntities.get(day);
             if (charges == 0) {
                 if (pd != null) {
+                    em.remove(pd);
                     cm.getPerDiems().remove(pd);
                 }
                 continue;
@@ -90,7 +91,11 @@ public class PerDiemService {
             String inServiceFrom = String.valueOf(pdJson.get("inServiceFrom"));
             String inServiceTo = String.valueOf(pdJson.get("inServiceTo"));
 
-            pd.setFulltime((Boolean) pdJson.get("fullTime"));
+            System.out.println("fullTime: " + pdJson.get("fullTime"));
+            Object ftObj = pdJson.get("fullTime");
+            if (String.valueOf(ftObj).isEmpty()) pdJson.put("fullTime", false);
+            
+            pd.setFulltime((Boolean)pdJson.get("fullTime"));
 
             String projectId = String.valueOf(pdJson.get("projectId"));
             pd.setProject(em.find(ProjectInformation.class, Long.valueOf(projectId)));

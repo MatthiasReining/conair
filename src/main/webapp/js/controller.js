@@ -1,6 +1,6 @@
 'use strict';
 
-var individualId = '4';
+var individualId;
 
 var serviceBaseUrl = 'http://localhost:8080/project-business-time-recording/rest/';
 
@@ -94,6 +94,8 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
         perDiem.inServiceFrom = '';
         perDiem.inServiceTo = '';
         perDiem.charges = '';
+        
+        calcSum();
     };
 
     $scope.copyPerDiem = function(targetPerDiem, sourcePerDiem) {
@@ -103,6 +105,8 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
         targetPerDiem.inServiceFrom = sourcePerDiem.inServiceFrom;
         targetPerDiem.inServiceTo = sourcePerDiem.inServiceTo;
         targetPerDiem.charges = sourcePerDiem.charges;
+        
+        calcSum();
     }
 
     $scope.calcPerDiem = function(perDiem) {
@@ -130,13 +134,14 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
 
         }
         calcSum();
-        
+
     };
-    
+
     var calcSum = function() {
-         var sum = 0;
+        var sum = 0;
         angular.forEach($scope.perDiemsData.perDiems, function(value, key) {
-            if (angular.isNumber(value.charges)) sum += value.charges;
+            if (angular.isNumber(value.charges))
+                sum += value.charges;
         });
         $scope.perDiemsData.sum = sum;
     };

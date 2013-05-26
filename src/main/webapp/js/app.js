@@ -26,8 +26,10 @@ function datepicker2model(e, $scope) {
 ;
 
 
-angular.module('pbtr', []).
-        config(['$routeProvider', function($routeProvider) {
+var app = angular.module('pbtr', []);
+
+app.config(['$routeProvider', function($routeProvider, $http) {
+
         $routeProvider.
                 when('/projects', {templateUrl: 'snippets/project-list.html', controller: ProjectListCtrl}).
                 when('/projects/:projectKey', {templateUrl: 'snippets/project.html', controller: ProjectCtrl}).
@@ -37,11 +39,20 @@ angular.module('pbtr', []).
                 when('/travel-costs', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
                 otherwise({redirectTo: '/projects'});
 
-        
+
     }]);
 
-
-
+app.run(['$http', '$rootScope', function($http, $rootScope) {
+        $http.get(serviceBaseUrl + 'auth').success(function(data) {
+            console.log(data);
+            $rootScope.user = data;
+            individualId = $rootScope.user.id;
+        }).error(function(data, status){
+            console.log(data);
+            console.log(status);
+            window.location = "login.html";
+        });
+    }]);
 
 var selectCurrentNavi = function(page) {
     $('.navi li').removeClass('current');

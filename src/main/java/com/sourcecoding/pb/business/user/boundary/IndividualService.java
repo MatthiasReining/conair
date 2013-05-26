@@ -5,6 +5,7 @@
 package com.sourcecoding.pb.business.user.boundary;
 
 import com.sourcecoding.pb.business.user.entity.Individual;
+import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -15,6 +16,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -32,19 +34,21 @@ public class IndividualService {
 
     @PUT
     @Path("{nickname}")
-    public Individual createOrUpdate(@PathParam("nickname") String nickname) {
+    public Individual createOrUpdate(@PathParam("nickname") String nickname, @QueryParam("linkedInId") String linkedinId) {
 
         List<Individual> iList = em.createNamedQuery(Individual.findByNickname, Individual.class)
-                .setParameter(Individual.findByNickname_Param_nickname, nickname)
+                .setParameter(Individual.queryParam_nickname, nickname)
                 .getResultList();
         Individual individual;
 
         if (iList.isEmpty()) {
             individual = new Individual();
             individual.setNickname(nickname);
+            individual.setLinkedInId(linkedinId);
             individual = em.merge(individual);
         } else {
             individual = iList.get(0);
+            individual.setLinkedInId(linkedinId);
         }
 
         return individual;
@@ -54,7 +58,7 @@ public class IndividualService {
     @Path("{nickname}")
     public Individual read(@PathParam("nickname") String nickname) {
         return em.createNamedQuery(Individual.findByNickname, Individual.class)
-                .setParameter(Individual.findByNickname_Param_nickname, nickname)
+                .setParameter(Individual.queryParam_nickname, nickname)
                 .getSingleResult();
     }
     
@@ -62,5 +66,18 @@ public class IndividualService {
     public List<Individual> getAll() {
          return em.createNamedQuery(Individual.findAll, Individual.class)
                 .getResultList();
+    }
+    
+    public Individual loginBySocialNetId(String socialNetId) {
+        List<Individual> result = em.createNamedQuery(Individual.findByLinkedInId, Individual.class)
+                .setParameter(Individual.queryParam_socialNetId, socialNetId)
+                .getResultList();
+        if (result.size() != 1) {
+            return null;
+        }
+        Individual individual = result.get(0);        
+        individual.setLastLogin(new Date());
+        
+        return individual;
     }
 }

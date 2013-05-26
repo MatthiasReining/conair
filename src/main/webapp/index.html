@@ -109,7 +109,8 @@
                         <ul class="nav pull-right">
                             <li class="dropdown pull-right">            
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                    <img src="img/user.jpg" alt="" class="nav-user-pic" /> Admin <b class="caret"></b>              
+                                    <img class="nav-user-pic" data-ng-src="{{user.pictureUrl}}" src/>
+                                    {{user.firstName}} <b class="caret"></b>              
                                 </a>
 
                                 <!-- Dropdown menu -->
@@ -128,7 +129,7 @@
                 </div>
             </div>
         </div>
-
+-
 
         <!-- Main content starts -->
 

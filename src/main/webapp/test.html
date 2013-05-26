@@ -1,0 +1,42 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="js/lib/jquery-1.9.1.min.js"></script> <!-- jQuery -->
+
+        <script type="text/javascript" src="http://platform.linkedin.com/in.js">
+            api_key: wbnjnfub9nob
+            onLoad: onLinkedInLoad
+            authorize: false
+        </script>
+
+
+        <script>
+            function onLinkedInAuth() {
+                IN.API.Profile("me").result( function(me) {
+                    var id = me.values[0].id;
+                    // AJAX call to pass back id to your server
+                    console.log(me);
+                });
+            }            
+        </script>
+
+    </head>
+    <body>
+        <div>TODO write content</div>
+
+        <hr>
+        <script type="IN/Login" data-onAuth="onLinkedInAuth"></script>
+
+
+
+        <hr>
+        
+        <button onclick="IN.UI.Authorize().place();">test-xxx</button>
+    </body>
+</html>

@@ -42,15 +42,15 @@ public class InitalizeSystem {
     @Test
     public void run() {
 
-        createIndividual("Mike");
-        createIndividual("Susan");
-        createIndividual("Lynette");
-        createIndividual("Tom");
+        createIndividual("Pierre", "");
+        createIndividual("Susan", "");
+        createIndividual("Lynette", "");
+        createIndividual("Matthias", "P1ExxuV6JL");
 
         createProject("E227", "DirektLine Deutschland", "Analyse", "Entwicklung");
         createProject("E118", "VIG", "Sprint 1", "Sprint 2", "Sprint 3", "Sprint 4", "Sprint 5", "Sprint 6");
 
-        Individual tom = getIndividual("Tom");
+        Individual tom = getIndividual("Matthias");
         ProjectInformation e227 = getProject("E227");
         WorkPackage e227Analyse = e227.getWorkPackages().toArray(new WorkPackage[]{})[0];
         WorkPackage e227Entwicklung = e227.getWorkPackages().toArray(new WorkPackage[]{})[1];
@@ -66,9 +66,10 @@ public class InitalizeSystem {
 
     }
 
-    protected Individual createIndividual(String nickname) throws UniformInterfaceException, ClientHandlerException {
+    protected Individual createIndividual(String nickname, String linkedInId) throws UniformInterfaceException, ClientHandlerException {
         ClientResponse cr = webResource.path("individuals")
                 .path(nickname)
+                .queryParam("linkedInId", linkedInId)
                 .type("application/json")
                 .accept("application/json")
                 .put(ClientResponse.class);
