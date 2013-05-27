@@ -49,12 +49,13 @@ public class PerDiemService {
             @PathParam("individualId") Long individualId,
             @PathParam("year") String year, @PathParam("month") String month, Map<String, Object> chargesDTMap) {
         String byMonth = year + "-" + month;
+        Individual individual = em.find(Individual.class, individualId);
 
         ChargesMonth cm = getChargesMonth(individualId, byMonth);
         if (cm == null) {
             cm = new ChargesMonth();
             cm.setChargesMonth(byMonth);
-            cm.setIndividual(em.find(Individual.class, individualId));
+            cm.setIndividual(individual);
             cm.setChargesState("OK");
             cm.setPerDiems(new ArrayList<PerDiem>());
         }
@@ -84,6 +85,7 @@ public class PerDiemService {
                 cm.getPerDiems().add(pd);
                 pd.setChargesMonth(cm);
                 pd.setPerDiemDate(DateParameter.valueOf(day));
+                pd.setIndividual(individual);
             }
 
             pd.setCharges(new BigDecimal(charges));

@@ -54,9 +54,9 @@ public class UserFactory implements Serializable {
     public void loginUser(User user) {
         Individual individual = individualService.loginBySocialNetId(user.getSocialNetId());
         if (individual == null) {
-            //throw new SecurityException("User " + user.getFirstName() + " " + user.getLastName() + " has no account on this platform! Please contact platform admin.");
-            individual = new Individual();
-            individual.setId(123L);
+            throw new SecurityException("User " + user.getFirstName() + " " + user.getLastName() + "(social net id: " + user.getSocialNetId() + ") has no account on this platform! Please contact the platform admin.");
+            //individual = new Individual();
+            //individual.setId(123L);
                     
         }
         user.setId(String.valueOf(individual.getId()));

@@ -1,7 +1,5 @@
 'use strict';
 
-var individualId;
-
 var serviceBaseUrl = 'http://localhost:8080/project-business-time-recording/rest/';
 
 function NaviCtrl($scope, $location) {
@@ -61,15 +59,13 @@ function PerDiemsSelectorCtrl($scope, $http) {
 
 }
 
-function PerDiemsCtrl($scope, $routeParams, $http) {
-    var serviceURL = serviceBaseUrl + 'per-diem/' + individualId + '/' + $routeParams.yearMonth;
+function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
+     var serviceURL = serviceBaseUrl + 'per-diem/' + $rootScope.user.id + '/' + $routeParams.yearMonth;
 
     $http.get(serviceURL).success(function(data) {
         console.log(data);
         $scope.perDiemsData = data;
         calcSum();
-
-
     });
 
     //load destination list
@@ -154,6 +150,7 @@ function PerDiemsCtrl($scope, $routeParams, $http) {
             console.log('<--fromServer');
             console.log(data);
             $scope.perDiemsData = data;
+            calcSum();
         });
     };
 

@@ -6,13 +6,8 @@ package com.sourcecoding.pb.business.authentication.boundary;
 
 import com.sourcecoding.pb.business.authentication.controller.UserFactory;
 import com.sourcecoding.pb.business.authentication.entity.User;
-import com.sourcecoding.pb.business.user.boundary.IndividualService;
-import com.sourcecoding.pb.business.user.entity.Individual;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.ejb.Stateless;
-import javax.enterprise.context.RequestScoped;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

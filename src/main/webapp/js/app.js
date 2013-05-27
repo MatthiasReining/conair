@@ -28,7 +28,7 @@ function datepicker2model(e, $scope) {
 
 var app = angular.module('pbtr', []);
 
-app.config(['$routeProvider', function($routeProvider, $http) {
+app.config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.
                 when('/projects', {templateUrl: 'snippets/project-list.html', controller: ProjectListCtrl}).
@@ -38,16 +38,13 @@ app.config(['$routeProvider', function($routeProvider, $http) {
                 when('/per-diems/:yearMonth', {templateUrl: 'snippets/per-diems.html', controller: PerDiemsCtrl}).
                 when('/travel-costs', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
                 otherwise({redirectTo: '/projects'});
-
-
     }]);
 
 app.run(['$http', '$rootScope', function($http, $rootScope) {
         $http.get(serviceBaseUrl + 'auth').success(function(data) {
             console.log(data);
             $rootScope.user = data;
-            individualId = $rootScope.user.id;
-        }).error(function(data, status){
+        }).error(function(data, status) {
             console.log(data);
             console.log(status);
             window.location = "login.html";
