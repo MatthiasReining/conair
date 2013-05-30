@@ -1,5 +1,6 @@
 'use strict';
 
+var user;
 
 String.prototype.right = function(length) {
     var str = this;
@@ -41,14 +42,8 @@ app.config(['$routeProvider', function($routeProvider) {
     }]);
 
 app.run(['$http', '$rootScope', function($http, $rootScope) {
-        $http.get(serviceBaseUrl + 'auth').success(function(data) {
-            console.log(data);
-            $rootScope.user = data;
-        }).error(function(data, status) {
-            console.log(data);
-            console.log(status);
-            window.location = "login.html";
-        });
+        console.log('in run');
+        $rootScope.user = user;
     }]);
 
 var selectCurrentNavi = function(page) {
@@ -60,3 +55,28 @@ var selectCurrentNavi = function(page) {
         }
     });
 };
+
+
+/**
+ * Bootstraping
+ * @returns {undefined}
+ */
+// Handler for .ready() called.
+angular.element(document).ready(function() {
+
+
+    console.log("start..");
+    $.get(serviceBaseUrl + 'auth', {
+        'cache': false
+    }).done(function(data) {
+        console.log("auth done..");
+        user = data;
+        angular.bootstrap(document, ['pbtr']);
+    }).error(function(data, status) {
+        console.log("auth error.. " + status);
+        window.location = "login.html";
+    });
+
+
+});
+    
