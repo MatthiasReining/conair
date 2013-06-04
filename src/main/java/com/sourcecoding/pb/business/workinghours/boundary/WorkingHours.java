@@ -13,6 +13,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -46,7 +47,7 @@ public class WorkingHours {
 
     @GET
     @Path("{individualId}/current-range/{weeks}")
-    public Response getCurrentWorkingHours(@PathParam("individualId") Long individualId, @PathParam("weeks") int weeks) {
+    public Map<String, Object> getCurrentWorkingHours(@PathParam("individualId") Long individualId, @PathParam("weeks") int weeks) {
 
         Calendar c = Calendar.getInstance();
         int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
@@ -64,7 +65,7 @@ public class WorkingHours {
 
     @GET
     @Path("{individualId}/range")
-    public Response getWorkingHoursWithRange(
+    public Map<String, Object> getWorkingHoursWithRange(
             @PathParam("individualId") Long individualId,
             @QueryParam("qStart") String qStart,
             @QueryParam("qEnd") String qEnd) {
@@ -73,9 +74,8 @@ public class WorkingHours {
         Date until = DateParameter.valueOf(qEnd);
 
         List<WorkingDay> entites = trl.getWorkingTimePackage(individualId, from, until);
-
-        String json = jsonMapPersister.buildWorkingTimePackage(entites);
-        return Response.ok(json, MediaType.APPLICATION_JSON).build();
+        
+        return jsonMapPersister.buildWorkingTimePackage(entites, from, until, individualId);
     }
 
     @PUT

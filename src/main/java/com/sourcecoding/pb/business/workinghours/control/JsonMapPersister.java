@@ -4,6 +4,7 @@
  */
 package com.sourcecoding.pb.business.workinghours.control;
 
+import com.sourcecoding.pb.business.authentication.entity.User;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
@@ -11,8 +12,8 @@ import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sourcecoding.pb.business.workinghours.entity.WorkPackageDescription;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingTime;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,6 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
-import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  *
@@ -47,77 +47,60 @@ public class JsonMapPersister {
 
     }
 
-    public String buildWorkingTimePackage(List<WorkingDay> workingDayList) {
+    public Map<String, Object> buildWorkingTimePackage(List<WorkingDay> workingDayList, Date fromDate, Date untilDate, Long individualId) {
 
         Map<String, Object> content = new HashMap<>();
 
-        Map<Long, Map<String, Object>> outputWorkPackageDescription = new HashMap<>();
-        Map<Long, Map<String, Object>> outputWorkPackage = new HashMap<>();
-        Map<Long, Map<String, Object>> outputProjectInformation = new HashMap<>();
+        //uaerId
+        content.put("userId", individualId);
 
-        Map<String, Map<String, Object>> outputWorkingDay = new HashMap<>();
+        //date range        
+        Map<String, Integer> wdr = new HashMap<>();
+        content.put("workingDayRange", wdr);
+        Calendar from = Calendar.getInstance();
+        from.setTime(fromDate);
+        Calendar until = Calendar.getInstance();
+        until.setTime(untilDate);
+        while (from.before(until)) {
+            wdr.put(DateParameter.valueOf(from), 0);
+            from.add(Calendar.DATE, 1);
+        }
 
+        //workingHours        
+        List<Map<String, Object>> workingHours = new ArrayList<>();
+        content.put("workingHours", workingHours);
+
+        Map<WorkPackageDescription, Map<String, Integer>> daysByWpd = new HashMap<>();
 
         for (WorkingDay wd : workingDayList) {
-
-            Map<String, Object> data;
-            Map<String, Object> wdData = new HashMap<>();
-
             String workingDay = DateParameter.valueOf(wd.getWorkingDay());
 
-            wdData.put("state", wd.getStatus());
-            wdData.put("workingTimeByDescriptionId", new HashMap<String, Integer>());
-            outputWorkingDay.put(workingDay, wdData);
+            //set working day status
+            wdr.put(workingDay, wd.getStatus());
 
             for (WorkingTime wt : wd.getWorkingTimeList()) {
+                Long wpdId = wt.getWorkPackageDescription().getId();
 
-                Map<String, Integer> wtTimeByDescrIdMap = (Map<String, Integer>) wdData.get("workingTimeByDescriptionId");
-                wtTimeByDescrIdMap.put(String.valueOf(wt.getWorkPackageDescription().getId()), wt.getWorkingTime());
-
-                WorkPackageDescription wpDescr = wt.getWorkPackageDescription();
-                if (!outputWorkPackageDescription.containsKey(wpDescr.getId())) {
-                    data = new HashMap<>();
-                    data.put("id", wpDescr.getId());
-                    data.put("description", wpDescr.getDescription());
-                    data.put("wpId", wpDescr.getWorkPackage().getId());
-                    outputWorkPackageDescription.put(wpDescr.getId(), data);
+                if (!daysByWpd.containsKey(wt.getWorkPackageDescription())) {
+                    daysByWpd.put(wt.getWorkPackageDescription(), new HashMap<String, Integer>());
                 }
-
-                WorkPackage wp = wpDescr.getWorkPackage();
-                if (!outputWorkPackage.containsKey(wp.getId())) {
-                    data = new HashMap<>();
-                    data.put("id", wp.getId());
-                    data.put("name", wp.getWpName());
-                    data.put("projectId", wp.getProjectInformation().getId());
-                    outputWorkPackage.put(wp.getId(), data);
-                }
-
-                ProjectInformation pi = wp.getProjectInformation();
-                if (!outputWorkPackage.containsKey(pi.getId())) {
-                    data = new HashMap<>();
-                    data.put("id", pi.getId());
-                    data.put("key", pi.getProjectKey());
-                    data.put("name", pi.getName());
-                    outputProjectInformation.put(pi.getId(), data);
-                }
+                Map<String, Integer> days = daysByWpd.get(wt.getWorkPackageDescription());
+                days.put(workingDay, wt.getWorkingTime());
             }
-
         }
 
-        content.put("workPackageDescription", outputWorkPackageDescription);
-        content.put("workPackage", outputWorkPackage);
-        content.put("projectInformation", outputProjectInformation);
+        for (Map.Entry<WorkPackageDescription, Map<String, Integer>> entry : daysByWpd.entrySet()) {
+            WorkPackageDescription wpd = entry.getKey();
+            Map<String, Object> workingHour = new HashMap<>();
+            workingHour.put("projectId", wpd.getWorkPackage().getProjectInformation().getId());
+            workingHour.put("workPackageId", wpd.getWorkPackage().getId());
+            workingHour.put("description", wpd.getDescription());
+            workingHour.put("days", entry.getValue());
 
-        content.put("workDayList", outputWorkingDay);
-
-
-        ObjectMapper mapper = new ObjectMapper();
-
-        try {
-            return mapper.writeValueAsString(content);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            workingHours.add(workingHour);
         }
+
+        return content;
     }
 
     private Map<String, WorkPackageDescription> createWorkPackageDescriptionEntityMap(Map<String, Object> workPackageDescriptionMap) {

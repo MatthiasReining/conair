@@ -9,7 +9,6 @@ import com.sourcecoding.pb.business.authentication.entity.User;
 import com.sourcecoding.pb.business.user.boundary.IndividualService;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import java.io.Serializable;
-import javax.enterprise.context.Dependent;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
@@ -59,7 +58,7 @@ public class UserFactory implements Serializable {
             //individual.setId(123L);
                     
         }
-        user.setId(String.valueOf(individual.getId()));
+        user.setId(individual.getId());
 
 
         System.out.println("userFactory#oginUser: " + this);

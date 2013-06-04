@@ -15,7 +15,7 @@ public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
 
-    private String id;
+    private Long id;
     private String socialNetId;
     private String firstName;
     private String lastName;
@@ -63,11 +63,11 @@ public class User implements Serializable {
         this.lastLoginTime = lastLoginTime;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

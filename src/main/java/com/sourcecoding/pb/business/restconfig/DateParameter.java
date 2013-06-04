@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -30,6 +31,11 @@ public class DateParameter implements Serializable {
     public static String valueOf(Date date) {
         if (date == null) return "";
         return DATE_FORMAT.format(date);
+    }
+    
+    public static String valueOf(Calendar date) {
+        if (date == null) return "";
+        return DATE_FORMAT.format(date.getTime());
     }
     
 }
