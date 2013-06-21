@@ -32,7 +32,7 @@ import javax.persistence.TemporalType;
 public class WorkingDay implements Serializable {
 
     public static final String findWorkingDayRange = "WorkingDay.findWorkingDayRange";
-    public static final String findWorkingDayForUser = "WorkingDay.findWorkingDayByUser";
+    public static final String findWorkingDayForUser = "WorkingDay.findWorkingDayForUser";
     
     public static final String queryParam_user = "user";
     public static final String queryParam_startDate = "startDate";

@@ -48,3 +48,12 @@
 .per-diems-selector .row-fluid .show-grid a div {
     margin: 5px;
 }
+
+/* TIME RECODRING */
+/* ============== */
+
+.tr-workingHour {
+    width: 27px;
+    text-align: right;
+}
+ 

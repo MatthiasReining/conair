@@ -6,16 +6,20 @@ package com.sourcecoding.pb.business.timerecording.boundary;
 
 import com.sourcecoding.pb.business.authentication.boundary.CurrentUser;
 import com.sourcecoding.pb.business.authentication.entity.User;
+import com.sourcecoding.pb.business.project.entity.ProjectInformation;
+import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sourcecoding.pb.business.workinghours.control.JsonMapPersister;
 import com.sourcecoding.pb.business.workinghours.control.TimeRecordingLoader;
+import com.sourcecoding.pb.business.workinghours.entity.WorkPackageDescription;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingTime;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -49,7 +53,7 @@ public class TimeRecordingService {
     TimeRecordingLoader trl;
     @Inject
     @CurrentUser
-    User user;
+    User currentUser;
     @PersistenceContext
     EntityManager em;
 
@@ -58,7 +62,7 @@ public class TimeRecordingService {
     public Map<String, Object> getCurrentWorkingHours(@PathParam("weeks") int weeks, @QueryParam("individualId") Long individualId) {
 
         if (individualId == null) {
-            individualId = user.getId();
+            individualId = currentUser.getId();
         }
 
         Calendar c = Calendar.getInstance();
@@ -83,7 +87,7 @@ public class TimeRecordingService {
             @QueryParam("qEnd") String qEnd) {
 
         if (individualId == null) {
-            individualId = user.getId();
+            individualId = currentUser.getId();
         }
 
 
@@ -104,18 +108,27 @@ public class TimeRecordingService {
 
         Individual user = em.find(Individual.class, userId);
 
+        Map<WorkingTime, Boolean> wt2Remove = new HashMap<>();
+
         List<Map<String, Object>> workingHours = (List<Map<String, Object>>) payload.get("workingHours");
+        System.out.println("workingHours:" + workingHours);
         for (Map<String, Object> workingHour : workingHours) {
             Long projectId = ((Integer) workingHour.get("projectId")).longValue();
             Long workPackageId = ((Integer) workingHour.get("workPackageId")).longValue();
             String description = (String) workingHour.get("description");
             Map<String, Integer> days = (Map<String, Integer>) workingHour.get("days");
 
+            WorkPackage workPackage = em.find(WorkPackage.class, workPackageId);
+
+            ProjectInformation projectInformation = em.find(ProjectInformation.class, projectId);
+
             for (Map.Entry<String, Integer> dayEntry : days.entrySet()) {
+                System.out.println("dayEntry: " + dayEntry);
 
                 Date date = DateParameter.valueOf(dayEntry.getKey());
+                Integer workingTimeMinutes = dayEntry.getValue();
 
-                List<WorkingDay> workingDayList = em.createNativeQuery(WorkingDay.findWorkingDayForUser, WorkingDay.class)
+                List<WorkingDay> workingDayList = em.createNamedQuery(WorkingDay.findWorkingDayForUser, WorkingDay.class)
                         .setParameter(WorkingDay.queryParam_user, user)
                         .setParameter(WorkingDay.queryParam_date, date)
                         .getResultList();
@@ -128,17 +141,73 @@ public class TimeRecordingService {
                 } else {
                     workingDay = workingDayList.get(0);
                 }
-                
+
                 //FIXME set status workingDay.setStatus();
-                
+
                 List<WorkingTime> workingTimeList = workingDay.getWorkingTimeList();
-                if (workingTimeList == null) workingTimeList = new ArrayList<>();
-                
+                if (workingTimeList == null) {
+                    workingTimeList = new ArrayList<>();
+                    workingDay.setWorkingTimeList(workingTimeList);
+                }
+
+                //check existing
+                boolean alreadyWorkedOff = false;
+                for (WorkingTime wt : workingTimeList) {
+                    if (!wt2Remove.containsKey(wt)) {
+                        wt2Remove.put(wt, true);
+                    }
+                    System.out.println("descr: " + description + "   -> " + wt.getWorkPackageDescription());
+                    if (description.equals(wt.getWorkPackageDescription().getDescription())) {
+                        wt.setWorkingTime(workingTimeMinutes);
+                        wt2Remove.put(wt, false);
+                        alreadyWorkedOff = true;
+                    }
+                }
+
+                if (alreadyWorkedOff) {
+                    continue;
+                }
                 //FIXME hier gehts weiter
+                //create new one
+
+                //search for existing working packages
+                List<WorkPackageDescription> wpdList = em.createNamedQuery(WorkPackageDescription.findByWorkPackageAndDescription, WorkPackageDescription.class)
+                        .setParameter(WorkPackageDescription.findByWorkPackageAndDescription_Param_WorkPackage, workPackage)
+                        .setParameter(WorkPackageDescription.findByWorkPackageAndDescription_Param_Description, description)
+                        .getResultList();
+                WorkPackageDescription wpd;
+                if (wpdList.isEmpty()) {
+                    wpd = new WorkPackageDescription();
+                    wpd.setDescription(description);
+                    wpd.setWorkPackage(workPackage);
+                    wpd = em.merge(wpd);
+                } else {
+                    wpd = wpdList.get(0);
+                }
+
+
+                WorkingTime wt = new WorkingTime();
+                wt.setWorkPackage(workPackage);
+                wt.setWorkingDay(workingDay);
+                wt.setWorkingTime(workingTimeMinutes);
+                wt.setWorkPackageDescription(wpd);
+
+                wt = em.merge(wt);
+                wt2Remove.put(wt, false);
+
+                workingTimeList.add(wt);
 
             }
 
         }
+        //remove not used WorkingTime objects
+        for (Map.Entry<WorkingTime, Boolean> entry2Remove : wt2Remove.entrySet()) {
+            if (entry2Remove.getValue()) {
+                em.remove(entry2Remove.getKey());
+            }
+        }
+
+
         return Response.ok().build();
     }
 }
