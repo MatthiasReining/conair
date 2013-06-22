@@ -47,6 +47,11 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TimeRecordingService {
 
+    private final String PROEJCT_ID = "projectId";
+    private final String WORKPACKAGE_ID = "workPackageId";
+    private final String DESCRIPTION = "description";
+    private final String DAYS = "days";
+    private final String WORKING_TIME_MINUTES = "workingTimeMinutes";
     @Inject
     JsonMapPersister jsonMapPersister;
     @Inject
@@ -103,74 +108,58 @@ public class TimeRecordingService {
 
     @PUT
     public Response udpateTimeRecording(Map<String, Object> payload) {
+
         Long userId = ((Integer) payload.get("userId")).longValue();
         System.out.println(userId);
 
         Individual user = em.find(Individual.class, userId);
-
-        Map<WorkingTime, Boolean> wt2Remove = new HashMap<>();
-
         List<Map<String, Object>> workingHours = (List<Map<String, Object>>) payload.get("workingHours");
         System.out.println("workingHours:" + workingHours);
-        for (Map<String, Object> workingHour : workingHours) {
-            Long projectId = ((Integer) workingHour.get("projectId")).longValue();
-            Long workPackageId = ((Integer) workingHour.get("workPackageId")).longValue();
-            String description = (String) workingHour.get("description");
-            Map<String, Integer> days = (Map<String, Integer>) workingHour.get("days");
 
-            WorkPackage workPackage = em.find(WorkPackage.class, workPackageId);
+        //Map for date -> key -> values
+        Map<Date, Map<String, Map<String, Object>>> workingTimeByDate = convertToWorkingTimeByDate(workingHours);
 
-            ProjectInformation projectInformation = em.find(ProjectInformation.class, projectId);
+        for (Map.Entry<Date, Map<String, Map<String, Object>>> entry : workingTimeByDate.entrySet()) {
 
-            for (Map.Entry<String, Integer> dayEntry : days.entrySet()) {
-                System.out.println("dayEntry: " + dayEntry);
+            Date date = entry.getKey();
+            Map<String, Map<String, Object>> keyObj = entry.getValue();
 
-                Date date = DateParameter.valueOf(dayEntry.getKey());
-                Integer workingTimeMinutes = dayEntry.getValue();
+            WorkingDay workingDay = getManagedWorkingDay(user, date);
 
-                List<WorkingDay> workingDayList = em.createNamedQuery(WorkingDay.findWorkingDayForUser, WorkingDay.class)
-                        .setParameter(WorkingDay.queryParam_user, user)
-                        .setParameter(WorkingDay.queryParam_date, date)
-                        .getResultList();
-                WorkingDay workingDay;
-                if (workingDayList.isEmpty()) {
-                    workingDay = new WorkingDay();
-                    workingDay.setUser(user);
-                    workingDay.setWorkingDay(date);
-                    workingDay = em.merge(workingDay);
+            if (workingDay.getWorkingTimeList() == null) {
+                workingDay.setWorkingTimeList(new ArrayList<WorkingTime>());
+            }
+
+            //modify and remove existing objects
+            List<WorkingTime> wtObjects2Remove = new ArrayList<>();
+            for (WorkingTime workingTime : workingDay.getWorkingTimeList()) {
+                String mangagedKey = workingTime.getWorkPackage().getId() + "-" + workingTime.getWorkPackageDescription().getDescription();
+
+                Map<String, Object> workingTimeMap = keyObj.get(mangagedKey);
+                if (workingTimeMap == null) {
+                    wtObjects2Remove.add(workingTime);
                 } else {
-                    workingDay = workingDayList.get(0);
+                    workingTime.setWorkingTime((Integer) workingTimeMap.get(WORKING_TIME_MINUTES));
+                    //remove updated value from map
+                    keyObj.remove(mangagedKey);
                 }
+            }
+            for (WorkingTime workingTime : wtObjects2Remove) {
+                em.remove(workingTime);
+            }
 
-                //FIXME set status workingDay.setStatus();
 
-                List<WorkingTime> workingTimeList = workingDay.getWorkingTimeList();
-                if (workingTimeList == null) {
-                    workingTimeList = new ArrayList<>();
-                    workingDay.setWorkingTimeList(workingTimeList);
-                }
+            //add new workingtime
+            for (Map.Entry<String, Map<String, Object>> wtListMap : keyObj.entrySet()) {
+                Map<String, Object> wtMap = wtListMap.getValue();
 
-                //check existing
-                boolean alreadyWorkedOff = false;
-                for (WorkingTime wt : workingTimeList) {
-                    if (!wt2Remove.containsKey(wt)) {
-                        wt2Remove.put(wt, true);
-                    }
-                    System.out.println("descr: " + description + "   -> " + wt.getWorkPackageDescription());
-                    if (description.equals(wt.getWorkPackageDescription().getDescription())) {
-                        wt.setWorkingTime(workingTimeMinutes);
-                        wt2Remove.put(wt, false);
-                        alreadyWorkedOff = true;
-                    }
-                }
 
-                if (alreadyWorkedOff) {
-                    continue;
-                }
-                //FIXME hier gehts weiter
-                //create new one
+                Long workPackageId = (Long) wtMap.get(WORKPACKAGE_ID);
+                String description = (String) wtMap.get(DESCRIPTION);
+                Integer workingTimeMinutes = (Integer) wtMap.get(WORKING_TIME_MINUTES);
 
-                //search for existing working packages
+                WorkPackage workPackage = em.find(WorkPackage.class, workPackageId);
+                //search for existing working package descriptions
                 List<WorkPackageDescription> wpdList = em.createNamedQuery(WorkPackageDescription.findByWorkPackageAndDescription, WorkPackageDescription.class)
                         .setParameter(WorkPackageDescription.findByWorkPackageAndDescription_Param_WorkPackage, workPackage)
                         .setParameter(WorkPackageDescription.findByWorkPackageAndDescription_Param_Description, description)
@@ -185,7 +174,6 @@ public class TimeRecordingService {
                     wpd = wpdList.get(0);
                 }
 
-
                 WorkingTime wt = new WorkingTime();
                 wt.setWorkPackage(workPackage);
                 wt.setWorkingDay(workingDay);
@@ -193,21 +181,72 @@ public class TimeRecordingService {
                 wt.setWorkPackageDescription(wpd);
 
                 wt = em.merge(wt);
-                wt2Remove.put(wt, false);
 
-                workingTimeList.add(wt);
+                workingDay.getWorkingTimeList().add(wt);
 
             }
 
-        }
-        //remove not used WorkingTime objects
-        for (Map.Entry<WorkingTime, Boolean> entry2Remove : wt2Remove.entrySet()) {
-            if (entry2Remove.getValue()) {
-                em.remove(entry2Remove.getKey());
-            }
-        }
 
+        }
 
         return Response.ok().build();
+    }
+
+    private Map<Date, Map<String, Map<String, Object>>> convertToWorkingTimeByDate(List<Map<String, Object>> workingHours) {
+        //Map for date -> key -> values
+        Map<Date, Map<String, Map<String, Object>>> workingTimeByDate = new HashMap<>();
+
+        for (Map<String, Object> workingHour : workingHours) {
+            Long projectId = ((Integer) workingHour.get(PROEJCT_ID)).longValue();
+            Long workPackageId = ((Integer) workingHour.get(WORKPACKAGE_ID)).longValue();
+            String description = (String) workingHour.get(DESCRIPTION);
+            Map<String, Integer> days = (Map<String, Integer>) workingHour.get(DAYS);
+            String key = workPackageId + "-" + description;
+
+            for (Map.Entry<String, Integer> dayEntry : days.entrySet()) {
+                System.out.println("dayEntry: " + dayEntry);
+                Date date = DateParameter.valueOf(dayEntry.getKey());
+                Integer workingTimeMinutes = dayEntry.getValue();
+
+                if (workingTimeMinutes == null || workingTimeMinutes == 0) {
+                    continue;
+                }
+
+                Map<String, Map<String, Object>> dateData = workingTimeByDate.get(date);
+                if (dateData == null) {
+                    dateData = new HashMap<>();
+                    workingTimeByDate.put(date, dateData);
+                }
+                Map<String, Object> keyData = dateData.get(key);
+                if (keyData == null) {
+                    keyData = new HashMap<>();
+                    dateData.put(key, keyData);
+                }
+
+                keyData.put(WORKING_TIME_MINUTES, workingTimeMinutes);
+                keyData.put(PROEJCT_ID, projectId);
+                keyData.put(WORKPACKAGE_ID, workPackageId);
+                keyData.put(DESCRIPTION, description);
+
+            }
+        }
+        return workingTimeByDate;
+    }
+
+    private WorkingDay getManagedWorkingDay(Individual user, Date date) {
+        List<WorkingDay> workingDayList = em.createNamedQuery(WorkingDay.findWorkingDayForUser, WorkingDay.class)
+                .setParameter(WorkingDay.queryParam_user, user)
+                .setParameter(WorkingDay.queryParam_date, date)
+                .getResultList();
+        WorkingDay workingDay;
+        if (workingDayList.isEmpty()) {
+            workingDay = new WorkingDay();
+            workingDay.setUser(user);
+            workingDay.setWorkingDay(date);
+            workingDay = em.merge(workingDay);
+        } else {
+            workingDay = workingDayList.get(0);
+        }
+        return workingDay;
     }
 }
