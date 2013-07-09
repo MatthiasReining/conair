@@ -57,3 +57,12 @@
     text-align: right;
 }
  
+
+/* VACATIONS */
+/* ========= */
+.bar-chart-x-axis-descr {
+    float:left; 
+    width: 48px; 
+    margin-right: 8px; 
+    text-align: center
+}

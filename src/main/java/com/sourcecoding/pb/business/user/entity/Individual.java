@@ -43,6 +43,9 @@ public class Individual implements Serializable {
     private String linkedInId;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
+    
+    private Integer vacationDaysPerYear;
+    private Integer workdaysPerWeek;
 
     public Long getId() {
         return id;
@@ -74,6 +77,22 @@ public class Individual implements Serializable {
 
     public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
+    }
+
+    public Integer getVacationDaysPerYear() {
+        return vacationDaysPerYear;
+    }
+
+    public void setVacationDaysPerYear(Integer vacationDaysPerYear) {
+        this.vacationDaysPerYear = vacationDaysPerYear;
+    }
+
+    public Integer getWorkdaysPerWeek() {
+        return workdaysPerWeek;
+    }
+
+    public void setWorkdaysPerWeek(Integer workdaysPerWeek) {
+        this.workdaysPerWeek = workdaysPerWeek;
     }
 
     

@@ -173,6 +173,60 @@ function TravelCostsCtrl($scope, $http) {
     //});
 }
 
+function VacationCtrl($scope, $http, $rootScope) {
+    var serviceURL = serviceBaseUrl + 'vacations';
+
+    $http.get(serviceURL).success(function(data) {
+        console.log(data);
+        //convert date
+
+        $scope.vacations = data;
+
+
+        //init click events
+        $('#vacation-input-from').datetimepicker().on('changeDate', function(e) {
+            console.log(e.date);
+            datepicker2model(e, $scope);
+        });
+        $('#vacation-input-until').datetimepicker().on('changeDate', function(e) {
+            datepicker2model(e, $scope);
+        });
+
+
+        var vacationDays = $scope.vacations.vacationDays;
+        var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        for (var i = 0; i < vacationDays.length; i++) {
+            var d = vacationDays[i].convert2Date();
+            vacationDaysByMonth[d.getMonth()] = vacationDaysByMonth[d.getMonth()] + 1;
+        }
+        $('#vacation-bar-chart').sparkline(vacationDaysByMonth, {type: 'bar', height: '80px', barWidth: 48, barSpacing: 8});
+    });
+
+    $scope.calculateVacationDays = function() {
+        $http.get(serviceURL + '/calculateVacationDays',
+                {params: {'vacationFrom': $scope.vacation.vacationFrom,
+                        'vacationUntil': $scope.vacation.vacationUntil
+                    }}
+        ).success(function(data) {
+            console.log('<--fromServer');
+            console.log(data);
+
+            $scope.vacation.calculateVacationDays = data.vacationDays;
+            $scope.vacation.vacationDays = data.vacationDays;
+        });
+    };
+
+    $scope.issueRequestForTimeOff = function() {
+        console.log('->sendToServer');
+        console.log($scope.vacation);
+
+        $scope.vacation.individualId = $rootScope.user.id;
+
+        $http.post(serviceURL, $scope.vacation).success(function(data) {
+            alert('Urlaubsantrag eingereicht');
+        });
+    };
+}
 
 
 

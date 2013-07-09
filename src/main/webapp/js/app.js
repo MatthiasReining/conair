@@ -15,6 +15,14 @@ Date.prototype.getText = function() {
     return year + '-' + month + '-' + day;
 };
 
+String.prototype.convert2Date = function() {
+    var dateArray = this.valueOf().split('-');
+    var year = parseInt(dateArray[0]);
+    var month = parseInt(dateArray[1])-1;
+    var day = parseInt(dateArray[2]);
+    return new Date( year, month, day);
+};
+
 function datepicker2model(e, $scope) {
     var inputObj = $(e.target).find('input');
     var modelPath = inputObj.attr('ng-model');
@@ -36,6 +44,7 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/projects/:projectKey', {templateUrl: 'snippets/project.html', controller: ProjectCtrl}).
                 when('/time-recording', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/time-recording/weeks/:weeks', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
+                when('/vacation', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).
                 when('/travel-costs-list', {templateUrl: 'snippets/travel-costs-list.html', controller: TravelCostsListCtrl}).
                 when('/per-diems-selector', {templateUrl: 'snippets/per-diems-selector.html', controller: PerDiemsSelectorCtrl}).
                 when('/per-diems/:yearMonth', {templateUrl: 'snippets/per-diems.html', controller: PerDiemsCtrl}).

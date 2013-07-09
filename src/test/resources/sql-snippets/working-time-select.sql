@@ -4,7 +4,7 @@ select wd.WORKINGDAY, wt.id, wt.WORKINGTIME, wpd.DESCRIPTION, wp.WPNAME, pi."NAM
                          LEFT JOIN APP.WORKPACKAGE wp ON wt.WORKPACKAGE_ID = wp.ID
                          LEFT JOIN APP.PROJECTINFORMATION pi ON wp.PROJECTINFORMATION_ID = pi.ID
  order by wd.WORKINGDAY desc;
-
+select * from workingtime;
 --delete from APP.WORKINGTIME;
 --delete from APP.WORKINGDAY;
 --delete from APP.WORKPACKAGEDESCRIPTION;
