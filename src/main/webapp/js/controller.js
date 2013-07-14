@@ -1,6 +1,6 @@
 'use strict';
 
-var serviceBaseUrl = 'http://localhost:8080/project-business-time-recording/rest/';
+var serviceBaseUrl = 'http://localhost:8080/conair/rest/';
 
 function NaviCtrl($scope, $location) {
     $scope.isActive = function(route) {

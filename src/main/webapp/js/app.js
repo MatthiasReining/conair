@@ -35,7 +35,8 @@ function datepicker2model(e, $scope) {
 ;
 
 
-var app = angular.module('pbtr',  ['ui.bootstrap']);
+var app = angular.module('conair',  ['ui.bootstrap']);
+//var app = angular.module('conair',  []);
 
 app.config(['$routeProvider', function($routeProvider) {
 
@@ -82,7 +83,7 @@ angular.element(document).ready(function() {
     }).done(function(data) {
         console.log("auth done..");
         user = data;
-        angular.bootstrap(document, ['pbtr']);
+        angular.bootstrap(document, ['conair']);
     }).error(function(data, status) {
         console.log("auth error.. " + status);
         window.location = "login.html";

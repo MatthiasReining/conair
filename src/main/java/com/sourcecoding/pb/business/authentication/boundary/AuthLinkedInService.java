@@ -40,14 +40,10 @@ public class AuthLinkedInService {
     private static final String SECRET_KEY = "ktyPRBlfx4tvYqPp";
     @Inject
     private UserFactory userFactory;
-    @Context
-    HttpServletRequest request;
-    @Context
-    HttpServletResponse response;
 
     @GET
     @Path("dialog")
-    public void loginDialog() {
+    public void loginDialog(@Context HttpServletRequest request, @Context HttpServletResponse response) {
         System.out.println("dialog/session-id:" + request.getSession().getId());
         System.out.println("dialog-userFactory:" + userFactory);
         System.out.println("uri: " + request.getRequestURL());
@@ -84,8 +80,10 @@ public class AuthLinkedInService {
     @GET
     @Path("login")
     @Produces(MediaType.TEXT_HTML)
-    public Response callback() throws IOException, JSONException {
-        System.out.println("login/session-id:" + request.getSession().getId());
+    public void callback(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException, JSONException {
+        System.out.println("request: " + request);
+      
+        System.out.println("login/session-id:" + request.getSession(true).getId());
         System.out.println("login-userFactory:" + userFactory);
         String oauth_token = request.getParameter("oauth_token");
         String oauth_verifier = request.getParameter("oauth_verifier");
@@ -98,6 +96,8 @@ public class AuthLinkedInService {
             OAuthService service = (OAuthService) httpsession.getAttribute("oauth.service");
             Token requestToken = (Token) httpsession.getAttribute("oauth.request_token");
             httpsession.setAttribute("username", username);
+
+            System.out.println("requestToken: " + requestToken);
 
             Token accessToken = service.getAccessToken(requestToken, verifier);
 
@@ -123,13 +123,14 @@ public class AuthLinkedInService {
             userFactory.loginUser(u);
 
             try {
-                response.sendRedirect("/" + request.getContextPath());
+                System.out.println("contextPath: "+ request.getContextPath());
+                response.sendRedirect(request.getContextPath());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
 
-           
+
         }
-        return Response.ok().build();
+        //return Response.ok().build();
     }
 }

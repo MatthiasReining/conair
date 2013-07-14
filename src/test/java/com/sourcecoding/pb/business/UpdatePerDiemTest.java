@@ -22,7 +22,7 @@ import org.junit.Test;
 @Ignore
 public class UpdatePerDiemTest {
 
-    private static final String REST_ROOT = "http://localhost:8080/project-business-time-recording/rest";
+    private static final String REST_ROOT = "http://localhost:8080/conair/rest";
     private WebResource webResource;
 
     @Before

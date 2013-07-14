@@ -13,7 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import javax.xml.bind.annotation.XmlTransient;
+//import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -34,7 +35,8 @@ public class WorkPackage implements Serializable {
     private Integer limitForWorkingHours;
     
     //FIXME add costs for every hour booked on a work package (temporal compontent=
-    @JsonIgnore
+    //@JsonIgnore
+    @XmlTransient
     @ManyToOne
     private ProjectInformation projectInformation;
 
