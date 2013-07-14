@@ -32,8 +32,6 @@
 
         <div class="row-fluid">
             <div class="span12">
-
-                <!-- Widget -->
                 <div class="widget wviolet">
                     <!-- Widget head -->
                     <div class="widget-head">
@@ -46,181 +44,177 @@
 
                     <!-- Widget content -->
                     <div class="widget-content">
-                        <div class="span8">
-                            <br>
-                            <!-- Bar chart (Blue color). jQuery Flot plugin used. -->
-                            <div id="vacation-bar-chart"></div>
-                            <div class="bar-chart-x-axis-descr">jan</div>
-                            <div class="bar-chart-x-axis-descr">feb</div>
-                            <div class="bar-chart-x-axis-descr">mar</div>
-                            <div class="bar-chart-x-axis-descr">apr</div>
-                            <div class="bar-chart-x-axis-descr">may</div>
-                            <div class="bar-chart-x-axis-descr">jun</div>
-                            <div class="bar-chart-x-axis-descr">jul</div>
-                            <div class="bar-chart-x-axis-descr">aug</div>
-                            <div class="bar-chart-x-axis-descr">sep</div>
-                            <div class="bar-chart-x-axis-descr">oct</div>
-                            <div class="bar-chart-x-axis-descr">nov</div>
-                            <div class="bar-chart-x-axis-descr">dec</div>
+                        <div class="row-fluid padd">
 
-                        </div>
+                            <div class="span8">
+                                <br>
+                                <!-- Bar chart (Blue color). jQuery Flot plugin used. -->
+                                <div id="vacation-bar-chart"></div>
+                                <div class="bar-chart-x-axis-descr">jan</div>
+                                <div class="bar-chart-x-axis-descr">feb</div>
+                                <div class="bar-chart-x-axis-descr">mar</div>
+                                <div class="bar-chart-x-axis-descr">apr</div>
+                                <div class="bar-chart-x-axis-descr">may</div>
+                                <div class="bar-chart-x-axis-descr">jun</div>
+                                <div class="bar-chart-x-axis-descr">jul</div>
+                                <div class="bar-chart-x-axis-descr">aug</div>
+                                <div class="bar-chart-x-axis-descr">sep</div>
+                                <div class="bar-chart-x-axis-descr">oct</div>
+                                <div class="bar-chart-x-axis-descr">nov</div>
+                                <div class="bar-chart-x-axis-descr">dec</div>
 
-                        <div class="span4">
-                            <h5>Vacation summary {{vacations.vacationYear}}</h5>
-                            <div class="row-fluid">
-                                <div class="span4">residual leave</div>
-                                <div class="span4">{{vacations.residualLeaveYearBefore}}</div>
-                            </div>
-                            <div class="row-fluid">
-                                <div class="span4">vacation days</div>
-                                <div class="span4">{{vacations.numberOfVacationDays}}</div>
-                            </div>
-                            <div class="row-fluid">
-                                <div class="span4">unused holidays</div>
-                                <div class="span4">{{vacations.residualLeave}}</div>
                             </div>
 
+                            <div class="span4">
+                                <h5>Vacation summary {{vacations.vacationYear}}</h5>
+                                <div class="row-fluid">
+                                    <div class="span5">vacation days</div>
+                                    <div class="span3">{{vacations.numberOfVacationDaysTotal}} &nbsp;&nbsp; (<span title="vacation days {{vacations.vacationYear}}">{{vacations.numberOfVacationDays}}</span>/<span title="residual leave {{vacations.vacationYearBefore}}">{{vacations.residualLeaveYearBefore}}</span>)</div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span5">used/requested days</div>
+                                    <div class="span3">{{vacations.vacationDaysThisYear}}</div>
+                                </div>
+                                <div class="row-fluid">
+                                    <div class="span5">residual leave</div>
+                                    <div class="span3">{{vacations.residualLeave}}</div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>
-                    <!-- Widget ends -->
-
                 </div>
             </div>
-
-
-            <div class="row-fluid">
-                <div class="span12">
-                    <div class="widget wviolet">
-
-                        <div class="widget-head">
-                            <div class="pull-left">Vacation</div>
-                            <div class="widget-icons pull-right">
-                                <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                            </div>
-                            <div class="clearfix"></div>
+            <br/>
+        </div>
+        
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget wviolet">
+                    <div class="widget-head">
+                        <div class="pull-left">Request for Time Off</div>
+                        <div class="widget-icons pull-right">
+                            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
                         </div>
+                        <div class="clearfix"></div>
+                    </div>
 
-                        <div class="widget-content" >
-                            <!-- content -->
-                            <div class="padd">
+                    <div class="widget-content" >
+                        <!-- content -->
+                        <div class="padd">
 
-                                <h6>Request for Time Off</h6>
+                            <!-- Form starts.  -->
+                            <form class="form-horizontal">
+                                <div class="control-group">
+                                    <label class="control-label" for="vacationFrom">Vacation from</label>
+                                    <div class="controls">
+
+                                        <div class="input-append" id="vacation-input-from">
+                                            <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationFrom" data-ng-model="vacation.vacationFrom" placeholder="vacation from">
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="vacationUntil">Vacation Until</label>
+                                    <div class="controls">
+
+                                        <div class="input-append" id="vacation-input-until">
+                                            <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationUntil" data-ng-model="vacation.vacationUntil" placeholder="vacation until (incl.)">
+                                            <span class="add-on">
+                                                <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label">Vacation Days Calculated</label>
+                                    <div class="controls">
+                                        {{vacation.calculateVacationDays}}
+                                        <button type="submit" data-ng-click="calculateVacationDays()" class="btn btn-info">Recalc</button>
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label" for="numberOfDays">Vacation Days</label>
+                                    <div class="controls">
+                                        <input type="number" id="numberOfDays" data-ng-model="vacation.numberOfDays">
+                                    </div>
+                                </div>
+
+
                                 <hr />
-                                <!-- Form starts.  -->
-                                <form class="form-horizontal">
-                                    <div class="control-group">
-                                        <label class="control-label" for="vacationFrom">Vacation from</label>
-                                        <div class="controls">
+                                <button class="btn btn-success" data-ng-click="issueRequestForTimeOff()">Issue request for time off</button>
 
-                                            <div class="input-append" id="vacation-input-from">
-                                                <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationFrom" data-ng-model="vacation.vacationFrom" placeholder="vacation from">
-                                                <span class="add-on">
-                                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="control-group">
-                                        <label class="control-label" for="vacationUntil">Vacation Until</label>
-                                        <div class="controls">
-                                            
-                                            <div class="input-append" id="vacation-input-until">
-                                                <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationUntil" data-ng-model="vacation.vacationUntil" placeholder="vacation until (incl.)">
-                                                <span class="add-on">
-                                                    <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                                </span>
-                                            </div>
-                                            
-                                        </div>
-                                    </div>
-
-                                    <div class="control-group">
-                                        <label class="control-label">Vacation Days Calculated</label>
-                                        <div class="controls">
-                                            {{vacation.calculateVacationDays}}
-                                            <button type="submit" data-ng-click="calculateVacationDays()" class="btn btn-info">Recalc</button>
-                                        </div>
-                                    </div>
-
-                                    <div class="control-group">
-                                        <label class="control-label" for="vacationDays">Vacation Days</label>
-                                        <div class="controls">
-                                            <input type="text" id="vacationDays" data-ng-model="vacation.vacationDays" placeholder="vacation days">
-                                        </div>
-                                    </div>
-
-
-                                    <hr />
-                                    <button class="btn btn-success" data-ng-click="issueRequestForTimeOff()">Issue request for time off</button>
-
-                                </form>
-
-                            </div>
-
-
+                            </form>
 
                         </div>
-                        <div class="clearfix"></div> 
+
+
 
                     </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row-fluid">
+            <div class="span12">
+                <div class="widget wviolet">
+
+                    <div class="widget-head">
+                        <div class="pull-left">Vacation List</div>
+                        <div class="widget-icons pull-right">
+                            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                    <div class="widget-content" >
+                        <!-- content -->
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>from</th>
+                                    <th>until</th>
+                                    <th>numberOfDays</th>
+                                    <th>state</th>
+                                    <th></th>
+                                </tr> 
+                            </thead>
+                            <tbody data-ng-repeat="vacationRecord in vacations.vacationRecords">
+                                <tr>
+                                    <td data-ng-click="selectVacationRecord(vacationRecord)">
+                                        {{vacationRecord.vacationFrom}}
+                                    </td>
+                                    <td>{{vacationRecord.vacationUntil}}</td>
+                                    <td>{{vacationRecord.numberOfDays}}</td>
+                                    <td>{{stateText[vacationRecord.approvalState]}}</td>
+                                    <td><div data-ng-click="removeVacationRecord(vacationRecord)" data-ng-show="vacationRecord.approvalState == 0">remove</div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                    <div class="clearfix"></div> 
 
                 </div>
 
-
-                <div class="widget-foot">
-                    <!-- Footer goes here -->
-
-                </div>
             </div>
 
 
-            <div class="row-fluid">
-                <div class="span12">
-                    <div class="widget wviolet">
+            <div class="widget-foot">
+                <!-- Footer goes here -->
 
-                        <div class="widget-head">
-                            <div class="pull-left">Vacation List</div>
-                            <div class="widget-icons pull-right">
-                                <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-
-                        <div class="widget-content" >
-                            <!-- content -->
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>key</th>
-                                        <th>name</th>
-                                    </tr> 
-                                </thead>
-                                <tbody data-ng-repeat="vacationRecord in vacations.vacationRecords">
-                                    <tr>
-                                        <td>{{vacationRecord.vacationFrom}}</td>
-                                        <td>{{vacationRecord.vacationUntil}}</td>
-                                        <td>{{vacationRecord.numberOfDays}}</td>
-                                        <td>{{project.name}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                        </div>
-                        <div class="clearfix"></div> 
-
-                    </div>
-
-                </div>
-
-
-                <div class="widget-foot">
-                    <!-- Footer goes here -->
-
-                </div>
             </div>
-
         </div>
 
     </div>
-    <!-- Matter ends -->
+
+</div>
+<!-- Matter ends -->
 

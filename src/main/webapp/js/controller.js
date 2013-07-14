@@ -175,23 +175,27 @@ function TravelCostsCtrl($scope, $http) {
 
 function VacationCtrl($scope, $http, $rootScope) {
     var serviceURL = serviceBaseUrl + 'vacations';
+    
+    $scope.stateText = {
+      0: 'requested'  
+    };
+
+    $scope.vacation = {};
+    //init click events
+    $('#vacation-input-from').datetimepicker().on('changeDate', function(e) {
+        console.log(e.date);
+        console.log($scope);
+        datepicker2model(e, $scope);
+    });
+    $('#vacation-input-until').datetimepicker().on('changeDate', function(e) {
+        datepicker2model(e, $scope);
+    });
 
     $http.get(serviceURL).success(function(data) {
         console.log(data);
         //convert date
 
         $scope.vacations = data;
-
-
-        //init click events
-        $('#vacation-input-from').datetimepicker().on('changeDate', function(e) {
-            console.log(e.date);
-            datepicker2model(e, $scope);
-        });
-        $('#vacation-input-until').datetimepicker().on('changeDate', function(e) {
-            datepicker2model(e, $scope);
-        });
-
 
         var vacationDays = $scope.vacations.vacationDays;
         var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -212,7 +216,7 @@ function VacationCtrl($scope, $http, $rootScope) {
             console.log(data);
 
             $scope.vacation.calculateVacationDays = data.vacationDays;
-            $scope.vacation.vacationDays = data.vacationDays;
+            $scope.vacation.numberOfDays = data.vacationDays;
         });
     };
 
@@ -224,6 +228,20 @@ function VacationCtrl($scope, $http, $rootScope) {
 
         $http.post(serviceURL, $scope.vacation).success(function(data) {
             alert('Urlaubsantrag eingereicht');
+        });
+    };
+    
+    $scope.selectVacationRecord = function(vacationRecord) {
+        console.log(vacationRecord);
+        $scope.vacation = vacationRecord;
+        $scope.calculateVacationDays();
+        $scope.vacation = vacationRecord;     
+    };
+    
+    $scope.removeVacationRecord = function(vacationRecord) {
+        console.log('remove record ' + vacationRecord);
+        $http.delete(serviceURL + '/' + vacationRecord.id).success(function(data) {
+            alert('Urlaubsantrag gelöscht');
         });
     };
 }

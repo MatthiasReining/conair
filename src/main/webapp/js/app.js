@@ -35,7 +35,7 @@ function datepicker2model(e, $scope) {
 ;
 
 
-var app = angular.module('pbtr', []);
+    var app = angular.module('pbtr', []);
 
 app.config(['$routeProvider', function($routeProvider) {
 

@@ -43,6 +43,7 @@ public class VacationYear implements Serializable {
     List<VacationRecord> vacationRecords;
     private Integer numberOfVacationDays;
     private Integer residualLeaveYearBefore;
+    private Integer residualLeave;
 
     public Long getId() {
         return id;
@@ -91,4 +92,13 @@ public class VacationYear implements Serializable {
     public void setResidualLeaveYearBefore(Integer residualLeaveYearBefore) {
         this.residualLeaveYearBefore = residualLeaveYearBefore;
     }
+
+    public Integer getResidualLeave() {
+        return residualLeave;
+    }
+
+    public void setResidualLeave(Integer residualLeave) {
+        this.residualLeave = residualLeave;
+    }
+    
 }

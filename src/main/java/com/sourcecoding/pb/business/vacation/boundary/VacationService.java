@@ -6,7 +6,6 @@ package com.sourcecoding.pb.business.vacation.boundary;
 
 import com.sourcecoding.pb.business.authentication.boundary.CurrentUser;
 import com.sourcecoding.pb.business.authentication.entity.User;
-import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sourcecoding.pb.business.vacation.entity.LegalHoliday;
@@ -22,9 +21,11 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -69,29 +70,54 @@ public class VacationService {
         result.put("individualId", vy.getIndividual().getId());
         result.put("numberOfVacationDays", vy.getNumberOfVacationDays());
         result.put("residualLeaveYearBefore", vy.getResidualLeaveYearBefore());
+        result.put("residualLeave", vy.getResidualLeave());
         result.put("vacationYear", vy.getVacationYear());
+        result.put("vacationYearBefore", vy.getVacationYear() - 1);
         List<Map<String, Object>> vacationRecords = new ArrayList<>();
         result.put("vacationRecords", vacationRecords);
         List<String> vacationDays = new ArrayList<>();
         result.put("vacationDays", vacationDays);
 
 
+        int vacationDaysThisYear = 0;
         for (VacationRecord vr : vy.getVacationRecords()) {
             Map<String, Object> vrMap = new HashMap<>();
             vacationRecords.add(vrMap);
             vrMap.put("approvalState", vr.getApprovalState());
             vrMap.put("numberOfDays", vr.getNumberOfDays());
+            vacationDaysThisYear += vr.getNumberOfDays();
             String vacationFrom = DateParameter.valueOf(vr.getVacationFrom());
             String vacationUntil = DateParameter.valueOf(vr.getVacationUntil());
             vrMap.put("vacationFrom", vacationFrom);
             vrMap.put("vacationUntil", vacationUntil);
+            vrMap.put("id", vr.getId());
 
             Map<String, Object> vacationDaysMap = calculateVacationDays(vacationFrom, vacationUntil);
             List<String> vacationDayDates = (List<String>) vacationDaysMap.get("vacationDayDate");
             vacationDays.addAll(vacationDayDates);
         }
 
+        int numberOfVacationDaysTotal = vy.getResidualLeaveYearBefore() + vy.getNumberOfVacationDays();
+        result.put("numberOfVacationDaysTotal", numberOfVacationDaysTotal);
+        result.put("vacationDaysThisYear", vacationDaysThisYear);
+
+
         return result;
+    }
+
+    @Path("{id}")
+    @DELETE
+    @Consumes(MediaType.WILDCARD)
+    public void deleteVacationRecord(@PathParam("id") String idText) {
+
+        Long id = Long.valueOf(idText);
+
+        VacationRecord vr = em.find(VacationRecord.class, id);
+        VacationYear vy = vr.getVacationYear();
+        vy.getVacationRecords().remove(vr);
+        em.remove(vr);
+        calculateVacationDays(vy);
+        
     }
 
     @Path("calculateVacationDays")
@@ -140,7 +166,7 @@ public class VacationService {
     @POST
     public Map<String, Object> issueRequestForTimeOff(Map<String, Object> payload) {
         Long individualId = ((Integer) payload.get("individualId")).longValue();
-        if (individualId == null) {
+        if (individualId == 0) {
             individualId = currentUser.getId();
         }
 
@@ -157,8 +183,10 @@ public class VacationService {
         if (vyList.isEmpty()) {
             vy = new VacationYear();
             vy.setIndividual(individual);
+            System.out.println("vacation days per year: " + individual.getVacationDaysPerYear());
             vy.setNumberOfVacationDays(individual.getVacationDaysPerYear());
             vy.setResidualLeaveYearBefore(0);
+            vy.setResidualLeave(vy.getNumberOfVacationDays() + vy.getResidualLeaveYearBefore());
             vy.setVacationYear(year);
             vy = em.merge(vy);
 
@@ -174,7 +202,7 @@ public class VacationService {
         VacationRecord vr = new VacationRecord();
         vr.setVacationYear(vy);
         vr.setIndividual(individual);
-        vr.setNumberOfDays((Integer) payload.get("vacationDays"));
+        vr.setNumberOfDays((Integer) payload.get("numberOfDays"));
         vr.setVacationFrom(DateParameter.valueOf(payload.get("vacationFrom").toString()));
         vr.setVacationUntil(DateParameter.valueOf(payload.get("vacationUntil").toString()));
         vr.setApprovalState(0);
@@ -182,6 +210,18 @@ public class VacationService {
         vrList.add(vr);
 
 
+        calculateVacationDays(vy);
+
         return null;
+    }
+
+    private void calculateVacationDays(VacationYear vy) {
+        System.out.println(vy.getResidualLeaveYearBefore() + " - " + vy.getNumberOfVacationDays());
+        int total = vy.getResidualLeaveYearBefore() + vy.getNumberOfVacationDays();
+        int vacationDays = 0;
+        for (VacationRecord vr : vy.getVacationRecords()) {
+            vacationDays += vr.getNumberOfDays();
+        }
+        vy.setResidualLeave(total - vacationDays);
     }
 }
