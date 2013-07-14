@@ -173,11 +173,11 @@ function TravelCostsCtrl($scope, $http) {
     //});
 }
 
-function VacationCtrl($scope, $http, $rootScope) {
+function VacationCtrl($scope, $http, $rootScope, $dialog) {
     var serviceURL = serviceBaseUrl + 'vacations';
-    
+
     $scope.stateText = {
-      0: 'requested'  
+        0: 'requested'
     };
 
     $scope.vacation = {};
@@ -191,20 +191,45 @@ function VacationCtrl($scope, $http, $rootScope) {
         datepicker2model(e, $scope);
     });
 
-    $http.get(serviceURL).success(function(data) {
-        console.log(data);
-        //convert date
+    var refresh = function() {
+        $http.get(serviceURL).success(function(data) {
+            console.log(data);
+            //convert date
 
-        $scope.vacations = data;
+            $scope.vacations = data;
 
-        var vacationDays = $scope.vacations.vacationDays;
-        var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        for (var i = 0; i < vacationDays.length; i++) {
-            var d = vacationDays[i].convert2Date();
-            vacationDaysByMonth[d.getMonth()] = vacationDaysByMonth[d.getMonth()] + 1;
-        }
-        $('#vacation-bar-chart').sparkline(vacationDaysByMonth, {type: 'bar', height: '80px', barWidth: 48, barSpacing: 8});
-    });
+            var vacationDays = $scope.vacations.vacationDays;
+            var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            for (var i = 0; i < vacationDays.length; i++) {
+                var d = vacationDays[i].convert2Date();
+                vacationDaysByMonth[d.getMonth()] = vacationDaysByMonth[d.getMonth()] + 1;
+            }
+            $('#vacation-bar-chart').sparkline(vacationDaysByMonth, {type: 'bar', height: '80px', barWidth: 48, barSpacing: 8});
+        });
+    };
+
+
+    //initalize load
+    refresh();
+
+    $scope.removeVacationRecord = function(vacationRecord) {
+        var title = 'Remove vacation request';
+        var msg = 'Should vacation request removed? (from ' + vacationRecord.vacationFrom + ')';
+        var btns = [{result: false, label: 'Cancel'}, {result: true, label: 'Remove', cssClass: 'btn-primary'}];
+
+        $dialog.messageBox(title, msg, btns)
+                .open()
+                .then(function(result) {
+            if (result) {
+                console.log('remove record ' + vacationRecord);
+                $http.delete(serviceURL + '/' + vacationRecord.id).success(function(data) {
+                    refresh();
+                });
+            }
+
+        });
+    };
+
 
     $scope.calculateVacationDays = function() {
         $http.get(serviceURL + '/calculateVacationDays',
@@ -227,22 +252,17 @@ function VacationCtrl($scope, $http, $rootScope) {
         $scope.vacation.individualId = $rootScope.user.id;
 
         $http.post(serviceURL, $scope.vacation).success(function(data) {
+            refresh();
             alert('Urlaubsantrag eingereicht');
+
         });
     };
-    
+
     $scope.selectVacationRecord = function(vacationRecord) {
         console.log(vacationRecord);
         $scope.vacation = vacationRecord;
         $scope.calculateVacationDays();
-        $scope.vacation = vacationRecord;     
-    };
-    
-    $scope.removeVacationRecord = function(vacationRecord) {
-        console.log('remove record ' + vacationRecord);
-        $http.delete(serviceURL + '/' + vacationRecord.id).success(function(data) {
-            alert('Urlaubsantrag gelöscht');
-        });
+        $scope.vacation = vacationRecord;
     };
 }
 
