@@ -232,7 +232,7 @@ function VacationCtrl($scope, $http, $rootScope, $dialog) {
 
 
     $scope.calculateVacationDays = function() {
-        $http.get(serviceURL + '/calculateVacationDays',
+        $http.get(serviceURL + '/' + $rootScope.user.id + '/calculateVacationDays',
                 {params: {'vacationFrom': $scope.vacation.vacationFrom,
                         'vacationUntil': $scope.vacation.vacationUntil
                     }}

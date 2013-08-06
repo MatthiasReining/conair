@@ -92,7 +92,7 @@ public class VacationService {
             vrMap.put("vacationUntil", vacationUntil);
             vrMap.put("id", vr.getId());
 
-            Map<String, Object> vacationDaysMap = calculateVacationDays(vacationFrom, vacationUntil);
+            Map<String, Object> vacationDaysMap = calculateVacationDays(individualId, vacationFrom, vacationUntil);
             List<String> vacationDayDates = (List<String>) vacationDaysMap.get("vacationDayDate");
             vacationDays.addAll(vacationDayDates);
         }
@@ -116,13 +116,14 @@ public class VacationService {
         VacationYear vy = vr.getVacationYear();
         vy.getVacationRecords().remove(vr);
         em.remove(vr);
-        calculateVacationDays(vy);
-        
+        calculateAllVacationDays(vy);
+
     }
 
-    @Path("calculateVacationDays")
+    @Path("{individualId}/calculateVacationDays")
     @GET
-    public Map<String, Object> calculateVacationDays(@QueryParam("vacationFrom") String vacationFrom,
+    public Map<String, Object> calculateVacationDays(@PathParam("individualId") Long individualId,
+            @QueryParam("vacationFrom") String vacationFrom,
             @QueryParam("vacationUntil") String vacationUntil) {
         Calendar from = DateParameter.calendarValueOf(vacationFrom); //payload.get(PARAM__VACATION_FROM));
         Calendar until = DateParameter.calendarValueOf(vacationUntil); //payload.get(PARAM__VACATION_UNTIL));
@@ -132,11 +133,15 @@ public class VacationService {
             return null;
         }
 
+        Individual individual = em.find(Individual.class, individualId);
+
+
         Map<String, Object> result = new HashMap<>();
         result.put("legalHolidays", new ArrayList());
         result.put("vacationDayDate", new ArrayList<String>());
 
         int duration = 0;
+        int workDaysWithoutLegalHoliday = 0;
         while (from.getTimeInMillis() <= until.getTimeInMillis()) {
             boolean sunday = (from.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY);
             boolean saturday = (from.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY);
@@ -149,6 +154,8 @@ public class VacationService {
                 legalHoliday.put("name", legalHolidayList.get(0).getLegalHolidyName());
                 ((List) result.get("legalHolidays")).add(legalHoliday);
             }
+            if (!saturday && !sunday)
+                workDaysWithoutLegalHoliday++;
             if (!saturday && !sunday && legalHoliday.isEmpty()) {
                 System.out.println(from.getTime() + " arbeitstag ");
                 ((List<String>) result.get("vacationDayDate")).add(DateParameter.valueOf(from));
@@ -157,6 +164,12 @@ public class VacationService {
 
             from.add(Calendar.DATE, 1);
         }
+
+        int vacationWeeks = workDaysWithoutLegalHoliday / 5;
+        int reduceVacationDaysPerWeek = 5- individual.getWorkdaysPerWeek();
+        int reduceVacationDays = vacationWeeks * reduceVacationDaysPerWeek;
+        
+        duration = duration - reduceVacationDays;
 
         result.put("vacationDays", duration);
 
@@ -210,12 +223,12 @@ public class VacationService {
         vrList.add(vr);
 
 
-        calculateVacationDays(vy);
+        calculateAllVacationDays(vy);
 
         return null;
     }
 
-    private void calculateVacationDays(VacationYear vy) {
+    private void calculateAllVacationDays(VacationYear vy) {
         System.out.println(vy.getResidualLeaveYearBefore() + " - " + vy.getNumberOfVacationDays());
         int total = vy.getResidualLeaveYearBefore() + vy.getNumberOfVacationDays();
         int vacationDays = 0;
