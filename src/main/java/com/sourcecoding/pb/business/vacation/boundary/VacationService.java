@@ -24,6 +24,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -67,12 +68,7 @@ public class VacationService {
         System.out.println("nach select");
 
         VacationYear vy = vyList.get(0);
-        result.put("individualId", vy.getIndividual().getId());
-        result.put("numberOfVacationDays", vy.getNumberOfVacationDays());
-        result.put("residualLeaveYearBefore", vy.getResidualLeaveYearBefore());
-        result.put("residualLeave", vy.getResidualLeave());
-        result.put("vacationYear", vy.getVacationYear());
-        result.put("vacationYearBefore", vy.getVacationYear() - 1);
+        buildVacationInformationByVacationYear(result, vy);
         List<Map<String, Object>> vacationRecords = new ArrayList<>();
         result.put("vacationRecords", vacationRecords);
         List<String> vacationDays = new ArrayList<>();
@@ -85,7 +81,8 @@ public class VacationService {
             vacationRecords.add(vrMap);
             vrMap.put("approvalState", vr.getApprovalState());
             vrMap.put("numberOfDays", vr.getNumberOfDays());
-            vacationDaysThisYear += vr.getNumberOfDays();
+            if (vr.getApprovalState() == VacationRecord.APPROVAL_STATE_APPROVED)
+                vacationDaysThisYear += vr.getNumberOfDays();
             String vacationFrom = DateParameter.valueOf(vr.getVacationFrom());
             String vacationUntil = DateParameter.valueOf(vr.getVacationUntil());
             vrMap.put("vacationFrom", vacationFrom);
@@ -100,6 +97,66 @@ public class VacationService {
         int numberOfVacationDaysTotal = vy.getResidualLeaveYearBefore() + vy.getNumberOfVacationDays();
         result.put("numberOfVacationDaysTotal", numberOfVacationDaysTotal);
         result.put("vacationDaysThisYear", vacationDaysThisYear);
+
+
+        return result;
+    }
+
+    @PUT
+    @Path("{vacationRecordId}/approve")
+    public Map<String, Object> approveRequestForTimeOff(@PathParam("vacationRecordId") Long vacationRecordId, Map<String, Object> payload) {
+        VacationRecord vr = em.find(VacationRecord.class, vacationRecordId);
+
+        vr.setApprovalState(VacationRecord.APPROVAL_STATE_APPROVED);
+
+        return null;
+    }
+
+    @PUT
+    @Path("{vacationRecordId}/reject")
+    public Map<String, Object> rejectRequestForTimeOff(@PathParam("vacationRecordId") Long vacationRecordId, Map<String, Object> payload) {
+        VacationRecord vr = em.find(VacationRecord.class, vacationRecordId);
+
+        vr.setApprovalState(VacationRecord.APPROVAL_STATE_REJECTED);
+
+        return null;
+    }
+
+    @GET
+    @Path("for-approval/{vacationRecordId}")
+    public Map<String, Object> getVacationForApprovalByVacationRecordId(
+            @PathParam("vacationRecordId") Long vacationRecordId) {
+        VacationRecord vr = em.find(VacationRecord.class, vacationRecordId);
+
+        Map<String, Object> taskEntry = buildVacationRecordEntry(vr);
+
+
+
+        return taskEntry;
+    }
+
+    @GET
+    @Path("for-approval")
+    public List<Object> getVacationsForApproval() {
+        Long individualId = currentUser.getId();
+        Individual individual = em.find(Individual.class, individualId);
+
+        List<VacationRecord> vrList = em.createNamedQuery(VacationRecord.findByApprovalState, VacationRecord.class)
+                .setParameter(VacationRecord.queryParam_vacationManager, individual)
+                .setParameter(VacationRecord.queryParam_approvalState, VacationRecord.APPROVAL_STATE_FOR_APPROVAL)
+                .getResultList();
+
+        List<Object> result = new ArrayList<>();
+
+        if (vrList.isEmpty()) {
+            return result;
+        }
+
+        for (VacationRecord vr : vrList) {
+            Map<String, Object> taskEntry = buildVacationRecordEntry(vr);
+            result.add(taskEntry);
+            System.out.println("worked off " + vr.getId());
+        }
 
 
         return result;
@@ -154,8 +211,9 @@ public class VacationService {
                 legalHoliday.put("name", legalHolidayList.get(0).getLegalHolidyName());
                 ((List) result.get("legalHolidays")).add(legalHoliday);
             }
-            if (!saturday && !sunday)
+            if (!saturday && !sunday) {
                 workDaysWithoutLegalHoliday++;
+            }
             if (!saturday && !sunday && legalHoliday.isEmpty()) {
                 System.out.println(from.getTime() + " arbeitstag ");
                 ((List<String>) result.get("vacationDayDate")).add(DateParameter.valueOf(from));
@@ -166,9 +224,9 @@ public class VacationService {
         }
 
         int vacationWeeks = workDaysWithoutLegalHoliday / 5;
-        int reduceVacationDaysPerWeek = 5- individual.getWorkdaysPerWeek();
+        int reduceVacationDaysPerWeek = 5 - individual.getWorkdaysPerWeek();
         int reduceVacationDays = vacationWeeks * reduceVacationDaysPerWeek;
-        
+
         duration = duration - reduceVacationDays;
 
         result.put("vacationDays", duration);
@@ -218,7 +276,7 @@ public class VacationService {
         vr.setNumberOfDays((Integer) payload.get("numberOfDays"));
         vr.setVacationFrom(DateParameter.valueOf(payload.get("vacationFrom").toString()));
         vr.setVacationUntil(DateParameter.valueOf(payload.get("vacationUntil").toString()));
-        vr.setApprovalState(0);
+        vr.setApprovalState(VacationRecord.APPROVAL_STATE_FOR_APPROVAL);
 
         vrList.add(vr);
 
@@ -233,8 +291,43 @@ public class VacationService {
         int total = vy.getResidualLeaveYearBefore() + vy.getNumberOfVacationDays();
         int vacationDays = 0;
         for (VacationRecord vr : vy.getVacationRecords()) {
-            vacationDays += vr.getNumberOfDays();
+            if (vr.getApprovalState() == VacationRecord.APPROVAL_STATE_APPROVED)
+                vacationDays += vr.getNumberOfDays();
         }
         vy.setResidualLeave(total - vacationDays);
+    }
+
+    private Map<String, Object> buildVacationRecordEntry(VacationRecord vr) {
+        Map<String, Object> taskEntry = new HashMap<>();
+        taskEntry.put("processName", "vacation-approval");
+
+        buildVacationInformationByVacationYear(taskEntry, vr.getVacationYear());
+
+        taskEntry.put("approvalState", vr.getApprovalState());
+        taskEntry.put("numberOfDays", vr.getNumberOfDays());
+        String vacationFrom = DateParameter.valueOf(vr.getVacationFrom());
+        String vacationUntil = DateParameter.valueOf(vr.getVacationUntil());
+        taskEntry.put("vacationFrom", vacationFrom);
+        taskEntry.put("vacationUntil", vacationUntil);
+        taskEntry.put("id", vr.getId());
+
+
+        Map<String, Object> calcDays = calculateVacationDays(vr.getIndividual().getId(), vacationFrom, vacationUntil);
+        taskEntry.put("calcDays", calcDays);
+
+
+        return taskEntry;
+    }
+
+    private void buildVacationInformationByVacationYear(Map<String, Object> result, VacationYear vy) {
+        result.put("individualId", vy.getIndividual().getId());
+        result.put("individualNickName", vy.getIndividual().getNickname());
+        result.put("vacationManager", vy.getIndividual().getVacationManager().getNickname());
+        result.put("numberOfVacationDays", vy.getNumberOfVacationDays());
+        result.put("workDaysPerWeek", vy.getIndividual().getWorkdaysPerWeek());
+        result.put("residualLeaveYearBefore", vy.getResidualLeaveYearBefore());
+        result.put("residualLeave", vy.getResidualLeave());
+        result.put("vacationYear", vy.getVacationYear());
+        result.put("vacationYearBefore", vy.getVacationYear() - 1);
     }
 }

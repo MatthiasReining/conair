@@ -117,7 +117,8 @@ public class AuthLinkedInService {
             u.setFirstName(userLIData.getString("firstName"));
             u.setLastName(userLIData.getString("lastName"));
             u.setTitle(userLIData.getString("headline"));
-            u.setPictureUrl(userLIData.getString("pictureUrl"));
+            if (userLIData.has("pictureUrl"))
+                u.setPictureUrl(userLIData.getString("pictureUrl"));
             u.setSocialNetId(userLIData.getString("id"));
 
             userFactory.loginUser(u);

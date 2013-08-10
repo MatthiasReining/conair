@@ -18,12 +18,14 @@ import com.sun.jersey.api.json.JSONConfiguration;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
  * @author Matthias
  */
+@Ignore
 public class InitalizeSystem {
 
     private static final String REST_ROOT = "http://localhost:8080/conair/rest";
@@ -41,10 +43,9 @@ public class InitalizeSystem {
 
     @Test
     public void run() {
-
-        createIndividual("Pierre", "");
-        createIndividual("Susan", "");
-        createIndividual("Lynette", "");
+        
+        createIndividual("Pierre", "M0vVQEOr07");
+        createIndividual("Hans", "35CXEuiaFs");
         createIndividual("Matthias", "P1ExxuV6JL");
 
         createProject("E227", "DirektLine Deutschland", "Analyse", "Entwicklung");

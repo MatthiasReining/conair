@@ -177,7 +177,10 @@ function VacationCtrl($scope, $http, $rootScope, $dialog) {
     var serviceURL = serviceBaseUrl + 'vacations';
 
     $scope.stateText = {
-        0: 'requested'
+        0: 'new',
+        1: 'for approval',
+        5: 'approved',
+        9: 'rejected'
     };
 
     $scope.vacation = {};
@@ -341,3 +344,28 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
 }
 
 
+function TaskVacationApprovalListCtrl($scope, $http) {
+    $http.get(serviceBaseUrl + 'vacations/for-approval').success(function(data) {
+        console.log(data);
+        $scope.tasks = data;
+    });
+}
+
+function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
+    $http.get(serviceBaseUrl + 'vacations/for-approval/' + $routeParams.vacationRecordId).success(function(data) {
+        console.log(data);
+        $scope.vacation = data;
+    });
+    
+    $scope.rejectRequestForTimeOff = function() {
+        $http.put(serviceBaseUrl + 'vacations/' + $scope.vacation.id + '/reject', $scope.vacation).success(function(data) {
+            alert("abgelehnt");
+        });
+    };
+
+    $scope.approveRequestForTimeOff = function() {
+        $http.put(serviceBaseUrl + 'vacations/' + $scope.vacation.id + '/approve', $scope.vacation).success(function(data) {
+            alert("genehmigt");
+        });
+    };
+}

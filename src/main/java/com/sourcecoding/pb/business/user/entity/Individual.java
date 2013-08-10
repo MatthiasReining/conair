@@ -6,14 +6,20 @@ package com.sourcecoding.pb.business.user.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -46,6 +52,26 @@ public class Individual implements Serializable {
     
     private Integer vacationDaysPerYear;
     private Integer workdaysPerWeek;
+    
+    @XmlTransient
+    @OneToOne
+    private Individual vacationManager;
+    
+    @XmlTransient
+    @ManyToMany(mappedBy = "individual", cascade = CascadeType.ALL)
+    private List<IndividualRole> roles;
+    
+    
+    public boolean hasRole(String roleName) {
+        for (IndividualRole ir : getRoles())
+            if (ir.getRoleName().equals(roleName)) return true;
+        return false;
+    }
+    public boolean hasRole(IndividualRole individualRole) {
+        for (IndividualRole ir : getRoles())
+            if (ir.getId().equals(individualRole.getId())) return true;
+        return false;
+    }
 
     public Long getId() {
         return id;
@@ -95,5 +121,21 @@ public class Individual implements Serializable {
         this.workdaysPerWeek = workdaysPerWeek;
     }
 
+    public List<IndividualRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<IndividualRole> roles) {
+        this.roles = roles;
+    }
+
+    public Individual getVacationManager() {
+        return vacationManager;
+    }
+
+    public void setVacationManager(Individual vacationManager) {
+        this.vacationManager = vacationManager;
+    }
+    
     
 }

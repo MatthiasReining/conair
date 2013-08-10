@@ -50,6 +50,9 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/per-diems-selector', {templateUrl: 'snippets/per-diems-selector.html', controller: PerDiemsSelectorCtrl}).
                 when('/per-diems/:yearMonth', {templateUrl: 'snippets/per-diems.html', controller: PerDiemsCtrl}).
                 when('/travel-costs', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
+                when('/tasks-vacation-approval-list', {templateUrl: 'snippets/tasks-vacation-approval-list.html', controller: TaskVacationApprovalListCtrl}).
+                when('/tasks-vacation-approval/:vacationRecordId', {templateUrl: 'snippets/tasks-vacation-approval.html', controller: TaskVacationApprovalCtrl}).
+                
                 otherwise({redirectTo: '/projects'});
     }]);
 
