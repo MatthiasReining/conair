@@ -51,6 +51,7 @@ public class VacationCalculator {
         Map<String, Object> result = new HashMap<>();
         result.put("legalHolidays", new ArrayList());
         result.put("vacationDayDate", new ArrayList<String>());
+        result.put("weekendDate", new ArrayList<String>());
 
         int duration = 0;
         int workDaysWithoutLegalHoliday = 0;
@@ -66,6 +67,8 @@ public class VacationCalculator {
                 legalHoliday.put("name", legalHolidayList.get(0).getLegalHolidyName());
                 ((List) result.get("legalHolidays")).add(legalHoliday);
             }
+            if (saturday || sunday)
+                ((List) result.get("weekendDate")).add(DateParameter.valueOf(from));
             if (!saturday && !sunday) {
                 workDaysWithoutLegalHoliday++;
             }
