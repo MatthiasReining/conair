@@ -173,8 +173,8 @@ function TravelCostsCtrl($scope, $http) {
     //});
 }
 
-function VacationCtrl($scope, $http, $rootScope, $dialog) {
-    var serviceURL = serviceBaseUrl + 'vacations';
+function VacationCtrl($scope, $http, $routeParams, $dialog) {
+    var serviceURL = serviceBaseUrl + 'vacations/' + $routeParams.individualId;
 
     $scope.stateText = {
         0: 'new',
@@ -200,7 +200,7 @@ function VacationCtrl($scope, $http, $rootScope, $dialog) {
             //convert date
 
             $scope.vacations = data;
-
+            
             var vacationDays = $scope.vacations.vacationDays;
             var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             for (var i = 0; i < vacationDays.length; i++) {
@@ -235,7 +235,7 @@ function VacationCtrl($scope, $http, $rootScope, $dialog) {
 
 
     $scope.calculateVacationDays = function() {
-        $http.get(serviceURL + '/' + $rootScope.user.id + '/calculateVacationDays',
+        $http.get(serviceURL + '/calculateVacationDays',
                 {params: {'vacationFrom': $scope.vacation.vacationFrom,
                         'vacationUntil': $scope.vacation.vacationUntil
                     }}
@@ -252,7 +252,7 @@ function VacationCtrl($scope, $http, $rootScope, $dialog) {
         console.log('->sendToServer');
         console.log($scope.vacation);
 
-        $scope.vacation.individualId = $rootScope.user.id;
+        $scope.vacation.individualId = $routeParams.individualId;
 
         $http.post(serviceURL, $scope.vacation).success(function(data) {
             refresh();
@@ -345,27 +345,71 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
 
 
 function TaskVacationApprovalListCtrl($scope, $http) {
-    $http.get(serviceBaseUrl + 'vacations/for-approval').success(function(data) {
+    $http.get(serviceBaseUrl + 'vacations/tasks').success(function(data) {
         console.log(data);
         $scope.tasks = data;
     });
 }
 
 function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
-    $http.get(serviceBaseUrl + 'vacations/for-approval/' + $routeParams.vacationRecordId).success(function(data) {
+    $http.get(serviceBaseUrl + 'vacations/tasks/' + $routeParams.vacationRecordId).success(function(data) {
         console.log(data);
         $scope.vacation = data;
     });
-    
+
     $scope.rejectRequestForTimeOff = function() {
-        $http.put(serviceBaseUrl + 'vacations/' + $scope.vacation.id + '/reject', $scope.vacation).success(function(data) {
+        $http.put(serviceBaseUrl + 'vacations/tasks/' + $scope.vacation.id + '/reject', $scope.vacation).success(function(data) {
             alert("abgelehnt");
         });
     };
 
     $scope.approveRequestForTimeOff = function() {
-        $http.put(serviceBaseUrl + 'vacations/' + $scope.vacation.id + '/approve', $scope.vacation).success(function(data) {
+        $http.put(serviceBaseUrl + 'vacations/tasks' + $scope.vacation.id + '/approve' , $scope.vacation).success(function(data) {
             alert("genehmigt");
         });
     };
 }
+
+
+function VacationManagerCtrl($scope, $routeParams, $http) {
+    
+    $http.get(serviceBaseUrl + 'vacations').success(function(data) {
+        console.log(data);
+        $scope.vacations = data;
+
+        var progess100percent = 45; //totalDays + residualLeaveYearBefore, means ca. 28 + puffer
+
+        angular.forEach($scope.vacations, function(value) {
+
+
+            var vacationDaysPerYear = value.numberOfVacationDays;
+            var residualLeaveYearBefore = value.residualLeaveYearBefore;
+            var approvedVacationDays = value.approvedVacationDays;
+
+            var vacationDaysPerYearProgress = Math.floor(vacationDaysPerYear / progess100percent * 100);
+
+            //this year
+            var thisYearApproved = Math.min(vacationDaysPerYear, approvedVacationDays);
+            var thisYearApprovedProgress = Math.floor(thisYearApproved / progess100percent * 100);
+            var thisYearResidualLeaveProgress = vacationDaysPerYearProgress - thisYearApprovedProgress;
+
+            //appendix
+            var appendixApproved = Math.max((approvedVacationDays - vacationDaysPerYear), 0);
+            var appendixApprovedProgress = Math.floor(appendixApproved / progess100percent * 100);
+            var appendixResidualLeave = (residualLeaveYearBefore) - appendixApproved;
+            var appendixResidualLeaveProgress = Math.floor(appendixResidualLeave / progess100percent * 100);
+
+            value.progress = [
+                    {"value":thisYearApprovedProgress,"type":"this-year-approved"},
+                    {"value":thisYearResidualLeaveProgress,"type":"this-year-residual-leave"},
+                    {"value":appendixApprovedProgress,"type":"appendix-approved"},
+                    {"value":appendixResidualLeaveProgress,"type":"appendix-residual-leave"}                
+            ];
+            
+            console.log( value.progress);
+        });
+
+    });
+
+}
+;

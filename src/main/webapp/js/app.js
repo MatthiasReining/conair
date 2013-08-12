@@ -38,6 +38,7 @@ function datepicker2model(e, $scope) {
 var app = angular.module('conair',  ['ui.bootstrap']);
 //var app = angular.module('conair',  []);
 
+
 app.config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.
@@ -45,7 +46,8 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/projects/:projectKey', {templateUrl: 'snippets/project.html', controller: ProjectCtrl}).
                 when('/time-recording', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/time-recording/weeks/:weeks', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
-                when('/vacation', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).
+                when('/vacations/:individualId', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).
+                when('/vacation-manager', {templateUrl: 'snippets/vacation-manager.html', controller: VacationManagerCtrl}).
                 when('/travel-costs-list', {templateUrl: 'snippets/travel-costs-list.html', controller: TravelCostsListCtrl}).
                 when('/per-diems-selector', {templateUrl: 'snippets/per-diems-selector.html', controller: PerDiemsSelectorCtrl}).
                 when('/per-diems/:yearMonth', {templateUrl: 'snippets/per-diems.html', controller: PerDiemsCtrl}).

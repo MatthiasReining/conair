@@ -25,8 +25,6 @@
         <link type="text/css" rel="stylesheet" href="style/jquery.cleditor.css"> 
         <!-- Bootstrap toggle -->
         <link type="text/css" rel="stylesheet" href="style/bootstrap-toggle-buttons.css">
-        <!-- Main stylesheet -->
-        <link type="text/css" href="style/style.css" rel="stylesheet">
         <!-- Widgets stylesheet -->
         <link type="text/css" href="style/widgets.css" rel="stylesheet">   
         <!-- Responsive style (from Bootstrap) -->
@@ -47,46 +45,52 @@
 
 
         <!-- JS -->
-        <!--<script src="js/lib/jquery.js"></script> --> <!-- jQuery -->
-
-        <script src="js/lib/jquery-1.9.1.min.js"></script> <!-- jQuery -->
-        <script src="js/lib/bootstrap.js"></script> <!-- Bootstrap -->
-        <script src="js/lib/jquery-ui-1.10.2.custom.min.js"></script> <!-- jQuery UI -->
-        <script src="js/lib/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
-        <script src="js/lib/jquery.rateit.min.js"></script> <!-- RateIt - Star rating -->
-        <script src="js/lib/jquery.prettyPhoto.js"></script> <!-- prettyPhoto -->
+        
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+        <script src="http://code.angularjs.org/1.0.7/i18n/angular-locale_de-de.js"></script>        
+        <script src="js/lib/ui-bootstrap-tpls-0.5.0.js"></script>
+    
+        <!--<script src="xjs/lib/jquery-1.9.1.min.js"></script>--> <!-- jQuery -->
+        <!--<script src="xjs/lib/bootstrap.js"></script>--> <!-- Bootstrap -->
+        <!--<script src="xjs/lib/jquery-ui-1.10.2.custom.min.js"></script>--> <!-- jQuery UI -->
+        <!--<script src="xjs/lib/fullcalendar.min.js"></script>--> <!-- Full Google Calendar - Calendar -->
+        <!--<script src="xjs/lib/jquery.rateit.min.js"></script>--> <!-- RateIt - Star rating -->
+        <!--<script src="xjs/lib/jquery.prettyPhoto.js"></script>--> <!-- prettyPhoto -->
 
         <!-- jQuery Flot -->
-        <script src="js/lib/excanvas.min.js"></script>
-        <script src="js/lib/jquery.flot.js"></script>
-        <script src="js/lib/jquery.flot.resize.js"></script>
-        <script src="js/lib/jquery.flot.pie.js"></script>
-        <script src="js/lib/jquery.flot.stack.js"></script>
-
-        <script src="js/lib/jquery.gritter.min.js"></script> <!-- jQuery Gritter -->
-        <script src="js/lib/sparklines-2.1.1.min.js"></script> <!-- Sparklines -->
+        <!--
+        <script src="xjs/lib/excanvas.min.js"></script>
+        <script src="xjs/lib/jquery.flot.js"></script>
+        <script src="xjs/lib/jquery.flot.resize.js"></script>
+        <script src="xjs/lib/jquery.flot.pie.js"></script>
+        <script src="xjs/lib/jquery.flot.stack.js"></script>
+        -->
+        <!--<script src="xjs/lib/jquery.gritter.min.js"></script>--> <!-- jQuery Gritter -->
+        
         <!-- <script src="js/lib/jquery.cleditor.min.js"></script>--> <!-- CLEditor -->
 
         <!-- Date picker -->
         <!--<script src="js/lib/bootstrap-datetimepicker.min.js"></script>-->
+        
+        <script src="js/lib/sparklines-2.1.1.min.js"></script> <!-- Sparklines -->
         <script src="js/lib/bootstrap-datepicker.js"></script>
 
-        <script src="js/lib/jquery.toggle.buttons.js"></script> <!-- Bootstrap Toggle -->
-        <script src="js/lib/filter.js"></script> <!-- Filter for support page -->
+        <!--<script src="xjs/lib/jquery.toggle.buttons.js"></script>--> <!-- Bootstrap Toggle -->
+        <!--<script src="xjs/lib/filter.js"></script>--> <!-- Filter for support page -->
         <!-- <script src="js/lib/custom.js"></script>--> <!-- Custom codes -->
-        <script src="js/lib/charts.js"></script> <!-- Custom chart codes -->
+        <!--<script src="xjs/lib/charts.js"></script>--> <!-- Custom chart codes -->
 
         <!-- my libs / no bootstrap -->
-        <script src="http://code.angularjs.org/1.0.7/angular.min.js"></script>
-        <script src="http://code.angularjs.org/1.0.7/angular-bootstrap.min.js"></script>
+        <!--
+        <script src="xhttp://code.angularjs.org/1.0.7/angular.min.js"></script>
+        <script src="xhttp://code.angularjs.org/1.0.7/angular-bootstrap.min.js"></script>
+        -->
 
-        <script src="http://code.angularjs.org/1.0.7/i18n/angular-locale_de-de.js"></script>
+        <!--
+        <script src="xjs/lib/dialog.js"></script>
+        -->
         
-        <script src="js/lib/ui-bootstrap-tpls-0.4.0.js"></script>
-        <script src="js/lib/dialog.js"></script>
-        
-        
-
         <script src="js/app.js"></script>
         <script src="js/controller.js"></script>
 
@@ -170,7 +174,11 @@
 
                         <li class="nlightblue" data-ng-class="{current:isActive('/time-recording')}"><a href="#/time-recording"><i class="icon-table"></i> Time Recording</a></li>
 
-                        <li class="nviolet" data-ng-class="{current:isActive('/vacation')}"><a href="#/vacation"><i class="icon-glass"></i> Vacation</a></li>
+                        <li class="has_submenu nviolet" data-ng-class="{current:isActive('/vacations')}"><a href="#/vacations/{{user.id}}"><i class="icon-glass"></i> Vacation</a>
+                            <ul>
+                                <li class="nviolet" data-ng-class="{current:isActive('/vacation-manager')}"><a href="#/vacation-manager">Vacation Manager</a></li>
+                            </ul>
+                        </li>
 
                         <li class="has_submenu ngreen" >
                             <a href="#">

@@ -23,10 +23,13 @@ import javax.persistence.OneToMany;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = VacationYear.findByDate, query = "SELECT o FROM VacationYear o WHERE o.individual = :" + VacationYear.queryParam_individual + " and o.vacationYear = :" + VacationYear.queryParam_year ),})
+    @NamedQuery(name = VacationYear.findByDate, query = "SELECT o FROM VacationYear o WHERE o.individual = :" + VacationYear.queryParam_individual + " and o.vacationYear = :" + VacationYear.queryParam_year ),
+    @NamedQuery(name = VacationYear.findAllByYear, query = "SELECT o FROM VacationYear o WHERE o.vacationYear = :" + VacationYear.queryParam_year ),
+})
 public class VacationYear implements Serializable {
 
-    public static final String findByDate = "VacationYear.findByYear";    
+    public static final String findByDate = "VacationYear.findByYear";
+    public static final String findAllByYear = "VacationYear.findAllByYear";
         
     public static final String queryParam_individual = "individual";
     public static final String queryParam_year = "year";
@@ -44,6 +47,7 @@ public class VacationYear implements Serializable {
     private Integer numberOfVacationDays;
     private Integer residualLeaveYearBefore;
     private Integer residualLeave;
+    private Integer approvedVacationDays;
 
     public Long getId() {
         return id;
@@ -100,5 +104,15 @@ public class VacationYear implements Serializable {
     public void setResidualLeave(Integer residualLeave) {
         this.residualLeave = residualLeave;
     }
+
+    public Integer getApprovedVacationDays() {
+        return approvedVacationDays;
+    }
+
+    public void setApprovedVacationDays(Integer approvedVacationDays) {
+        this.approvedVacationDays = approvedVacationDays;
+    }
+    
+    
     
 }
