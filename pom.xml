@@ -3,17 +3,18 @@
 
     <groupId>com.sourcecoding</groupId>
     <artifactId>conair</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.0-Snapshot</version>
     <packaging>war</packaging>
 
     <name>conair</name>
     <description>Consulting Administration of Internal Resources</description>
 
 	<scm>
-		<connection>scm:git@github.com:mr678/conair.git</connection>
-		<developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
-		<url>scm:git@github.com:mr678/conair.git</url>
+		<connection>scm:git:https://github.com/mr678/conair.git</connection>
+		<developerConnection>scm:git:https://github.com/mr678/conair.git</developerConnection>
+		<url>scm:git:https://github.com/mr678/conair.git</url>
 	</scm>
+		
 	
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
