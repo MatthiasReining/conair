@@ -9,15 +9,18 @@
 
     <name>conair</name>
     <description>Consulting Administration of Internal Resources</description>
+
+	<scm>
+		<connection>scm:git@github.com:mr678/conair.git</connection>
+		<developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
+		<url>scm:git@github.com:mr678/conair.git</url>
+	</scm>
 	
     <properties>
         <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-	<scm>
-		<connection>scm:git:https://github.com/mr678/conair.git</connection>
-	</scm>
 		
     <dependencies>
         <!--
