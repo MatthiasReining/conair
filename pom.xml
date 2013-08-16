@@ -10,8 +10,8 @@
     <description>Consulting Administration of Internal Resources</description>
 
 	<scm>
-		<connection>scm:git:https://github.com/mr678/conair.git</connection>
-		<developerConnection>scm:git:https://github.com/mr678/conair.git</developerConnection>
+		<connection>scm:git:git@github.com:mr678/conair.git</connection>
+		<developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
   </scm>
   
 		
