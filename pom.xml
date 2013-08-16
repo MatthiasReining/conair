@@ -9,11 +9,11 @@
     <name>conair</name>
     <description>Consulting Administration of Internal Resources</description>
 
-	<scm>
-		<connection>scm:git:git@github.com:mr678/conair.git</connection>
-		<developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
+    <scm>
+        <connection>scm:git:git@github.com:mr678/conair.git</connection>
+        <developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
   
 		
 	
@@ -88,11 +88,11 @@
     <build>
         <plugins>
 		
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.4.1</version>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.1</version>
+            </plugin>
             
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -124,6 +124,26 @@
                 <version>2.1.1</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <archive>
+                        <manifest>
+                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+                        </manifest>
+                        <manifestEntries>
+                            <Specification-Title>${project.name}</Specification-Title>
+                            <Specification-Version>${project.version}</Specification-Version>
+                            <Implementation-Version>${BUILD_TAG}</Implementation-Version>
+                            <buildId>${BUILD_ID}</buildId>
+                            <buildNumber>${BUILD_NUMBER}</buildNumber>
+                            <buildTag>${BUILD_TAG}</buildTag>
+                            <buildUrl>${BUILD_URL}</buildUrl>
+                            <executorNumber>${EXECUTOR_NUMBER}</executorNumber>
+                            <jenkinsUrl>${JENKINS_URL}</jenkinsUrl>
+                            <jobName>${JOB_NAME}</jobName>
+                            <gitCommit>${GIT_COMMIT}</gitCommit>
+                            <gitBranch>${GIT_BRANCH</gitBranch>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
@@ -151,6 +171,48 @@
                     </execution>
                 </executions>
             </plugin>
+			
+			
+			
+            <plugin>
+                <groupId>org.codehaus.cargo</groupId>
+                <artifactId>cargo-maven2-plugin</artifactId>
+                <version>1.4.3</version>
+                <configuration>
+                    <container>
+                        <containerId>glassfish4x</containerId>
+                        <type>remote</type>
+                    </container>
+                    <configuration>
+                        <type>runtime</type>
+                        <properties>
+                            <cargo.hostname>euve30387.vserver.de</cargo.hostname>
+                            <cargo.remote.username>admin</cargo.remote.username>
+                            <cargo.remote.port>8080</cargo.remote.port>						
+                            <cargo.glassfish.domain.name>/conair</cargo.glassfish.domain.name>
+                        </properties>
+                    </configuration>
+                    <deployables>
+                        <deployable>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>${project.artifactId}</artifactId>
+                            <type>war</type>
+                            <properties>
+                                <context>/conair</context>
+                            </properties>
+                        </deployable>
+                    </deployables>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.glassfish.deployment</groupId>
+                        <artifactId>deployment-client</artifactId>
+                        <version>3.2-b06</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+			
+		
         </plugins>
     </build>
     <repositories>
