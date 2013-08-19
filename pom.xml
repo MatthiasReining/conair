@@ -144,7 +144,7 @@
                             <jenkinsUrl>${JENKINS_URL}</jenkinsUrl>
                             <jobName>${JOB_NAME}</jobName>
                             <gitCommit>${GIT_COMMIT}</gitCommit>
-                            <gitBranch>${GIT_BRANCH</gitBranch>
+                            <gitBranch>${GIT_BRANCH}</gitBranch>
                         </manifestEntries>
                     </archive>
                 </configuration>
