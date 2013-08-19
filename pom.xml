@@ -12,8 +12,7 @@
     <scm>
         <connection>scm:git:git@github.com:mr678/conair.git</connection>
         <developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
-    <tag>HEAD</tag>
-  </scm>
+    </scm>
   
 		
 	
@@ -86,6 +85,10 @@
     </dependencies>
 
     <build>
+	
+		<finalName>${project.artifactId}</finalName>
+		
+		
         <plugins>
 		
             <plugin>
@@ -199,7 +202,6 @@
                             <type>war</type>
                             <properties>
                                 <context>/conair</context>
-                                <war /> TODO war file ohne version bauen
                             </properties>
                         </deployable>
                     </deployables>
