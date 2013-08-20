@@ -61,6 +61,8 @@ public class Individual implements Serializable {
     @ManyToMany(mappedBy = "individual", cascade = CascadeType.ALL)
     private List<IndividualRole> roles;
     
+    private String emailAddress;
+    
     
     public boolean hasRole(String roleName) {
         for (IndividualRole ir : getRoles())
@@ -135,6 +137,14 @@ public class Individual implements Serializable {
 
     public void setVacationManager(Individual vacationManager) {
         this.vacationManager = vacationManager;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
     
     

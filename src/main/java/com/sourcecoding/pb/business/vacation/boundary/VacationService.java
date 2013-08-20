@@ -4,12 +4,8 @@
  */
 package com.sourcecoding.pb.business.vacation.boundary;
 
-import com.sourcecoding.pb.business.authentication.boundary.CurrentUser;
-import com.sourcecoding.pb.business.authentication.entity.User;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
-import com.sourcecoding.pb.business.vacation.control.VacationCalculator;
-import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +17,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;

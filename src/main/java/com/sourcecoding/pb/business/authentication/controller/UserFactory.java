@@ -51,7 +51,7 @@ public class UserFactory implements Serializable {
     }
 
     public void loginUser(User user) {
-        Individual individual = individualService.loginBySocialNetId(user.getSocialNetId());
+        Individual individual = individualService.loginBySocialNetId(user);
         if (individual == null) {
             throw new SecurityException("User " + user.getFirstName() + " " + user.getLastName() + "(social net id: " + user.getSocialNetId() + ") has no account on this platform! Please contact the platform admin.");
             //individual = new Individual();
@@ -59,8 +59,7 @@ public class UserFactory implements Serializable {
                     
         }
         user.setId(individual.getId());
-
-
+        
         System.out.println("userFactory#oginUser: " + this);
         System.out.println("user: " + user);
         currentUser = user;

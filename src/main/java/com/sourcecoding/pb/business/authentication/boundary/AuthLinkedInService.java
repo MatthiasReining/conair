@@ -105,7 +105,7 @@ public class AuthLinkedInService {
 
             System.out.println("rawresponse: " + accessToken.getRawResponse());
 
-            OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, "https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,picture-url)");
+            OAuthRequest oAuthRequest = new OAuthRequest(Verb.GET, "https://api.linkedin.com/v1/people/~:(id,first-name,last-name,headline,picture-url,email-address)");
             oAuthRequest.addHeader("x-li-format", "json");
             service.signRequest(accessToken, oAuthRequest);
             org.scribe.model.Response scribeResponse = oAuthRequest.send(); //Do something with response.getBody()
@@ -120,6 +120,7 @@ public class AuthLinkedInService {
             if (userLIData.has("pictureUrl"))
                 u.setPictureUrl(userLIData.getString("pictureUrl"));
             u.setSocialNetId(userLIData.getString("id"));
+            u.setEmailAddress(userLIData.getString("emailAddress"));
 
             userFactory.loginUser(u);
 
@@ -129,8 +130,6 @@ public class AuthLinkedInService {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-
-
         }
         //return Response.ok().build();
     }

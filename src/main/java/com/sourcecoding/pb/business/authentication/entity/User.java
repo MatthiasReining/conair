@@ -22,6 +22,7 @@ public class User implements Serializable {
     private String title;
     private String pictureUrl;
     private String lastLoginTime;
+    private String emailAddress;
 
     public String getFirstName() {
         return firstName;
@@ -77,6 +78,14 @@ public class User implements Serializable {
 
     public void setSocialNetId(String socialNetId) {
         this.socialNetId = socialNetId;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     

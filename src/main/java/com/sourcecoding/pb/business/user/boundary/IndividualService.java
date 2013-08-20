@@ -4,6 +4,7 @@
  */
 package com.sourcecoding.pb.business.user.boundary;
 
+import com.sourcecoding.pb.business.authentication.entity.User;
 import com.sourcecoding.pb.business.user.entity.Individual;
 import java.util.Date;
 import java.util.List;
@@ -68,7 +69,8 @@ public class IndividualService {
                 .getResultList();
     }
     
-    public Individual loginBySocialNetId(String socialNetId) {
+    public Individual loginBySocialNetId(User user) {
+        String socialNetId = user.getSocialNetId();
         List<Individual> result = em.createNamedQuery(Individual.findByLinkedInId, Individual.class)
                 .setParameter(Individual.queryParam_socialNetId, socialNetId)
                 .getResultList();
@@ -77,6 +79,7 @@ public class IndividualService {
         }
         Individual individual = result.get(0);        
         individual.setLastLogin(new Date());
+        individual.setEmailAddress(user.getEmailAddress());
         
         return individual;
     }
