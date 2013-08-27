@@ -207,7 +207,7 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
                 var d = vacationDays[i].convert2Date();
                 vacationDaysByMonth[d.getMonth()] = vacationDaysByMonth[d.getMonth()] + 1;
             }
-            $('#vacation-bar-chart').sparkline(vacationDaysByMonth, {type: 'bar', height: '80px', barWidth: 48, barSpacing: 8});
+            $('#vacation-bar-chart').sparkline(vacationDaysByMonth, {type: 'bar', height: '80px', barWidth: 46, barSpacing: 8});
         });
     };
 
