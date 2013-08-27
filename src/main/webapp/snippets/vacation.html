@@ -104,25 +104,25 @@
                         <div class="padd">
 
                             <!-- Form starts.  -->
-                            <form class="form-horizontal">
-                                <div class="control-group">
+                            <form class="form-horizontal" name="requestForm" novalidate>
+                                <div class="control-group" data-ng-class="{error: myForm.vacationFrom.$invalid}">
                                     <label class="control-label" for="vacationFrom">Vacation from</label>
                                     <div class="controls">
 
                                         <div class="input-append" id="vacation-input-from">
-                                            <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationFrom" data-ng-model="vacation.vacationFrom" placeholder="vacation from">
+                                            <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationFrom" data-ng-model="vacation.vacationFrom" placeholder="vacation from" required>
                                             <span class="add-on">
                                                 <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
                                             </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="control-group">
+                                <div class="control-group" data-ng-class="{error: myForm.vacationUntil.$invalid}">
                                     <label class="control-label" for="vacationUntil">Vacation Until</label>
                                     <div class="controls">
 
                                         <div class="input-append" id="vacation-input-until">
-                                            <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationUntil" data-ng-model="vacation.vacationUntil" placeholder="vacation until (incl.)">
+                                            <input data-format="yyyy-MM-dd" class="span6" type="text" name="vacationUntil" data-ng-model="vacation.vacationUntil" placeholder="vacation until (incl.)" required>
                                             <span class="add-on">
                                                 <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
                                             </span>
@@ -139,10 +139,10 @@
                                     </div>
                                 </div>
 
-                                <div class="control-group">
+                                <div class="control-group" data-ng-class="{error: myForm.numberOfDays.$invalid}">
                                     <label class="control-label" for="numberOfDays">Vacation Days</label>
                                     <div class="controls">
-                                        <input type="number" id="numberOfDays" data-ng-model="vacation.numberOfDays">
+                                        <input type="number" id="numberOfDays" name="numberOfDays" data-ng-model="vacation.numberOfDays" required>
                                     </div>
                                 </div>
 

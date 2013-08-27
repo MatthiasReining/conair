@@ -12,6 +12,7 @@ import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -37,15 +39,11 @@ public class IndividualVacationResource {
 
     @PersistenceContext
     EntityManager em;
-    
     @Inject
     ResponseBuilder rb;
-    
     @Inject
     VacationCalculator vacationCalculator;
-    
     private Individual individual;
-    
 
     public void setIndividual(Individual individual) {
         this.individual = individual;
@@ -103,7 +101,7 @@ public class IndividualVacationResource {
 
         return result;
     }
-    
+
     @Path("{id}")
     @DELETE
     @Consumes(MediaType.WILDCARD)
@@ -117,8 +115,7 @@ public class IndividualVacationResource {
         em.remove(vr);
         vacationCalculator.calculateAllVacationDays(vy);
     }
-    
-    
+
     @Path("calculateVacationDays")
     @GET
     public Map<String, Object> calculateVacationDays(
@@ -127,10 +124,25 @@ public class IndividualVacationResource {
 
         return vacationCalculator.calcVacationDays(individual, vacationFrom, vacationUntil);
     }
-    
+
     @POST
-    public Map<String, Object> issueRequestForTimeOff(Map<String, Object> payload) {
-        
+    public Response issueRequestForTimeOff(Map<String, Object> payload) {
+        //validation
+        Integer numberOfDays = (Integer) payload.get("numberOfDays");
+        Date vacationFrom = DateParameter.valueOf(payload.get("vacationFrom").toString());
+        Date vacationUntil = DateParameter.valueOf(payload.get("vacationUntil").toString());
+
+        Map<String, String> errors = new HashMap<>();
+        if (numberOfDays <= 0)
+            errors.put("numberOfDays", "Die Anzahl der Urlaubstage muss > 0 sein.");
+        if (vacationFrom.after(vacationUntil))
+            errors.put("vacationFrom", "'Urlaub von' muss vor 'Urlaub bis' liegen.");
+
+        if (errors.size() > 0) {
+            return Response.status(Response.Status.PRECONDITION_FAILED).entity(errors).build();
+        }
+
+
         Calendar from = DateParameter.calendarValueOf(payload.get("vacationFrom").toString());
         Integer year = from.get(Calendar.YEAR);
 
@@ -139,7 +151,7 @@ public class IndividualVacationResource {
                 .setParameter(VacationYear.queryParam_year, year)
                 .getResultList();
         VacationYear vy;
-        System.out.println("vyList: " + vyList );
+        System.out.println("vyList: " + vyList);
         if (vyList.isEmpty()) {
             vy = createNewVacationYear(individual, year);
             vy = em.merge(vy);
@@ -155,20 +167,18 @@ public class IndividualVacationResource {
         VacationRecord vr = new VacationRecord();
         vr.setVacationYear(vy);
         vr.setIndividual(individual);
-        vr.setNumberOfDays((Integer) payload.get("numberOfDays"));
-        vr.setVacationFrom(DateParameter.valueOf(payload.get("vacationFrom").toString()));
-        vr.setVacationUntil(DateParameter.valueOf(payload.get("vacationUntil").toString()));
+        vr.setNumberOfDays(numberOfDays);
+        vr.setVacationFrom(vacationFrom);
+        vr.setVacationUntil(vacationUntil);
         vr.setApprovalState(VacationRecord.APPROVAL_STATE_FOR_APPROVAL);
 
         vrList.add(vr);
-        
+
         vacationCalculator.calculateAllVacationDays(vy);
 
 
-        return null;
+        return Response.ok().build();
     }
-
-    
 
     private VacationYear createNewVacationYear(Individual individual, Integer year) {
         VacationYear vy = new VacationYear();
@@ -183,6 +193,4 @@ public class IndividualVacationResource {
         vy = em.merge(vy);
         return vy;
     }
-
-  
 }

@@ -200,7 +200,7 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
             //convert date
 
             $scope.vacations = data;
-            
+
             var vacationDays = $scope.vacations.vacationDays;
             var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             for (var i = 0; i < vacationDays.length; i++) {
@@ -249,16 +249,27 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
     };
 
     $scope.issueRequestForTimeOff = function() {
+        console.log($scope.requestForm.$valid);
+
+        if (!$scope.requestForm.$valid)
+            return;
         console.log('->sendToServer');
         console.log($scope.vacation);
 
         $scope.vacation.individualId = $routeParams.individualId;
 
-        $http.post(serviceURL, $scope.vacation).success(function(data) {
-            refresh();
-            alert('Urlaubsantrag eingereicht');
-
-        });
+        $http.post(serviceURL, $scope.vacation).
+                success(function(data) {
+                    refresh();
+                    alert('Urlaubsantrag eingereicht');
+                }).
+                error(function(data) {
+                    console.log(data);
+                    
+                   // called asynchronously if an error occurs
+                   // or server returns response with status
+                   // code outside of the <200, 400) range
+                 });
     };
 
     $scope.selectVacationRecord = function(vacationRecord) {
@@ -364,7 +375,7 @@ function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
     };
 
     $scope.approveRequestForTimeOff = function() {
-        $http.put(serviceBaseUrl + 'vacations/tasks' + $scope.vacation.id + '/approve' , $scope.vacation).success(function(data) {
+        $http.put(serviceBaseUrl + 'vacations/tasks' + $scope.vacation.id + '/approve', $scope.vacation).success(function(data) {
             alert("genehmigt");
         });
     };
@@ -372,7 +383,7 @@ function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
 
 
 function VacationManagerCtrl($scope, $routeParams, $http) {
-    
+
     $http.get(serviceBaseUrl + 'vacations').success(function(data) {
         console.log(data);
         $scope.vacations = data;
@@ -400,13 +411,13 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
             var appendixResidualLeaveProgress = Math.floor(appendixResidualLeave / progess100percent * 100);
 
             value.progress = [
-                    {"value":thisYearApprovedProgress,"type":"this-year-approved"},
-                    {"value":thisYearResidualLeaveProgress,"type":"this-year-residual-leave"},
-                    {"value":appendixApprovedProgress,"type":"appendix-approved"},
-                    {"value":appendixResidualLeaveProgress,"type":"appendix-residual-leave"}                
+                {"value": thisYearApprovedProgress, "type": "this-year-approved"},
+                {"value": thisYearResidualLeaveProgress, "type": "this-year-residual-leave"},
+                {"value": appendixApprovedProgress, "type": "appendix-approved"},
+                {"value": appendixResidualLeaveProgress, "type": "appendix-residual-leave"}
             ];
-            
-            console.log( value.progress);
+
+            console.log(value.progress);
         });
 
     });
