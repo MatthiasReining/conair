@@ -57,7 +57,7 @@ public class VersionService {
             vi.setSpecificationVersion(attr.getValue("Specification-Version"));
             vi.setSpecificationTitle(attr.getValue("Specification-Title"));
             vi.setBuildId(attr.getValue("buildId"));
-            vi.setBuildNumber(attr.getValue("buildNumber"));
+            vi.setBuildNumber(attr.getValue("buildNumber"));            
             vi.setBuildTag(attr.getValue("buildTag"));
             vi.setBuildUrl(attr.getValue("buildUrl"));
             vi.setExecutorNumber(attr.getValue("executorNumber"));

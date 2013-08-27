@@ -1,6 +1,7 @@
 'use strict';
 
 var user;
+var version;
 
 String.prototype.right = function(length) {
     var str = this;
@@ -61,6 +62,7 @@ app.config(['$routeProvider', function($routeProvider) {
 app.run(['$http', '$rootScope', function($http, $rootScope) {
         console.log('in run');
         $rootScope.user = user;
+        $rootScope.version = version;
     }]);
 
 var selectCurrentNavi = function(page) {
@@ -87,7 +89,8 @@ angular.element(document).ready(function() {
         'cache': false
     }).done(function(data) {
         console.log("auth done..");
-        user = data;
+        user = data.user;
+        version = data.version;
         angular.bootstrap(document, ['conair']);
     }).error(function(data, status) {
         console.log("auth error.. " + status);
