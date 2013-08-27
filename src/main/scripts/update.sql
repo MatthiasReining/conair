@@ -1,1 +1,2 @@
-alter table APP.INDIVIDUAL add emailAddress varchar(255);
+--alter table INDIVIDUAL add EMAILADDRESS varchar(255);
+-- done 2013-08-27

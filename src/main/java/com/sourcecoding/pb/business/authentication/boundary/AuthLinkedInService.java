@@ -7,8 +7,12 @@ package com.sourcecoding.pb.business.authentication.boundary;
 import com.sourcecoding.pb.business.authentication.controller.UserFactory;
 import com.sourcecoding.pb.business.authentication.entity.User;
 import java.io.IOException;
+import java.io.StringReader;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -17,9 +21,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.LinkedInApi;
 import org.scribe.model.OAuthRequest;
@@ -80,7 +81,7 @@ public class AuthLinkedInService {
     @GET
     @Path("login")
     @Produces(MediaType.TEXT_HTML)
-    public void callback(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException, JSONException {
+    public void callback(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
         System.out.println("request: " + request);
       
         System.out.println("login/session-id:" + request.getSession(true).getId());
@@ -111,13 +112,13 @@ public class AuthLinkedInService {
             org.scribe.model.Response scribeResponse = oAuthRequest.send(); //Do something with response.getBody()
             System.out.println(scribeResponse.getBody());
 
-            JSONObject userLIData = new JSONObject(scribeResponse.getBody());
-
+            JsonObject userLIData = Json.createReader( new StringReader(scribeResponse.getBody())).readObject();
+            
             User u = new User();
             u.setFirstName(userLIData.getString("firstName"));
             u.setLastName(userLIData.getString("lastName"));
             u.setTitle(userLIData.getString("headline"));
-            if (userLIData.has("pictureUrl"))
+            if (userLIData.containsKey("pictureUrl"))
                 u.setPictureUrl(userLIData.getString("pictureUrl"));
             u.setSocialNetId(userLIData.getString("id"));
             u.setEmailAddress(userLIData.getString("emailAddress"));
