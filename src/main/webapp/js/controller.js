@@ -375,7 +375,7 @@ function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
     };
 
     $scope.approveRequestForTimeOff = function() {
-        $http.put(serviceBaseUrl + 'vacations/tasks' + $scope.vacation.id + '/approve', $scope.vacation).success(function(data) {
+        $http.put(serviceBaseUrl + 'vacations/tasks/' + $scope.vacation.id + '/approve', $scope.vacation).success(function(data) {
             alert("genehmigt");
         });
     };
