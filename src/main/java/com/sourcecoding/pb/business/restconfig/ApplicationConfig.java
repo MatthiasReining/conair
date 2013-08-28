@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business;
+package com.sourcecoding.pb.business.restconfig;
 
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
@@ -42,8 +42,10 @@ public class ApplicationConfig extends Application {
         resources.add(com.sourcecoding.pb.business.meta.boundary.VersionService.class);
         resources.add(com.sourcecoding.pb.business.perdiemcharges.boundary.PerDiemService.class);
         resources.add(com.sourcecoding.pb.business.project.boundary.ProjectServices.class);
+        resources.add(com.sourcecoding.pb.business.resources.boundary.ResourcesResource.class);
         resources.add(com.sourcecoding.pb.business.timerecording.boundary.TimeRecordingService.class);
         resources.add(com.sourcecoding.pb.business.user.boundary.IndividualService.class);
+        resources.add(com.sourcecoding.pb.business.user.boundary.PeopleResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.IndividualVacationResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.TasksResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.VacationService.class);

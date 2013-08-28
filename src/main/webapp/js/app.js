@@ -43,6 +43,7 @@ var app = angular.module('conair',  ['ui.bootstrap']);
 app.config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.
+                when('/resources/people', {templateUrl: 'snippets/people.html', controller: PeopleCtrl}).
                 when('/projects', {templateUrl: 'snippets/project-list.html', controller: ProjectListCtrl}).
                 when('/projects/:projectKey', {templateUrl: 'snippets/project.html', controller: ProjectCtrl}).
                 when('/time-recording', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).

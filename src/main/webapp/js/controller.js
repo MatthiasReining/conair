@@ -422,5 +422,13 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
 
     });
 
+};
+
+
+
+function PeopleCtrl($scope, $http) {
+    $http.get(serviceBaseUrl + 'resources/people').success(function(data) {
+        console.log(data);
+        $scope.people = data;
+    });
 }
-;
