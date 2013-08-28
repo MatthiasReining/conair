@@ -16,6 +16,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
@@ -26,32 +27,35 @@ import javax.ws.rs.core.MediaType;
 public class AuthService implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
     @Inject
     @CurrentUser
     User user;
-    
     @Inject
     VersionService versionService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, Object> getUserInfo() throws IOException, ClassNotFoundException {
-        System.out.println("auth/user: " + user);
-        
+    public Response getUserInfo() throws IOException, ClassNotFoundException {
         Map<String, Object> result = new HashMap<>();
-        
-        User userCopy = new User();
-        userCopy.setFirstName(user.getFirstName());
-        userCopy.setLastName(user.getLastName());
-        userCopy.setSocialNetId(user.getSocialNetId());
-        userCopy.setId(user.getId());
-        userCopy.setTitle(user.getTitle());
-        userCopy.setPictureUrl(user.getPictureUrl());
-        
-        result.put("user", userCopy);
         result.put("version", versionService.getVersionInformation());
-        
-        return result;
+
+        try {
+            System.out.println("auth/user: " + user);
+
+            User userCopy = new User();
+            userCopy.setFirstName(user.getFirstName());
+            userCopy.setLastName(user.getLastName());
+            userCopy.setSocialNetId(user.getSocialNetId());
+            userCopy.setId(user.getId());
+            userCopy.setTitle(user.getTitle());
+            userCopy.setPictureUrl(user.getPictureUrl());
+
+            result.put("user", userCopy);
+            return Response.ok().entity(result).build();
+
+        } catch (SecurityException e) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity(result).build();
+        }
+
     }
 }

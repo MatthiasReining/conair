@@ -173,6 +173,17 @@
                         <!-- Use the class nred, ngreen, nblue, nlightblue, nviolet or norange to add background color. You need to use this in <li> tag. -->
 
                         <li class="nred"><a href="#/dashboard"><i class="icon-desktop"></i> Dashboard</a></li>
+                        
+                         <li class="has_submenu nviolet" >
+                            <a href="#">
+                                <i class="icon-male"></i> Resources
+                                <span class="pull-right"><i class="icon-angle-right"></i></span>
+                            </a>
+                            <ul>
+                                <li class="nviolet" data-ng-class="{current:isActive('/staff')}"><a href="#/per-diems-selector">Staff</a></li>
+                                <li class="nviolet" data-ng-class="{current:isActive('/legal-holidays')}"><a href="#/travel-costs">Legal Holidays</a></li>
+                            </ul>
+                        </li>
 
                         <li class="norange" data-ng-class="{current:isActive('/projects')}"><a href="#/projects"><i class="icon-list"></i> Projects</a></li>
 

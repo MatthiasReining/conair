@@ -93,7 +93,10 @@ angular.element(document).ready(function() {
         version = data.version;
         angular.bootstrap(document, ['conair']);
     }).error(function(data, status) {
+        
         console.log("auth error.. " + status);
+        console.log(data);
+        
         window.location = "login.html";
     });
 
