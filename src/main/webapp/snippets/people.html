@@ -49,10 +49,10 @@
                                     <th>name</th>
                                 </tr> 
                             </thead>
-                            <tbody id="project-list-data" data-ng-repeat="project in projects">
+                            <tbody id="project-list-data" data-ng-repeat="p in people">
                                 <tr>
-                                    <td><a href="#/projects/{{project.key}}">{{project.key}}</a></td>
-                                    <td>{{project.name}}</td>
+                                    <td><a href="#/projects/{{project.key}}">{{p.nickname}} ({{p.emailAddress}})</a></td>
+                                    <td>{{p.linkedInId}}</td>
                                 </tr>
                             </tbody>
                         </table>
