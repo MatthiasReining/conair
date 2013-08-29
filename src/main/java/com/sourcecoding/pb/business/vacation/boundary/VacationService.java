@@ -65,6 +65,8 @@ public class VacationService {
         IndividualVacationResource ivr = resourceContext.getResource(IndividualVacationResource.class);
 
         Individual individual = em.find(Individual.class, individualId);
+        
+        //FIXME setter for slsb :-( search for a better solution!
         ivr.setIndividual(individual);
         return ivr;
     }

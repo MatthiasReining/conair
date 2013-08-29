@@ -260,16 +260,16 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
 
         $http.post(serviceURL, $scope.vacation).
                 success(function(data) {
-                    refresh();
-                    alert('Urlaubsantrag eingereicht');
-                }).
+            refresh();
+            alert('Urlaubsantrag eingereicht');
+        }).
                 error(function(data) {
-                    console.log(data);
-                    
-                   // called asynchronously if an error occurs
-                   // or server returns response with status
-                   // code outside of the <200, 400) range
-                 });
+            console.log(data);
+
+            // called asynchronously if an error occurs
+            // or server returns response with status
+            // code outside of the <200, 400) range
+        });
     };
 
     $scope.selectVacationRecord = function(vacationRecord) {
@@ -422,7 +422,8 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
 
     });
 
-};
+}
+;
 
 
 
@@ -431,4 +432,18 @@ function IndividualsCtrl($scope, $http) {
         console.log(data);
         $scope.individuals = data;
     });
+
+    $scope.selectIndividual = function(individual) {
+        $scope.currentIndividual = individual;
+    };
+    
+    $scope.sendToServer = function() {
+        console.log($scope.currentIndividual);
+        $http.put(serviceBaseUrl + 'resources/individuals', $scope.currentIndividual).success(function(data) {
+            console.log('<--fromServer');
+            console.log(data);
+            alert('info auf dem server...');
+        });
+    }
+
 }
