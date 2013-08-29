@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.user.entity;
+package com.sourcecoding.pb.business.individuals.entity;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -59,7 +60,7 @@ public class Individual implements Serializable {
     
     @XmlTransient
     @ManyToMany(mappedBy = "individual", cascade = CascadeType.ALL)
-    private List<IndividualRole> roles;
+    private Set<IndividualRole> roles;
     
     private String emailAddress;
     
@@ -123,11 +124,11 @@ public class Individual implements Serializable {
         this.workdaysPerWeek = workdaysPerWeek;
     }
 
-    public List<IndividualRole> getRoles() {
+    public Set<IndividualRole> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<IndividualRole> roles) {
+    public void setRoles(Set<IndividualRole> roles) {
         this.roles = roles;
     }
 

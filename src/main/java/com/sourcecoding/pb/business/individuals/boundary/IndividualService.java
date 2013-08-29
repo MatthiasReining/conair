@@ -2,10 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.user.boundary;
+package com.sourcecoding.pb.business.individuals.boundary;
 
 import com.sourcecoding.pb.business.authentication.entity.User;
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.util.Date;
 import java.util.List;
 import javax.ejb.Stateless;

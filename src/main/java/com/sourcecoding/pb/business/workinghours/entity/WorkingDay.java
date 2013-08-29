@@ -4,7 +4,7 @@
  */
 package com.sourcecoding.pb.business.workinghours.entity;
 
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;

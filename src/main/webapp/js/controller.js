@@ -426,9 +426,9 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
 
 
 
-function PeopleCtrl($scope, $http) {
-    $http.get(serviceBaseUrl + 'resources/people').success(function(data) {
+function IndividualsCtrl($scope, $http) {
+    $http.get(serviceBaseUrl + 'resources/individuals').success(function(data) {
         console.log(data);
-        $scope.people = data;
+        $scope.individuals = data;
     });
 }

@@ -4,7 +4,7 @@
  */
 package com.sourcecoding.pb.business.vacation.boundary;
 
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.util.ArrayList;

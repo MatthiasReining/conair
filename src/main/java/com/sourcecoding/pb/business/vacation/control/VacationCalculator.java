@@ -5,7 +5,7 @@
 package com.sourcecoding.pb.business.vacation.control;
 
 import com.sourcecoding.pb.business.restconfig.DateParameter;
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.vacation.entity.LegalHoliday;
 import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;

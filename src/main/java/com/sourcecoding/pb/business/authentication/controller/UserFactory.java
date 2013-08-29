@@ -6,8 +6,8 @@ package com.sourcecoding.pb.business.authentication.controller;
 
 import com.sourcecoding.pb.business.authentication.boundary.CurrentUser;
 import com.sourcecoding.pb.business.authentication.entity.User;
-import com.sourcecoding.pb.business.user.boundary.IndividualService;
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.boundary.IndividualService;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
 import javax.enterprise.context.RequestScoped;
 import javax.enterprise.context.SessionScoped;

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.user.entity;
+package com.sourcecoding.pb.business.individuals.entity;
 
 import com.sourcecoding.pb.business.restconfig.JsonDateTimeAdapter;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  * @author Matthias
  */
-public class JsonPeople {
+public class JsonIndividual {
 
     public Long id;
     public String nickname;
@@ -28,8 +28,8 @@ public class JsonPeople {
     public String vacationManagerNickName;
     public List<String> roles;
 
-    public static JsonPeople create(Individual individual) {
-        JsonPeople p = new JsonPeople();
+    public static JsonIndividual create(Individual individual) {
+        JsonIndividual p = new JsonIndividual();
         p.id = individual.getId();
         p.nickname = individual.getNickname();
         p.emailAddress = individual.getEmailAddress();

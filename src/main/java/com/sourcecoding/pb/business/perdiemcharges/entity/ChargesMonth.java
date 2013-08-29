@@ -4,7 +4,7 @@
  */
 package com.sourcecoding.pb.business.perdiemcharges.entity;
 
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.CascadeType;

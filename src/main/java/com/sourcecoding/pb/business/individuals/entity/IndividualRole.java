@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.user.entity;
+package com.sourcecoding.pb.business.individuals.entity;
 
 import java.io.Serializable;
 import java.util.List;

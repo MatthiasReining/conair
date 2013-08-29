@@ -6,7 +6,7 @@ package com.sourcecoding.pb.business.vacation.boundary;
 
 import com.sourcecoding.pb.business.authentication.boundary.CurrentUser;
 import com.sourcecoding.pb.business.authentication.entity.User;
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
 import com.sourcecoding.pb.business.vacation.control.VacationCalculator;
 import com.sourcecoding.pb.business.vacation.entity.VacationRecord;

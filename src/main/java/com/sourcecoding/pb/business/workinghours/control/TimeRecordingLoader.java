@@ -4,7 +4,7 @@
  */
 package com.sourcecoding.pb.business.workinghours.control;
 
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
 import java.util.Date;
 import java.util.List;

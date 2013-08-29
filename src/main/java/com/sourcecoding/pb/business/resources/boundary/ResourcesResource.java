@@ -4,25 +4,14 @@
  */
 package com.sourcecoding.pb.business.resources.boundary;
 
-import com.sourcecoding.pb.business.user.entity.JsonPeople;
-import com.sourcecoding.pb.business.user.boundary.IndividualService;
-import com.sourcecoding.pb.business.user.boundary.PeopleResource;
-import com.sourcecoding.pb.business.user.entity.Individual;
-import com.sourcecoding.pb.business.vacation.boundary.TasksResource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.sourcecoding.pb.business.individuals.boundary.IndividualsResource;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  *
@@ -37,8 +26,8 @@ public class ResourcesResource {
     @Context
     private ResourceContext resourceContext;
 
-    @Path("people")
-    public PeopleResource getPeople() {
-        return resourceContext.getResource(PeopleResource.class);
+    @Path("individuals")
+    public IndividualsResource getPeople() {
+        return resourceContext.getResource(IndividualsResource.class);
     }
 }

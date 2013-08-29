@@ -8,7 +8,7 @@ import com.sourcecoding.pb.business.authentication.boundary.CurrentUser;
 import com.sourcecoding.pb.business.authentication.entity.User;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.workinghours.control.JsonMapPersister;
 import com.sourcecoding.pb.business.workinghours.control.TimeRecordingLoader;
 import com.sourcecoding.pb.business.workinghours.entity.WorkPackageDescription;

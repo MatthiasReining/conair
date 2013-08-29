@@ -9,7 +9,7 @@ import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiem;
 import com.sourcecoding.pb.business.perdiemcharges.entity.TravelExpensesRate;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
-import com.sourcecoding.pb.business.user.entity.Individual;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
