@@ -193,4 +193,9 @@ public class IndividualVacationResource {
         vy = em.merge(vy);
         return vy;
     }
+    
+    public Response changeNumberOfVacationDays(String vacationYear, String newNumberOfVacationDays) {
+        //FIXME implement
+        return Response.ok().build();
+    }
 }
