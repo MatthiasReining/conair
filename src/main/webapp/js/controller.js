@@ -6,6 +6,10 @@ function NaviCtrl($scope, $location) {
     $scope.isActive = function(route) {
         return ($location.path().indexOf(route) > -1);
     };
+
+    $scope.test = function(path) {
+        alert($scope.isActive(path));
+    };
 }
 ;
 
@@ -174,6 +178,8 @@ function TravelCostsCtrl($scope, $http) {
 }
 
 function VacationCtrl($scope, $http, $routeParams, $dialog) {
+    $('.panel-heading').css('background-color', 'mediumvioletred');
+    $('.panel-heading').css('color', 'white');
     var serviceURL = serviceBaseUrl + 'vacations/' + $routeParams.individualId;
 
     $scope.stateText = {
@@ -185,13 +191,25 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
 
     $scope.vacation = {};
     //init click events
-    $('#vacation-input-from').datetimepicker().on('changeDate', function(e) {
-        console.log(e.date);
-        console.log($scope);
-        datepicker2model(e, $scope);
-    });
-    $('#vacation-input-until').datetimepicker().on('changeDate', function(e) {
-        datepicker2model(e, $scope);
+    //$('#vacation-input-from').datetimepicker().on('changeDate', function(e) {
+    //    console.log(e.date);
+    //    console.log($scope);
+    //    datepicker2model(e, $scope);
+    //});
+    //$('#vacation-input-until').datetimepicker().on('changeDate', function(e) {
+    //    datepicker2model(e, $scope);
+    //});
+
+    
+    $('#vacationFromUntil').daterangepicker({
+        showWeekNumbers: true,
+        format: 'dd, L',
+        separator: '    -    ',
+        locale: {firstDay: 1}
+    },
+    function(start, end) {
+        $scope.vacation.vacationFrom = start.format('YYYY-MM-DD');
+        $scope.vacation.vacationUntil = end.format('YYYY-MM-DD');
     });
 
     var refresh = function() {
@@ -436,7 +454,7 @@ function IndividualsCtrl($scope, $http) {
     $scope.selectIndividual = function(individual) {
         $scope.currentIndividual = individual;
     };
-    
+
     $scope.sendToServer = function() {
         console.log($scope.currentIndividual);
         $http.put(serviceBaseUrl + 'resources/individuals', $scope.currentIndividual).success(function(data) {

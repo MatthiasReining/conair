@@ -1,4 +1,124 @@
+/* INFRASTRUCTURE */
 
+body {
+    background-color: black;
+    margin-top: 50px;
+}
+.navbar-fixed-top {
+    color: white;
+    padding: 10px 20px 10px 30px;
+}
+.navbar-fixed-top a {
+    color: white;
+    text-decoration: none;
+}
+
+.sidebar {
+    width: 230px; 
+    float: left;
+    display: block;
+    position: relative;
+}
+
+.sidebar a {
+    color: white;
+    font-size: 15px;
+    padding: 12px 20px;
+    display: block;
+    text-decoration: none !important;
+}
+.sidebar ul {
+    padding: 0;
+    margin: 0;
+}
+.sidebar ul li {
+    line-height: 25px;
+    list-style-type: none;
+    border-bottom: 1px solid #222222;
+}
+
+.sidebar ul li.has_submenu > ul li {
+    border-top: 1px solid #222222;
+    padding-left: 25px;
+    line-height: 10px;
+}
+.sidebar ul li.has_submenu > ul li a {
+    font-weight: normal;
+    font-size: 90%;
+    color: gainsboro;
+}
+
+.sidebar .navi > li.nred > a:hover, 
+.sidebar .nave > li.nred current > a {
+    background-color: red;
+}
+.sidebar .navi > li.has_submenu > ul li.nred > a:hover, 
+.sidebar .navi > li.has_submenu > ul li.nred.current > a {
+    color: red;
+}
+.sidebar .navi > li.nviolet > a:hover,
+.sidebar .navi > li.nviolet.current > a {
+    background-color: mediumvioletred;
+}
+.sidebar .navi > li.has_submenu > ul li.nviolet > a:hover,
+.sidebar .navi > li.has_submenu > ul li.nviolet.current > a{
+    color: mediumvioletred;
+}
+.sidebar .navi > li.norange > a:hover, 
+.sidebar .navi > li.norange.current > a {
+    background-color: orange;
+}
+
+.sidebar .navi > li.has_submenu > ul li.norange > a:hover,
+.sidebar .navi > li.has_submenu > ul li.norange.current > a {
+    color: orange;
+}
+.sidebar .navi > li.nlightblue > a:hover, 
+.sidebar .navi > li.nlightblue.current > a{
+    background-color: lightblue;
+}
+.sidebar .navi > li.has_submenu > ul li.nlightblue > a:hover,
+.sidebar .navi > li.has_submenu > ul li.nlightblue.current > a {
+    color: lightblue;
+}
+.sidebar .navi > li.ngreen > a:hover,
+.sidebar .navi > li.ngreen.current > a {
+    background-color: green;
+}
+.sidebar .navi > li.has_submenu > ul li.ngreen > a:hover,*
+.sidebar .navi > li.has_submenu > ul li.ngreen.current > a {
+    color: green;
+}
+.sidebar .navi > li.naqua > a:hover,
+.sidebar .navi > li.naqua.current > a {
+    background-color: aqua;
+}
+.sidebar .navi > li.has_submenu > ul li.naqua > a:hover,
+.sidebar .navi > li.has_submenu > ul li.naqua.current > a {
+    color: aqua;
+}
+
+.sidebar:after {
+    clear: both;
+}
+#main-content {
+    margin-left: 230px; 
+    min-height: 900px; 
+    background-color: white;
+    padding: 15px 20px;
+    color: #777;
+    width: auto;
+    margin-right: 0px;
+    position: relative;
+}
+
+#main-content .row:after, #main-content .panel-body:after {
+    clear: none;
+}
+
+.form-horizontal .form-group:after {
+    clear: none;
+}
 
 /* PER DIEMS */
 /* ========= */

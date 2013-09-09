@@ -66,16 +66,6 @@ app.run(['$http', '$rootScope', function($http, $rootScope) {
         $rootScope.version = version;
     }]);
 
-var selectCurrentNavi = function(page) {
-    $('.navi li').removeClass('current');
-    $.each($('.navi li'), function(index, key) {
-        var href = $(key).find('a').attr('href');
-        if (href.indexOf('#/' + page) > -1) {
-            $(key).addClass('current');
-        }
-    });
-};
-
 
 /**
  * Bootstraping
@@ -104,3 +94,5 @@ angular.element(document).ready(function() {
 
 });
     
+    
+moment.lang('de');
