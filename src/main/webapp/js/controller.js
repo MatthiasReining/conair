@@ -1,18 +1,14 @@
 'use strict';
-
 var serviceBaseUrl = 'rest/';
-
 function NaviCtrl($scope, $location) {
     $scope.isActive = function(route) {
         return ($location.path().indexOf(route) > -1);
     };
-
     $scope.test = function(path) {
         alert($scope.isActive(path));
     };
 }
 ;
-
 function ProjectListCtrl($scope, $http) {
     $http.get(serviceBaseUrl + 'projects/list').success(function(data) {
         console.log(data);
@@ -22,9 +18,7 @@ function ProjectListCtrl($scope, $http) {
 
 function ProjectCtrl($scope, $routeParams, $http) {
     var serviceURL = serviceBaseUrl + 'projects/v0.1/' + $routeParams.projectKey;
-
     console.log('in ProjectCtrl');
-
     //init click events
     $('#project-start-area').datetimepicker().on('changeDate', function(e) {
         console.log(e.date);
@@ -33,7 +27,6 @@ function ProjectCtrl($scope, $routeParams, $http) {
     $('#project-end-area').datetimepicker().on('changeDate', function(e) {
         datepicker2model(e, $scope);
     });
-
     $http.get(serviceURL).success(function(data) {
         console.log(data);
         //convert date
@@ -41,16 +34,13 @@ function ProjectCtrl($scope, $routeParams, $http) {
         data.projectEnd = new Date(data.projectEnd).getText();
         $scope.project = data;
     });
-
     $scope.selectWP = function(workPackage) {
         console.log(workPackage);
         $scope.currentWP = workPackage;
     };
-
     $scope.sendToServer = function() {
         console.log('->sendToServer');
         console.log($scope.project);
-
         $http.put(serviceURL, $scope.project).success(function(data) {
             console.log('<--fromServer');
             console.log(data);
@@ -65,13 +55,11 @@ function PerDiemsSelectorCtrl($scope, $http) {
 
 function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
     var serviceURL = serviceBaseUrl + 'per-diem/' + $rootScope.user.id + '/' + $routeParams.yearMonth;
-
     $http.get(serviceURL).success(function(data) {
         console.log(data);
         $scope.perDiemsData = data;
         calcSum();
     });
-
     //load destination list
     //FIXME cache
     $scope.travelExpensesRatesById = {};
@@ -86,7 +74,6 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         console.log(data);
         $scope.projects = data;
     });
-
     $scope.removePerDiem = function(perDiem) {
         perDiem.projectId = '';
         perDiem.travelExpensesRateId = '';
@@ -94,10 +81,8 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         perDiem.inServiceFrom = '';
         perDiem.inServiceTo = '';
         perDiem.charges = '';
-
         calcSum();
     };
-
     $scope.copyPerDiem = function(targetPerDiem, sourcePerDiem) {
         targetPerDiem.projectId = sourcePerDiem.projectId;
         targetPerDiem.travelExpensesRateId = sourcePerDiem.travelExpensesRateId;
@@ -105,7 +90,6 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         targetPerDiem.inServiceFrom = sourcePerDiem.inServiceFrom;
         targetPerDiem.inServiceTo = sourcePerDiem.inServiceTo;
         targetPerDiem.charges = sourcePerDiem.charges;
-
         calcSum();
     }
 
@@ -134,9 +118,7 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
 
         }
         calcSum();
-
     };
-
     var calcSum = function() {
         var sum = 0;
         angular.forEach($scope.perDiemsData.perDiems, function(value, key) {
@@ -145,11 +127,9 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         });
         $scope.perDiemsData.sum = sum;
     };
-
     $scope.sendToServer = function() {
         console.log('->sendToServer');
         console.log($scope.perDiemsData);
-
         $http.put(serviceURL, $scope.perDiemsData).success(function(data) {
             console.log('<--fromServer');
             console.log(data);
@@ -157,7 +137,6 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
             calcSum();
         });
     };
-
 }
 
 
@@ -170,37 +149,25 @@ function TravelCostsListCtrl($scope, $http) {
 }
 
 function TravelCostsCtrl($scope, $http) {
-    //selectCurrentNavi('travel-costs');
-    //$http.get(serviceBaseUrl + 'travel-costs').success(function(data) {
-    //    console.log(data);
-    //    $scope.travelCosts = data;
-    //});
+//selectCurrentNavi('travel-costs');
+//$http.get(serviceBaseUrl + 'travel-costs').success(function(data) {
+//    console.log(data);
+//    $scope.travelCosts = data;
+//});
 }
 
-function VacationCtrl($scope, $http, $routeParams, $dialog) {
+
+function VacationCtrl($scope, $http, $routeParams, $modal) {
     $('.panel-heading').css('background-color', 'mediumvioletred');
     $('.panel-heading').css('color', 'white');
     var serviceURL = serviceBaseUrl + 'vacations/' + $routeParams.individualId;
-
     $scope.stateText = {
         0: 'new',
         1: 'for approval',
         5: 'approved',
         9: 'rejected'
     };
-
     $scope.vacation = {};
-    //init click events
-    //$('#vacation-input-from').datetimepicker().on('changeDate', function(e) {
-    //    console.log(e.date);
-    //    console.log($scope);
-    //    datepicker2model(e, $scope);
-    //});
-    //$('#vacation-input-until').datetimepicker().on('changeDate', function(e) {
-    //    datepicker2model(e, $scope);
-    //});
-
-    
     $('#vacationFromUntil').daterangepicker({
         showWeekNumbers: true,
         format: 'dd, L',
@@ -211,14 +178,12 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
         $scope.vacation.vacationFrom = start.format('YYYY-MM-DD');
         $scope.vacation.vacationUntil = end.format('YYYY-MM-DD');
     });
-
     var refresh = function() {
         $http.get(serviceURL).success(function(data) {
             console.log(data);
             //convert date
 
             $scope.vacations = data;
-
             var vacationDays = $scope.vacations.vacationDays;
             var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             for (var i = 0; i < vacationDays.length; i++) {
@@ -228,30 +193,19 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
             $('#vacation-bar-chart').sparkline(vacationDaysByMonth, {type: 'bar', height: '80px', barWidth: 46, barSpacing: 8});
         });
     };
-
-
     //initalize load
     refresh();
-
     $scope.removeVacationRecord = function(vacationRecord) {
+
         var title = 'Remove vacation request';
-        var msg = 'Should vacation request removed? (from ' + vacationRecord.vacationFrom + ')';
-        var btns = [{result: false, label: 'Cancel'}, {result: true, label: 'Remove', cssClass: 'btn-primary'}];
-
-        $dialog.messageBox(title, msg, btns)
-                .open()
-                .then(function(result) {
-            if (result) {
-                console.log('remove record ' + vacationRecord);
-                $http.delete(serviceURL + '/' + vacationRecord.id).success(function(data) {
-                    refresh();
-                });
-            }
-
+        var message = 'Should vacation request removed? (from ' + vacationRecord.vacationFrom + ')';
+        MsgBox($modal, {title: title, message: message}, function() {
+            console.log('remove record ' + vacationRecord);
+            $http.delete(serviceURL + '/' + vacationRecord.id).success(function(data) {
+                refresh();
+            });
         });
     };
-
-
     $scope.calculateVacationDays = function() {
         $http.get(serviceURL + '/calculateVacationDays',
                 {params: {'vacationFrom': $scope.vacation.vacationFrom,
@@ -260,36 +214,34 @@ function VacationCtrl($scope, $http, $routeParams, $dialog) {
         ).success(function(data) {
             console.log('<--fromServer');
             console.log(data);
-
             $scope.vacation.calculateVacationDays = data.vacationDays;
             $scope.vacation.numberOfDays = data.vacationDays;
         });
     };
-
     $scope.issueRequestForTimeOff = function() {
         console.log($scope.requestForm.$valid);
-
         if (!$scope.requestForm.$valid)
             return;
         console.log('->sendToServer');
         console.log($scope.vacation);
-
         $scope.vacation.individualId = $routeParams.individualId;
-
-        $http.post(serviceURL, $scope.vacation).
-                success(function(data) {
+        $http.post(serviceURL, $scope.vacation)
+                .success(function(data) {
             refresh();
-            alert('Urlaubsantrag eingereicht');
-        }).
-                error(function(data) {
+            $scope.vacation.vacationFrom = null;
+            $scope.vacation.vacationUntil = null;
+            $scope.vacation.calculateVacationDays = null;
+            $scope.vacation.numberOfDays = null;
+            $('#vacationFromUntil').val('');
+            
+            MsgBox($modal, {title: 'Request for Time Off', message: 'Your request for time off was submitted', hideCancelBtn: true});
+        }).error(function(data) {
             console.log(data);
-
             // called asynchronously if an error occurs
             // or server returns response with status
             // code outside of the <200, 400) range
         });
     };
-
     $scope.selectVacationRecord = function(vacationRecord) {
         console.log(vacationRecord);
         $scope.vacation = vacationRecord;
@@ -306,7 +258,6 @@ $(document).ready(function() {
         e.preventDefault();
         var menu_li = $(this).parent("li");
         var menu_ul = $(this).next("ul");
-
         if (menu_li.hasClass("open")) {
             menu_ul.slideUp(350);
             menu_li.removeClass("open");
@@ -318,7 +269,6 @@ $(document).ready(function() {
             menu_li.addClass("open");
         }
     });
-
     $('.mainbar').on("click", '.wminimize', function(e) {
         e.preventDefault();
         var $wcontent = $(this).parent().parent().next('.widget-content');
@@ -334,36 +284,28 @@ $(document).ready(function() {
         }
         $wcontent.toggle(500);
     });
-
 });
-
 function TimeRecordingCtrl($scope, $http, $routeParams) {
     var weeks = $routeParams.weeks;
     if (angular.isUndefined(weeks))
         weeks = '2';
-
     $http.get(serviceBaseUrl + 'projects').success(function(data) {
         console.log(data);
         $scope.projects = data;
     });
-
     $http.get(serviceBaseUrl + 'time-recording/range/' + weeks).success(function(data) {
         console.log(data);
         $scope.timeRecording = data;
     });
-
     $scope.addRow = function() {
         console.log('->addRow');
         $scope.timeRecording.workingHours.push({
             "days": {}
         });
     };
-
-
     $scope.sendToServer = function() {
         console.log('->sendToServer');
         console.log($scope.timeRecording);
-
         $http.put(serviceBaseUrl + "time-recording", $scope.timeRecording).success(function(data) {
             console.log('<--fromServer');
             console.log(data);
@@ -385,13 +327,11 @@ function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
         console.log(data);
         $scope.vacation = data;
     });
-
     $scope.rejectRequestForTimeOff = function() {
         $http.put(serviceBaseUrl + 'vacations/tasks/' + $scope.vacation.id + '/reject', $scope.vacation).success(function(data) {
             alert("abgelehnt");
         });
     };
-
     $scope.approveRequestForTimeOff = function() {
         $http.put(serviceBaseUrl + 'vacations/tasks/' + $scope.vacation.id + '/approve', $scope.vacation).success(function(data) {
             alert("genehmigt");
@@ -405,7 +345,6 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
     $http.get(serviceBaseUrl + 'vacations').success(function(data) {
         console.log(data);
         $scope.vacations = data;
-
         var progess100percent = 45; //totalDays + residualLeaveYearBefore, means ca. 28 + puffer
 
         angular.forEach($scope.vacations, function(value) {
@@ -414,47 +353,35 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
             var vacationDaysPerYear = value.numberOfVacationDays;
             var residualLeaveYearBefore = value.residualLeaveYearBefore;
             var approvedVacationDays = value.approvedVacationDays;
-
             var vacationDaysPerYearProgress = Math.floor(vacationDaysPerYear / progess100percent * 100);
-
             //this year
             var thisYearApproved = Math.min(vacationDaysPerYear, approvedVacationDays);
             var thisYearApprovedProgress = Math.floor(thisYearApproved / progess100percent * 100);
             var thisYearResidualLeaveProgress = vacationDaysPerYearProgress - thisYearApprovedProgress;
-
             //appendix
             var appendixApproved = Math.max((approvedVacationDays - vacationDaysPerYear), 0);
             var appendixApprovedProgress = Math.floor(appendixApproved / progess100percent * 100);
             var appendixResidualLeave = (residualLeaveYearBefore) - appendixApproved;
             var appendixResidualLeaveProgress = Math.floor(appendixResidualLeave / progess100percent * 100);
-
             value.progress = [
                 {"value": thisYearApprovedProgress, "type": "this-year-approved"},
                 {"value": thisYearResidualLeaveProgress, "type": "this-year-residual-leave"},
                 {"value": appendixApprovedProgress, "type": "appendix-approved"},
                 {"value": appendixResidualLeaveProgress, "type": "appendix-residual-leave"}
             ];
-
             console.log(value.progress);
         });
-
     });
-
 }
 ;
-
-
-
 function IndividualsCtrl($scope, $http) {
     $http.get(serviceBaseUrl + 'resources/individuals').success(function(data) {
         console.log(data);
         $scope.individuals = data;
     });
-
     $scope.selectIndividual = function(individual) {
         $scope.currentIndividual = individual;
     };
-
     $scope.sendToServer = function() {
         console.log($scope.currentIndividual);
         $http.put(serviceBaseUrl + 'resources/individuals', $scope.currentIndividual).success(function(data) {
@@ -462,6 +389,40 @@ function IndividualsCtrl($scope, $http) {
             console.log(data);
             alert('info auf dem server...');
         });
-    }
-
+    };
 }
+;
+var MsgBoxCtrl = function($scope, $modalInstance, content) {
+
+    $scope.content = content;
+
+    if (angular.isUndefined($scope.content.title))
+        $scope.content.titel = '';
+    if (angular.isUndefined($scope.content.message))
+        $scope.content.message = '';
+    if (angular.isUndefined($scope.content.okBtn))
+        $scope.content.okBtn = 'OK';
+    if (angular.isUndefined($scope.content.cancelBtn))
+        $scope.content.cancelBtn = 'Cancel';
+    if (angular.isUndefined($scope.content.hideCancelBtn))
+        $scope.content.hideCancelBtn = false;
+
+    $scope.ok = function() {
+        $modalInstance.close();
+    };
+    $scope.cancel = function() {
+        $modalInstance.dismiss('cancel');
+    };
+};
+function MsgBox($modal, param, fnYesCallback) {
+    $modal.open({
+        templateUrl: 'snippets/msgbox.html',
+        controller: MsgBoxCtrl,
+        resolve: {
+            content: function() {
+                return param;
+            }
+        }
+    }).result.then(fnYesCallback);
+}
+;
