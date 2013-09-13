@@ -233,7 +233,7 @@ function VacationCtrl($scope, $http, $routeParams, $modal) {
             $scope.vacation.calculateVacationDays = null;
             $scope.vacation.numberOfDays = null;
             $('#vacationFromUntil').val('');
-            
+
             MsgBox($modal, {title: 'Request for Time Off', message: 'Your request for time off was submitted', hideCancelBtn: true});
         }).error(function(data) {
             console.log(data);
@@ -255,7 +255,7 @@ function VacationCtrl($scope, $http, $routeParams, $modal) {
 $(document).ready(function() {
 
     $(".has_submenu > a").click(function(e) {
-        e.preventDefault();
+        //e.preventDefault();
         var menu_li = $(this).parent("li");
         var menu_ul = $(this).next("ul");
         if (menu_li.hasClass("open")) {
@@ -341,6 +341,8 @@ function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
 
 
 function VacationManagerCtrl($scope, $routeParams, $http) {
+    $('.panel-heading').css('background-color', 'mediumvioletred');
+    $('.panel-heading').css('color', 'white');
 
     $http.get(serviceBaseUrl + 'vacations').success(function(data) {
         console.log(data);
@@ -349,7 +351,6 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
 
         angular.forEach($scope.vacations, function(value) {
 
-
             var vacationDaysPerYear = value.numberOfVacationDays;
             var residualLeaveYearBefore = value.residualLeaveYearBefore;
             var approvedVacationDays = value.approvedVacationDays;
@@ -357,6 +358,7 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
             //this year
             var thisYearApproved = Math.min(vacationDaysPerYear, approvedVacationDays);
             var thisYearApprovedProgress = Math.floor(thisYearApproved / progess100percent * 100);
+            var thisYearResidualLeave = Math.min( (vacationDaysPerYear-approvedVacationDays), vacationDaysPerYear);
             var thisYearResidualLeaveProgress = vacationDaysPerYearProgress - thisYearApprovedProgress;
             //appendix
             var appendixApproved = Math.max((approvedVacationDays - vacationDaysPerYear), 0);
@@ -364,16 +366,21 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
             var appendixResidualLeave = (residualLeaveYearBefore) - appendixApproved;
             var appendixResidualLeaveProgress = Math.floor(appendixResidualLeave / progess100percent * 100);
             value.progress = [
-                {"value": thisYearApprovedProgress, "type": "this-year-approved"},
-                {"value": thisYearResidualLeaveProgress, "type": "this-year-residual-leave"},
-                {"value": appendixApprovedProgress, "type": "appendix-approved"},
-                {"value": appendixResidualLeaveProgress, "type": "appendix-residual-leave"}
+                {"type": "this-year-approved",       "typeText": "approved",                     "value": thisYearApproved, "percent": thisYearApprovedProgress, "color": "green"},
+                {"type": "this-year-residual-leave", "typeText": "residual leave",               "value": thisYearResidualLeave, "percent": thisYearResidualLeaveProgress, "color": "red"},
+                {"type": "appendix-approved",        "typeText": "approved",                     "value": appendixApproved, "percent": appendixApprovedProgress, "color": "orangered"},
+                {"type": "appendix-residual-leave",  "typeText": "residual leave (year before)", "value": appendixResidualLeave, "percent": appendixResidualLeaveProgress, "color": "yellowgreen"}
             ];
+            console.log('--> ' + vacationDaysPerYear);
             console.log(value.progress);
+
         });
+
     });
 }
 ;
+
+
 function IndividualsCtrl($scope, $http) {
     $http.get(serviceBaseUrl + 'resources/individuals').success(function(data) {
         console.log(data);

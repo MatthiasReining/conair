@@ -5,52 +5,57 @@
     <head>
         <title>ProjectList</title>
 
-        <!-- Stylesheets -->
-        <link type="text/css" href="style/bootstrap.css" rel="stylesheet">
-        <!-- Font awesome icon -->
-        <link type="text/css" rel="stylesheet" href="style/font-awesome.css"> 
-        <!-- jQuery UI -->
-        <link type="text/css" rel="stylesheet" href="style/jquery-ui.css"> 
-        <!-- Calendar -->
-        <link type="text/css" rel="stylesheet" href="style/fullcalendar.css">
-        <!-- prettyPhoto -->
-        <link type="text/css" rel="stylesheet" href="style/prettyPhoto.css">   
-        <!-- Star rating -->
-        <link type="text/css" rel="stylesheet" href="style/rateit.css">
-        <!-- Date picker -->
-        <link type="text/css" rel="stylesheet" href="style/bootstrap-datetimepicker.min.css">
-        <!-- jQuery Gritter -->
-        <link type="text/css" rel="stylesheet" href="style/jquery.gritter.css">
-        <!-- CLEditor -->
-        <link type="text/css" rel="stylesheet" href="style/jquery.cleditor.css"> 
-        <!-- Bootstrap toggle -->
-        <link type="text/css" rel="stylesheet" href="style/bootstrap-toggle-buttons.css">
-        <!-- Widgets stylesheet -->
-        <link type="text/css" href="style/widgets.css" rel="stylesheet">   
-        <!-- Responsive style (from Bootstrap) -->
-        <link type="text/css" href="style/bootstrap-responsive.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.css" rel="stylesheet" media="screen">
+        <!--<link href="css/bootstrap-theme.css" rel="stylesheet" media="screen">-->
+
+
+
+        <!-- <link type="text/css" href="style/bootstrap.css" rel="stylesheet"> <!-- Stylesheets -->
+        <link type="text/css" rel="stylesheet" href="style/font-awesome.css"> <!-- Font awesome icon -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/jquery-ui.css"> <!-- jQuery UI -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/fullcalendar.css"> <!-- Calendar -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/prettyPhoto.css">   <!-- prettyPhoto -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/rateit.css"> <!-- Star rating -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/bootstrap-datetimepicker.min.css"> <!-- Date picker -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/jquery.gritter.css"> <!-- jQuery Gritter -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/jquery.cleditor.css"> <!-- CLEditor -->
+        <!-- <link type="text/css" rel="stylesheet" href="style/bootstrap-toggle-buttons.css"> <!-- Bootstrap toggle -->
+        <!-- <link type="text/css" href="style/widgets.css" rel="stylesheet"> <!-- Widgets stylesheet -->
+        <!-- <link type="text/css" href="style/bootstrap-responsive.css" rel="stylesheet"> <!-- Responsive style (from Bootstrap) -->
 
         <!-- HTML5 Support for IE -->
         <!--[if lt IE 9]>
         <script src="js/lib/html5shim.js"></script>
         <![endif]-->
 
-        <!-- Favicon -->
-        <link rel="shortcut icon" href="img/favicon/favicon.png">
-        <link rel="stylesheet" href="style/style.css" type="text/css"/>
-        
-        
         <!-- app css -->
         <link rel="stylesheet" href="app.css" type="text/css"/>
 
 
+        <!-- Favicon -->
+        <link rel="shortcut icon" href="img/favicon/favicon.png">
+        <!-- <link rel="stylesheet" href="style/style.css" type="text/css"/> <!-- win8 layout-->
+
+
+
+
         <!-- JS -->
-        
+
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"></script>
+        <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
+
         <script src="http://code.angularjs.org/1.0.7/i18n/angular-locale_de-de.js"></script>        
-        <script src="js/lib/ui-bootstrap-tpls-0.5.0.js"></script>
-    
+
+
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="js/lib2/bootstrap.js"></script>
+
+
+
         <!--<script src="xjs/lib/jquery-1.9.1.min.js"></script>--> <!-- jQuery -->
         <!--<script src="xjs/lib/bootstrap.js"></script>--> <!-- Bootstrap -->
         <!--<script src="xjs/lib/jquery-ui-1.10.2.custom.min.js"></script>--> <!-- jQuery UI -->
@@ -67,14 +72,20 @@
         <script src="xjs/lib/jquery.flot.stack.js"></script>
         -->
         <!--<script src="xjs/lib/jquery.gritter.min.js"></script>--> <!-- jQuery Gritter -->
-        
+
         <!-- <script src="js/lib/jquery.cleditor.min.js"></script>--> <!-- CLEditor -->
 
         <!-- Date picker -->
         <!--<script src="js/lib/bootstrap-datetimepicker.min.js"></script>-->
-        
-        <script src="js/lib/sparklines-2.1.1.min.js"></script> <!-- Sparklines -->
-        <script src="js/lib/bootstrap-datepicker.js"></script>
+
+        <script src="js/lib/sparklines-2.1.1.min.js"></script> <!-- Sparklines, Chart -->
+
+        <!-- datepicker -->
+        <script src="js/lib2/moment.min.js"></script>
+        <script src="js/lib2/daterangepicker.js"></script>
+        <link type="text/css" rel="stylesheet" href="css/daterangepicker-bs3.css"> 
+
+        <!--<script src="js/lib/bootstrap-datepicker.js"></script>-->
 
         <!--<script src="xjs/lib/jquery.toggle.buttons.js"></script>--> <!-- Bootstrap Toggle -->
         <!--<script src="xjs/lib/filter.js"></script>--> <!-- Filter for support page -->
@@ -90,82 +101,54 @@
         <!--
         <script src="xjs/lib/dialog.js"></script>
         -->
-        
+
+
         <script src="js/app.js"></script>
         <script src="js/controller.js"></script>
-
 
     </head>
 
     <body>
 
-        <div class="navbar navbar-fixed-top navbar-inverse">
-            <div class="navbar-inner">
-                <div class="container">
-                    <!-- Menu button for smallar screens -->
-                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </a>
-                    <!-- Site name for smallar screens -->
-                    <span class="brand">
-                        <a href="index.html" style="color: white">Con<span class="bold">AIR</span></a>
-                        <span style="font-size: 60%; color: #cccccc; padding-left: 20px">
-                            {{version.specificationTitle}}-{{version.specificationVersion}}
+        <header>
+            <!-- Fixed navbar -->
+            <div class="navbar navbar-inverse navbar-fixed-top">
+
+                <div class="row">
+                    <div class="col-md-4 text-left">
+                        <span style="font-size: 140%">
+                            <a href="index.html">Con<b>AIR</b></a>
+                            <span style="font-size: 60%; color: #cccccc; padding-left: 20px">
+                                {{version.specificationTitle}}-{{version.specificationVersion}}
+                            </span>
                         </span>
-                    </span>
-                    <!-- Navigation starts -->
-                    <div class="nav-collapse collapse">        
-
-                        <!-- Links -->
-                        <ul class="nav pull-right">
-                            <li class="dropdown pull-right">            
-                                <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                    <img class="nav-user-pic" data-ng-src="{{user.pictureUrl}}" src/>
-                                    {{user.firstName}} <b class="caret"></b>              
-                                </a>
-
-                                <!-- Dropdown menu -->
-                                <ul class="dropdown-menu">
-                                    <li><a href="#"><i class="icon-user"></i> Profile</a></li>
-                                    <li><a href="#"><i class="icon-cogs"></i> Settings</a></li>
-                                    <li><a href="login.html"><i class="icon-off"></i> Logout</a></li>
-                                </ul>
-                            </li>
-
-                        </ul>
-
+                    </div>
+                    <div class="col-md-2 col-md-offset-6">
+                        <div class="dropdown">
+                               <a data-toggle="dropdown" href="#">
+                                   <img class="nav-user-pic" data-ng-src="{{user.pictureUrl}}" src style="height: 30px"/>
+                                   {{user.firstName}}
+                                   <b class="caret" style="border-top-color: white"></b>              
+                               </a>
+                               <!-- Dropdown menu -->
+                               <ul class="dropdown-menu">
+                                   <li><a href="#"><i class="icon-user"></i> Profile</a></li>
+                                       <li><a href="#"><i class="icon-cogs"></i> Settings</a></li>
+                                       <li><a href="login.html"><i class="icon-off"></i> Logout</a></li>
+                                   </ul>
+                               </div>
+                           </div>
+                        </div>
 
                     </div>
 
-                </div>
-            </div>
-        </div>
--
-
-        <!-- Main content starts -->
-
-        <div class="content">
-
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="sidebar-dropdown"><a href="#">Navigation</a></div>
-
-                <div class="sidebar-inner" data-ng-controller="NaviCtrl">
+                </header>
 
 
+                <!-- Main content starts -->
+                <nav class="sidebar" data-ng-controller="NaviCtrl">
 
-                    <!-- Search form -->
-                    <div class="sidebar-widget">
-                        <form class="form-inline">
-                            <div class="input-append row-fluid">
-                                <input type="text" class="span8" placeholder="Search">
-                                <button type="submit" class="btn btn-info">Search</button>
-                            </div>
-                        </form>
-                    </div>
-
+                    <!-- sidebar -->
                     <!--- Sidebar navigation -->
                     <!-- If the main navigation has sub navigation, then add the class "has_submenu" to "li" of main navigation. -->
                     <ul class="navi">
@@ -173,8 +156,8 @@
                         <!-- Use the class nred, ngreen, nblue, nlightblue, nviolet or norange to add background color. You need to use this in <li> tag. -->
 
                         <li class="nred"><a href="#/dashboard"><i class="icon-desktop"></i> Dashboard</a></li>
-                        
-                         <li class="has_submenu nviolet" >
+
+                        <li class="has_submenu nviolet" >
                             <a href="#">
                                 <i class="icon-male"></i> Resources
                                 <span class="pull-right"><i class="icon-angle-right"></i></span>
@@ -190,58 +173,44 @@
                         <li class="nlightblue" data-ng-class="{current:isActive('/time-recording')}"><a href="#/time-recording"><i class="icon-table"></i> Time Recording</a></li>
 
                         <li class="has_submenu nviolet" data-ng-class="{current:isActive('/vacations')}"><a href="#/vacations/{{user.id}}"><i class="icon-glass"></i> Vacation</a>
-                            <ul>
-                                <li class="nviolet" data-ng-class="{current:isActive('/vacation-manager')}"><a href="#/vacation-manager">Vacation Manager</a></li>
-                            </ul>
-                        </li>
-
-                        <li class="has_submenu ngreen" >
-                            <a href="#">
-                                <i class="icon-plane"></i> Travel Costs
-                                <span class="pull-right"><i class="icon-angle-right"></i></span>
-                            </a>
-                            <ul>
-                                <li class="ngreen" data-ng-class="{current:isActive('/per-diems-selector')}"><a href="#/per-diems-selector">Per Diems</a></li>
-                                <li class="ngreen" data-ng-class="{current:isActive('/travel-costs')}"><a href="#/travel-costs">Travel Costs</a></li>
-                            </ul>
-                        </li>
-                        
-                        
-                        <li class="has_submenu nlightblue" >
-                            <a href="#">
-                                <i class="icon-tasks"></i> My Tasks
-                                <span class="pull-right"><i class="icon-angle-right"></i></span>
-                            </a>
-                            <ul>
-                                <li class="nlightblue" data-ng-class="{current:isActive('/tasks-vacation-approval-list')}"><a href="#/tasks-vacation-approval-list">Vacation Approval</a></li>
-                            </ul>
-                        </li>
-
+                        <ul>
+                            <li class="nviolet" data-ng-class="{current:isActive('/vacation-manager')}"><a href="#/vacation-manager">Vacation Manager</a></li>
                     </ul>
+                </li>
 
-                    <br/>
+                <li class="has_submenu ngreen" >
+                    <a href="#">
+                        <i class="icon-plane"></i> Travel Costs
+                        <span class="pull-right"><i class="icon-angle-right"></i></span>
+                    </a>
+                    <ul>
+                        <li class="ngreen" data-ng-class="{current:isActive('/per-diems-selector')}"><a href="#/per-diems-selector">Per Diems</a></li>
+                        <li class="ngreen" data-ng-class="{current:isActive('/travel-costs')}"><a href="#/travel-costs">Travel Costs</a></li>
+                    </ul>
+                </li>
 
-                    <!-- Date -->
-                    <div class="sidebar-widget">
-                        <div id="todaydate"></div>
-                    </div>
-                </div>
 
-            </div>
+                <li class="has_submenu nlightblue" >
+                    <a href="#">
+                        <i class="icon-tasks"></i> My Tasks
+                        <span class="pull-right"><i class="icon-angle-right"></i></span>
+                    </a>
+                    <ul>
+                        <li class="nlightblue" data-ng-class="{current:isActive('/tasks-vacation-approval-list')}"><a href="#/tasks-vacation-approval-list">Vacation Approval</a></li>
+                    </ul>
+                </li>
 
-            <!-- Sidebar ends -->
+            </ul>
 
-            <!-- Main bar -->
-            <div class="mainbar" id="main-content">
 
-                <div data-ng-view></div>
-            </div>
 
-            <!-- Mainbar ends -->	    	
-            <div class="clearfix"></div>
+        </nav>
 
+        <div id="main-content" data-ng-view>
         </div>
-        <!-- Content ends -->
+
+
+
 
         <!-- Scroll to top -->
         <span class="totop"><a href="#"><i class="icon-chevron-up"></i></a></span> 

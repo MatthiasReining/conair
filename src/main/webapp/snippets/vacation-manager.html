@@ -1,79 +1,40 @@
-<!-- Page heading -->
-<div class="page-head">
-    <!-- Page heading -->
-    <h2 class="pull-left">Vacation Manager 
-        <!-- page meta -->
-        <span class="page-meta">List of holidays</span>
-    </h2>
+<h3>Vacation Manager</h3>
+<h6>List of holidays</h6>
 
-
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/vacation-manager" class="bread-current">Vacation Manager</a>
-    </div>
-
-    <div class="clearfix"></div>
-
-</div>
-<!-- Page heading ends -->
-
+<!-- TODO breadcrumb -->
 
 
 <!-- Matter -->
 
-<div class="matter">
-    <div class="container-fluid">
-
-        <div class="row-fluid">
-
-            <div class="span12">
-
-
-                <div class="widget wviolet">
-
-                    <div class="widget-head">
-                        <div class="pull-left">List of holidays</div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="widget-content">
-
-                        <table class="table ">
-                            <tbody id="project-list-data" data-ng-repeat="vacation in vacations">
-                                <tr>
-                                    <td width="250px"><a href="#/vacations/{{vacation.individualId}}">{{vacation.individualNickName}}</a></td>
-                                    <td width="100px">
-                                        <span title="approved vacation days ({{vacation.approvedVacationDays}})">{{vacation.approvedVacationDays}}</span> of
-                                        <span title="number of vacation days ({{vacation.numberOfVacationDays}}) + residual leave of the year before ({{vacation.residualLeaveYearBefore}})">{{vacation.numberOfVacationDays + vacation.residualLeaveYearBefore}}</span>
-                                    </td>
-                                    <td>
-                                        <progress data-percent="vacation.progress" data-auto-type="true" ></progress>
-                                    </td>                                    
-                                </tr>
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
-
-                </div>
-
-
-                <div class="widget-foot">
-                    <!-- Footer goes here -->
-
-                </div>
-            </div>  
-
-
-        </div>
-
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">List of holidays</h3>
+    </div>
+    <div class="panel-body">
+        <table class="table ">
+            <tbody id="project-list-data" data-ng-repeat="vacation in vacations">
+                <tr>
+                    <td width="150px"><a href="#/vacations/{{vacation.individualId}}">{{vacation.individualNickName}}</a></td>
+                    <td width="100px">
+                        <span title="approved vacation days ({{vacation.approvedVacationDays}})">{{vacation.approvedVacationDays}}</span> of
+                        <span title="number of vacation days ({{vacation.numberOfVacationDays}}) + residual leave of the year before ({{vacation.residualLeaveYearBefore}})">{{vacation.numberOfVacationDays + vacation.residualLeaveYearBefore}}</span>
+                    </td>
+                    <td>
+                        <div class="progress">
+                            <div class="progress-bar"
+                                 data-ng-repeat="progress in vacation.progress" 
+                                 data-tooltip-placement="top" 
+                                 data-tooltip="{{progress.value}} days {{progress.typeText}}" 
+                                 style="width: {{progress.percent}}%; background-color: {{progress.color}};">
+                            </div>
+                        </div>
+                        <br>
+                    </td>   
+                    <td width="100px">
+                        action
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
-
-<!-- Matter ends -->
-
