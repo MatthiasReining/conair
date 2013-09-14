@@ -1,10 +1,6 @@
 <h3>Vacation Manager</h3>
-<h6>List of holidays</h6>
 
 <!-- TODO breadcrumb -->
-
-
-<!-- Matter -->
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -30,8 +26,47 @@
                         </div>
                         <br>
                     </td>   
-                    <td width="100px">
-                        action
+                    <td width="150px">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                Action <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li><a data-ng-click="changeNumberOfVacationDays(vacation)" href="">Change number of Vacation Days</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 0"></td>
+                    <td colspan="3" style="border: 0">
+
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h2 class="panel-title">Change number of vacation days for {{vacation.individualNickName}} for the year {{vacation.vacationYear}}</h2>
+                            </div>
+                            <div class="panel-body">
+                                <form class="form-horizontal" data-role="form" name="changeNumberOfVacationDays" novalidate>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label">Current number of vacation days</label>
+                                        <div class="col-md-8">
+                                            {{vacation.numberOfVacationDays}}                                            
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-4 control-label" for="newNumberOfDays">New number of vacation days</label>
+                                        <div class="col-md-8">                                            
+                                            <input type="number" id="newNumberOfDays" data-ng-model="vacation.newNumberOfDays" required>                                            
+                                        </div>
+                                    </div>
+
+                                    <button class="btn" data-ng-click="issueRequestForTimeOff()">Cancel</button>
+                                    <button class="btn btn-success" data-ng-click="issueRequestForTimeOff()">Change</button>
+
+
+                                </form>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>

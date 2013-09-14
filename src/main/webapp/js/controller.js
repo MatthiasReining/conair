@@ -375,10 +375,13 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
             console.log(value.progress);
 
         });
-
     });
-}
-;
+    
+    $scope.changeNumberOfVacationDays = function(vacation) {
+        console.log(vacation);
+        alert( vacation );
+    };
+};
 
 
 function IndividualsCtrl($scope, $http) {
