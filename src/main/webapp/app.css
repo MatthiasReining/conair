@@ -98,9 +98,6 @@ body {
     color: aqua;
 }
 
-.sidebar:after {
-    clear: both;
-}
 #main-content {
     margin-left: 230px; 
     min-height: 900px; 
@@ -110,16 +107,8 @@ body {
     width: auto;
     margin-right: 0px;
     position: relative;
+    overflow: auto;
 }
-
-#main-content .row:after, #main-content .panel-body:after {
-    clear: none;
-}
-
-.form-horizontal .form-group:after {
-    clear: none;
-}
-
 
 /* Bootstrap 3.0 and angular.js modal (diabox) */
 .modal {
