@@ -24,6 +24,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -133,10 +134,12 @@ public class IndividualVacationResource {
         Date vacationUntil = DateParameter.valueOf(payload.get("vacationUntil").toString());
 
         Map<String, String> errors = new HashMap<>();
-        if (numberOfDays <= 0)
+        if (numberOfDays <= 0) {
             errors.put("numberOfDays", "Die Anzahl der Urlaubstage muss > 0 sein.");
-        if (vacationFrom.after(vacationUntil))
+        }
+        if (vacationFrom.after(vacationUntil)) {
             errors.put("vacationFrom", "'Urlaub von' muss vor 'Urlaub bis' liegen.");
+        }
 
         if (errors.size() > 0) {
             return Response.status(Response.Status.PRECONDITION_FAILED).entity(errors).build();
@@ -145,19 +148,7 @@ public class IndividualVacationResource {
 
         Calendar from = DateParameter.calendarValueOf(payload.get("vacationFrom").toString());
         Integer year = from.get(Calendar.YEAR);
-
-        List<VacationYear> vyList = em.createNamedQuery(VacationYear.findByDate, VacationYear.class)
-                .setParameter(VacationYear.queryParam_individual, individual)
-                .setParameter(VacationYear.queryParam_year, year)
-                .getResultList();
-        VacationYear vy;
-        System.out.println("vyList: " + vyList);
-        if (vyList.isEmpty()) {
-            vy = createNewVacationYear(individual, year);
-            vy = em.merge(vy);
-        } else {
-            vy = vyList.get(0);
-        }
+        VacationYear vy = getVacationYear(year, individual);
         if (vy.getVacationRecords() == null) {
             vy.setVacationRecords(new ArrayList<VacationRecord>());
         }
@@ -193,9 +184,34 @@ public class IndividualVacationResource {
         vy = em.merge(vy);
         return vy;
     }
-    
-    public Response changeNumberOfVacationDays(String vacationYear, String newNumberOfVacationDays) {
-        //FIXME implement
+
+    @PUT
+    @Path("admin/{year}/change-number-of-vacation-days")
+    public Response changeNumberOfVacationDays(@PathParam("year") Integer year, Map<String, Object> payload) {
+
+        Integer newNumberOfVacationDays = (Integer) payload.get("newNumberOfVacationDays");
+
+        VacationYear vy = getVacationYear(year, individual);
+        vy.setNumberOfVacationDays(newNumberOfVacationDays);
+
+        vacationCalculator.calculateAllVacationDays(vy);
+
         return Response.ok().build();
+    }
+
+    private VacationYear getVacationYear(Integer year, Individual individual) {
+        List<VacationYear> vyList = em.createNamedQuery(VacationYear.findByDate, VacationYear.class)
+                .setParameter(VacationYear.queryParam_individual, individual)
+                .setParameter(VacationYear.queryParam_year, year)
+                .getResultList();
+        VacationYear vy;
+        System.out.println("vyList: " + vyList);
+        if (vyList.isEmpty()) {
+            vy = createNewVacationYear(individual, year);
+            vy = em.merge(vy);
+        } else {
+            vy = vyList.get(0);
+        }
+        return vy;
     }
 }

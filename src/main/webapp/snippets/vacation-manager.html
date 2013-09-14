@@ -7,69 +7,72 @@
         <h3 class="panel-title">List of holidays</h3>
     </div>
     <div class="panel-body">
-        <table class="table ">
-            <tbody id="project-list-data" data-ng-repeat="vacation in vacations">
-                <tr>
-                    <td width="150px"><a href="#/vacations/{{vacation.individualId}}">{{vacation.individualNickName}}</a></td>
-                    <td width="100px">
-                        <span title="approved vacation days ({{vacation.approvedVacationDays}})">{{vacation.approvedVacationDays}}</span> of
-                        <span title="number of vacation days ({{vacation.numberOfVacationDays}}) + residual leave of the year before ({{vacation.residualLeaveYearBefore}})">{{vacation.numberOfVacationDays + vacation.residualLeaveYearBefore}}</span>
-                    </td>
-                    <td>
-                        <div class="progress">
-                            <div class="progress-bar"
-                                 data-ng-repeat="progress in vacation.progress" 
-                                 data-tooltip-placement="top" 
-                                 data-tooltip="{{progress.value}} days {{progress.typeText}}" 
-                                 style="width: {{progress.percent}}%; background-color: {{progress.color}};">
-                            </div>
+        <div data-ng-repeat="vacation in vacations" >
+            <div class="row" >
+                <div class="col-md-2">
+                    <a href="#/vacations/{{vacation.individualId}}">{{vacation.individualNickName}}</a>
+                </div>
+                <div class="col-md-1">
+                    <span title="approved vacation days ({{vacation.approvedVacationDays}})">{{vacation.approvedVacationDays}}</span> of
+                    <span title="number of vacation days ({{vacation.numberOfVacationDays}}) + residual leave of the year before ({{vacation.residualLeaveYearBefore}})">{{vacation.numberOfVacationDays + vacation.residualLeaveYearBefore}}</span>
+                </div>
+                <div class="col-md-8">
+                    <div class="progress">
+                        <div class="progress-bar"
+                             data-ng-repeat="progress in vacation.progress" 
+                             data-tooltip-placement="top" 
+                             data-tooltip="{{progress.value}} days {{progress.typeText}}" 
+                             style="width: {{progress.percent}}%; background-color: {{progress.color}};">
                         </div>
-                        <br>
-                    </td>   
-                    <td width="150px">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                Action <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right" role="menu">
-                                <li><a data-ng-click="changeNumberOfVacationDays(vacation)" href="">Change number of Vacation Days</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="border: 0"></td>
-                    <td colspan="3" style="border: 0">
+                    </div>
+                </div>
+                <div class="col-md-1">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Action <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu pull-right" role="menu">
+                            <li><a data-ng-click="activePanelChangeNumberOfVacationDays = vacation.individualId" href="">Change number of Vacation Days</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h2 class="panel-title">Change number of vacation days for {{vacation.individualNickName}} for the year {{vacation.vacationYear}}</h2>
-                            </div>
-                            <div class="panel-body">
-                                <form class="form-horizontal" data-role="form" name="changeNumberOfVacationDays" novalidate>
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label">Current number of vacation days</label>
-                                        <div class="col-md-8">
-                                            {{vacation.numberOfVacationDays}}                                            
-                                        </div>
+            <div class="row" data-ng-show="activePanelChangeNumberOfVacationDays==vacation.individualId">
+
+                <div class="col-md-offset-3 col-md-8">
+                    <div class="panel panel-default" >
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Change number of vacation days for <b>{{vacation.individualNickName}}</b> in the year <b>{{vacation.vacationYear}}</b></h3>
+                        </div>
+                        <div class="panel-body">
+                            <form class="form-horizontal" data-role="form" name="formChangeNumberOfVacationDays" novalidate>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label">Current number of vacation days</label>
+                                    <div class="col-md-7">
+                                        <input class="form-control input-sm" readonly data-ng-model="vacation.numberOfVacationDays">                                       
                                     </div>
-                                    <div class="form-group">
-                                        <label class="col-md-4 control-label" for="newNumberOfDays">New number of vacation days</label>
-                                        <div class="col-md-8">                                            
-                                            <input type="number" id="newNumberOfDays" data-ng-model="vacation.newNumberOfDays" required>                                            
-                                        </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-5 control-label" for="newNumberOfDays">New number of vacation days</label>
+                                    <div class="col-md-7">                                            
+                                        <input class="form-control input-sm" type="number" id="newNumberOfVacationDays" data-ng-model="vacation.newNumberOfVacationDays" required>
                                     </div>
+                                </div>
 
-                                    <button class="btn" data-ng-click="issueRequestForTimeOff()">Cancel</button>
-                                    <button class="btn btn-success" data-ng-click="issueRequestForTimeOff()">Change</button>
+                                <p class="text-right">
+                                    <button class="btn" data-ng-click="activePanelChangeNumberOfVacationDays = null">Cancel</button>
+                                    <button class="btn btn-success" data-ng-click="changeNumberOfVacationDays(vacation)">Change</button>
+                                </p>
 
-
-                                </form>
-                            </div>
+                            </form>
                         </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="margin-top: 0px">
+        </div>
+
     </div>
 </div>
