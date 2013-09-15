@@ -1,158 +1,119 @@
-<!-- Page heading -->
-<div class="page-head">
-    <!-- Page heading -->
-    <h2 class="pull-left">Projects 
-        <!-- page meta -->
-        <span class="page-meta">List of all projects</span>
-    </h2>
+<h3>Resources</h3>
 
-
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/resources/people" class="bread-current">Resources</a>
-        <span class="divider">/</span> 
-        <a href="#/resources/people" class="bread-current">People</a>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">People</h3>
     </div>
+    <div class="panel-body">
 
-    <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-4">
+                <table class="table table-bordered">
+                    <tbody id="project-list-data" data-ng-repeat="i in individuals">
+                        <tr>
+                            <td data-ng-click="selectIndividual(i)" style="cursor: pointer">{{i.nickname}} ({{i.emailAddress}})</td>
+                        </tr>
+                    </tbody>
+                </table>           
+            </div>
 
-</div>
-<!-- Page heading ends -->
-
-
-
-<!-- Matter -->
-
-<div class="matter">
-    <div class="container-fluid">
-
-        <div class="row-fluid">
-
-            <div class="span4">
-
-                <div class="widget wviolet">
-
-                    <div class="widget-head">
-                        <div class="pull-left">People</div>
-                        <div class="clearfix"></div>
+            <div class="col-md-8">
+                <div class="panel panel-default" data-ng-hide="currentIndividual.linkedInId==null">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{currentIndividual.nickname}} ({{currentIndividual.emailAddress}})</h3>
                     </div>
+                    <div class="panel-body">
 
-                    <div class="widget-content">
-                        <table class="table table-bordered">
-                            <tbody id="project-list-data" data-ng-repeat="i in individuals">
-                                <tr>
-                                    <td data-ng-click="selectIndividual(i)">{{i.nickname}} ({{i.emailAddress}})</td>
-                                </tr>
-                            </tbody>
-                        </table>                        
+                        <form class="form-horizontal" data-role="form" novalidate>
+
+                            <div class="form-group">
+                                <label class="col-md-6 control-label" for="nickname">Nickname</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="nickname" data-ng-model="currentIndividual.nickname">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-6 control-label">Last Login</label>
+                                <div class="col-md-6">                                    
+                                    <input type="text" class="form-control" readonly value="{{currentIndividual.lastLogin | date:'medium'}}">
+                                </div>
+                            </div>
+
+                            <br>
+                            <h5>LinkedIn connection</h5>
+                            <hr>
+
+                            <div class="form-group">
+                                <label class="col-md-6 control-label" for="linkedInId">LinkedIn Key</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="linkedInId" data-ng-model="currentIndividual.linkedInId">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-6 control-label">Email Address</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" readonly data-ng-model="currentIndividual.emailAddress">
+                                </div>
+                            </div>
+
+                            <br>
+                            <h5>Vacation information</h5>
+                            <hr>
+
+                            <div class="form-group">
+                                <label class="col-md-6 control-label" for="vacationManagerNickName">Vacation Manager</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" id="vacationManagerNickName" data-ng-model="currentIndividual.vacationManagerNickName">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-6 control-label" for="vacationDaysPerYear">Vacation Days per Year</label>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="vacationDaysPerYear" data-ng-model="currentIndividual.vacationDaysPerYear">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-md-6 control-label" for="workdaysPerWeek">Work Days per Week</label>
+                                <div class="col-md-6">
+                                    <input type="number" class="form-control" id="workdaysPerWeek" data-ng-model="currentIndividual.workdaysPerWeek">
+                                </div>
+                            </div>
+
+                            <br>
+                            <h5>Roles</h5>
+                            <hr>
+                            <div class="form-group">
+                                <label class="col-md-6 control-label" for="roles">Roles</label>
+                                <div class="col-md-6">
+                                    <div class="checkbox">
+                                        <label data-ng-model="currentIndividual.roles">
+                                            <input type="checkbox"> {{currentIndividual.roles}}
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+
+                            <hr>
+                            <br>
+
+                            <button class="btn btn-success" data-ng-click="sendToServer()">Save</button>
+
+                        </form>
+
                     </div>
-
-                </div>
-
-
-                <div class="widget-foot">
-                    <!-- Footer goes here -->
-
-                </div>
-            </div>  
-
-            <div class="span8">
-                <div class="widget wviolet">
-                    <div class="widget-head">
-                        <div class="pull-left">{{currentIndividual.nickname}} ({{currentIndividual.emailAddress}})</div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="widget-content">
-                        <div class="padd">
-
-                            <form class="form-horizontal">
-
-                                <div class="control-group">
-                                    <label class="control-label" for="nickname">Nickname</label>
-                                    <div class="controls">
-                                        <input type="text" class="input-large" id="nickname" data-ng-model="currentIndividual.nickname">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="lastLogin">Last Login</label>
-                                    <div class="controls">
-                                        {{currentIndividual.lastLogin}}
-                                    </div>
-                                </div>
-
-
-
-                                <h5>LinkedIn connection</h5>
-                                <hr>
-
-                                <div class="control-group">
-                                    <label class="control-label" for="linkedInId">LinkedIn Key</label>
-                                    <div class="controls">
-                                        <input type="text" class="input-large" id="linkedInId" data-ng-model="currentIndividual.linkedInId">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="emailAddress">Email Address</label>
-                                    <div class="controls">
-                                        <input type="text" class="input-large" readonly="" id="emailAddress" data-ng-model="currentIndividual.emailAddress">
-                                    </div>
-                                </div>
-
-                                <h5>Vacation information</h5>
-                                <hr>
-
-                                <div class="control-group">
-                                    <label class="control-label" for="vacationManagerNickName">Vacation Manager</label>
-                                    <div class="controls">
-                                        <input type="text" class="input-large" id="vacationManagerNickName" data-ng-model="currentIndividual.vacationManagerNickName">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="vacationDaysPerYear">Vacation Days per Year</label>
-                                    <div class="controls">
-                                        <input type="number" class="input-small" id="vacationDaysPerYear" data-ng-model="currentIndividual.vacationDaysPerYear">
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="workdaysPerWeek">Work Days per Week</label>
-                                    <div class="controls">
-                                        <input type="number" class="input-small" id="workdaysPerWeek" data-ng-model="currentIndividual.workdaysPerWeek">
-                                    </div>
-                                </div>
-
-
-                                <h5>Roles</h5>
-                                <hr>
-                                <div class="control-group">
-                                    <label class="control-label" for="workdaysPerWeek">Roles</label>
-                                    <div class="controls">
-                                        <input type="checkbox" class="checkbox" data-ng-model="currentIndividual.roles">
-                                    </div>
-                                </div>
-                                
-                                <hr>
-                                <br>
-
-                                <button class="btn btn-success" data-ng-click="sendToServer()">Save</button>
-
-                            </form>
-
-
-                        </div>
-                    </div>
-
                 </div>
 
             </div>
-
         </div>
-
     </div>
 </div>
 
-<!-- Matter ends -->
+
+<hr>
+<hr>
 

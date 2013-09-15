@@ -1,14 +1,6 @@
 'use strict';
 var serviceBaseUrl = 'rest/';
-function NaviCtrl($scope, $location) {
-    $scope.isActive = function(route) {
-        return ($location.path().indexOf(route) > -1);
-    };
-    $scope.test = function(path) {
-        alert($scope.isActive(path));
-    };
-}
-;
+
 function ProjectListCtrl($scope, $http) {
     $http.get(serviceBaseUrl + 'projects/list').success(function(data) {
         console.log(data);
@@ -156,40 +148,6 @@ function TravelCostsCtrl($scope, $http) {
 //});
 }
 
-
-$(document).ready(function() {
-
-    $(".has_submenu > a").click(function(e) {
-        //e.preventDefault();
-        var menu_li = $(this).parent("li");
-        var menu_ul = $(this).next("ul");
-        if (menu_li.hasClass("open")) {
-            menu_ul.slideUp(350);
-            menu_li.removeClass("open");
-        }
-        else {
-            $(".navi > li > ul").slideUp(350);
-            $(".navi > li").removeClass("open");
-            menu_ul.slideDown(350);
-            menu_li.addClass("open");
-        }
-    });
-    $('.mainbar').on("click", '.wminimize', function(e) {
-        e.preventDefault();
-        var $wcontent = $(this).parent().parent().next('.widget-content');
-        if ($wcontent.is(':visible'))
-        {
-            $(this).children('i').removeClass('icon-chevron-up');
-            $(this).children('i').addClass('icon-chevron-down');
-        }
-        else
-        {
-            $(this).children('i').removeClass('icon-chevron-down');
-            $(this).children('i').addClass('icon-chevron-up');
-        }
-        $wcontent.toggle(500);
-    });
-});
 function TimeRecordingCtrl($scope, $http, $routeParams) {
     var weeks = $routeParams.weeks;
     if (angular.isUndefined(weeks))
@@ -245,24 +203,6 @@ function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
 }
 
 
-function IndividualsCtrl($scope, $http) {
-    $http.get(serviceBaseUrl + 'resources/individuals').success(function(data) {
-        console.log(data);
-        $scope.individuals = data;
-    });
-    $scope.selectIndividual = function(individual) {
-        $scope.currentIndividual = individual;
-    };
-    $scope.sendToServer = function() {
-        console.log($scope.currentIndividual);
-        $http.put(serviceBaseUrl + 'resources/individuals', $scope.currentIndividual).success(function(data) {
-            console.log('<--fromServer');
-            console.log(data);
-            alert('info auf dem server...');
-        });
-    };
-}
-;
 var MsgBoxCtrl = function($scope, $modalInstance, content) {
 
     $scope.content = content;

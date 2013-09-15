@@ -10,6 +10,12 @@
         <!-- Favicon -->
         <link rel="shortcut icon" href="img/favicon/favicon.png">
 
+
+        <!-- ############################################################ -->
+        <!-- jQuery -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <!-- ############################################################ -->
+
         <!-- ############################################################ -->
         <!-- Bootstrap -->
         <!--<link rel="stylesheet" href="css/bootstrap.css"  media="screen"> -->
@@ -30,8 +36,7 @@
 
 
         <!-- ############################################################ -->
-        <!-- AngularJS (and jQuery)-->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+        <!-- AngularJS -->
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.js"></script>
         <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
         <script src="http://code.angularjs.org/1.0.7/i18n/angular-locale_de-de.js"></script>    
@@ -50,8 +55,10 @@
         <!-- Custom -->
         <link rel="stylesheet" href="app.css">         
         <script src="js/app.js"></script>
+        <script src="js/controller/NaviController.js"></script>
         <script src="js/controller/VacationController.js"></script>
         <script src="js/controller/VacationManagerController.js"></script>
+        <script src="js/controller/IndividualController.js"></script>
         <script src="js/controller.js"></script>
 
     </head>
@@ -95,6 +102,7 @@
 
         <!-- Main content starts -->
         <nav class="sidebar" data-ng-controller="NaviCtrl">
+            <br><br>
 
             <!-- sidebar -->
             <!--- Sidebar navigation -->
@@ -105,12 +113,12 @@
 
                 <li class="nred"><a href="#/dashboard"><i class="icon-desktop"></i> Dashboard</a></li>
 
-                <li class="has_submenu nviolet" >
+                <li class="has_submenu nviolet">
                     <a href="#">
                         <i class="icon-male"></i> Resources
                         <span class="pull-right"><i class="icon-angle-right"></i></span>
                     </a>
-                    <ul>
+                    <ul style="display: none">
                         <li class="nviolet" data-ng-class="{current:isActive('/resources/individuals')}"><a href="#/resources/individuals">Individuals</a></li>
                         <li class="nviolet" data-ng-class="{current:isActive('/legal-holidays')}"><a href="#/travel-costs">Legal Holidays</a></li>
                     </ul>
@@ -121,7 +129,7 @@
                 <li class="nlightblue" data-ng-class="{current:isActive('/time-recording')}"><a href="#/time-recording"><i class="icon-table"></i> Time Recording</a></li>
 
                 <li class="has_submenu nviolet" data-ng-class="{current:isActive('/vacations')}"><a href="#/vacations/{{user.id}}"><i class="icon-glass"></i> Vacation</a>
-                    <ul>
+                    <ul style="display: none">
                         <li class="nviolet" data-ng-class="{current:isActive('/vacation-manager')}"><a href="#/vacation-manager">Vacation Manager</a></li>
                     </ul>
                 </li>
@@ -131,7 +139,7 @@
                         <i class="icon-plane"></i> Travel Costs
                         <span class="pull-right"><i class="icon-angle-right"></i></span>
                     </a>
-                    <ul>
+                    <ul style="display: none">
                         <li class="ngreen" data-ng-class="{current:isActive('/per-diems-selector')}"><a href="#/per-diems-selector">Per Diems</a></li>
                         <li class="ngreen" data-ng-class="{current:isActive('/travel-costs')}"><a href="#/travel-costs">Travel Costs</a></li>
                     </ul>
@@ -143,7 +151,7 @@
                         <i class="icon-tasks"></i> My Tasks
                         <span class="pull-right"><i class="icon-angle-right"></i></span>
                     </a>
-                    <ul>
+                    <ul style="display: none">
                         <li class="nlightblue" data-ng-class="{current:isActive('/tasks-vacation-approval-list')}"><a href="#/tasks-vacation-approval-list">Vacation Approval</a></li>
                     </ul>
                 </li>
