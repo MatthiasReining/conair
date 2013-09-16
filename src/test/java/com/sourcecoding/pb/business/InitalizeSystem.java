@@ -7,16 +7,14 @@ package com.sourcecoding.pb.business;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
 import java.util.HashSet;
 import java.util.Set;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -29,21 +27,22 @@ import org.junit.Test;
 public class InitalizeSystem {
 
     private static final String REST_ROOT = "http://localhost:8080/conair/rest";
-    private WebResource webResource;
+    private WebTarget base;
 
     @Before
     public void init() {
-        ClientConfig clientConfig = new DefaultClientConfig();
-        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 
-        Client client = Client.create(clientConfig);
-        webResource = client.resource(REST_ROOT);
+        Client client = ClientBuilder.newClient();
+        base = client.target(REST_ROOT);
+
+
+        //clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 
     }
 
     @Test
     public void run() {
-        
+
         createIndividual("Pierre", "M0vVQEOr07");
         createIndividual("Hans", "35CXEuiaFs");
         createIndividual("Matthias", "P1ExxuV6JL");
@@ -67,33 +66,33 @@ public class InitalizeSystem {
 
     }
 
-    protected Individual createIndividual(String nickname, String linkedInId) throws UniformInterfaceException, ClientHandlerException {
-        ClientResponse cr = webResource.path("individuals")
+    protected Individual createIndividual(String nickname, String linkedInId) {
+
+        Response response = base.path("individuals")
                 .path(nickname)
                 .queryParam("linkedInId", linkedInId)
-                .type("application/json")
-                .accept("application/json")
-                .put(ClientResponse.class);
+                .request(MediaType.APPLICATION_JSON)
+                .put(null, Response.class);
 
-        Individual individual = cr.getEntity(Individual.class);
+
+        Individual individual = response.readEntity(Individual.class);
         System.out.println("get individual: " + individual.getId());
         return individual;
     }
 
-    protected Individual getIndividual(String nickname) throws UniformInterfaceException, ClientHandlerException {
-        ClientResponse cr = webResource.path("individuals")
+    protected Individual getIndividual(String nickname)  {
+        Response cr = base.path("individuals")
                 .path(nickname)
-                .type("application/json")
-                .accept("application/json")
-                .get(ClientResponse.class);
+                .request(MediaType.APPLICATION_JSON)
+                .get();
 
-        Individual individual = cr.getEntity(Individual.class);
+        Individual individual = cr.readEntity(Individual.class);
         System.out.println("created individual: " + individual.getId());
         return individual;
 
     }
 
-    private ProjectInformation createProject(String projectKey, String projectName, String... workPackages) throws ClientHandlerException, UniformInterfaceException {
+    private ProjectInformation createProject(String projectKey, String projectName, String... workPackages) {
         ProjectInformation pi = new ProjectInformation();
         pi.setProjectKey(projectKey);
         pi.setName(projectName);
@@ -108,26 +107,24 @@ public class InitalizeSystem {
             s.add(wp);
         }
 
-        ClientResponse cr = webResource.path("projects/v0.1")
+        Response cr = base.path("projects/v0.1")
                 .path(pi.getProjectKey())
-                .type("application/json")
-                .accept("application/json")
-                .put(ClientResponse.class, pi);
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(pi), Response.class);
 
-        ProjectInformation piResult = cr.getEntity(ProjectInformation.class);
+        ProjectInformation piResult = cr.readEntity(ProjectInformation.class);
         System.out.println("create project: " + piResult.getProjectKey() + " " + piResult.getName());
         return piResult;
     }
 
-    private ProjectInformation getProject(String projectKey) throws ClientHandlerException, UniformInterfaceException {
+    private ProjectInformation getProject(String projectKey)  {
 
-        ClientResponse cr = webResource.path("projects")
+        Response cr = base.path("projects")
                 .path(projectKey)
-                .type("application/json")
-                .accept("application/json")
-                .get(ClientResponse.class);
+                .request(MediaType.APPLICATION_JSON)
+                .get();
 
-        ProjectInformation piResult = cr.getEntity(ProjectInformation.class);
+        ProjectInformation piResult = cr.readEntity(ProjectInformation.class);
         System.out.println("get project: " + piResult.getProjectKey() + " " + piResult.getName());
         return piResult;
     }
@@ -138,6 +135,4 @@ public class InitalizeSystem {
 
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
-   
 }

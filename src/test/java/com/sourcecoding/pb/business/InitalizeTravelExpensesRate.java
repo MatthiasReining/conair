@@ -8,26 +8,21 @@ import com.sourcecoding.pb.business.perdiemcharges.entity.TravelExpensesRate;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientHandlerException;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.UniformInterfaceException;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
-import com.sun.jersey.api.json.JSONConfiguration;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,15 +33,20 @@ import org.junit.Test;
 public class InitalizeTravelExpensesRate {
 
     private static final String REST_ROOT = "http://localhost:8080/conair/rest";
-    private WebResource webResource;
+    private WebTarget base;
 
     @Before
     public void init() {
-        ClientConfig clientConfig = new DefaultClientConfig();
-        clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
 
-        Client client = Client.create(clientConfig);
-        webResource = client.resource(REST_ROOT);
+        Client client = ClientBuilder.newClient();
+        base = client.target(REST_ROOT);
+
+
+        //ClientConfig clientConfig = new DefaultClientConfig();
+        //clientConfig.getFeatures().put(JSONConfiguration.FEATURE_POJO_MAPPING, Boolean.TRUE);
+
+        //Client client = Client.create(clientConfig);
+        //webResource = client.resource(REST_ROOT);
 
     }
 
@@ -80,48 +80,44 @@ public class InitalizeTravelExpensesRate {
             ter.setAccommodationExpenses(new BigDecimal(values[4]));
         }
 
-        ClientResponse cr = webResource.path("per-diem/travel-expenses-rates")
-                .type("application/json")
-                .accept("application/json")
-                .put(ClientResponse.class, data);
+        Response cr = base.path("per-diem/travel-expenses-rates")
+                .request(MediaType.APPLICATION_JSON)
+                .put(Entity.json(data), Response.class);
 
         System.out.println("Upload status: " + cr.getStatus());
     }
 
-    protected Individual createIndividual(String nickname) throws UniformInterfaceException, ClientHandlerException {
-        ClientResponse cr = webResource.path("individuals")
+    protected Individual createIndividual(String nickname)  {
+        Response cr = base.path("individuals")
                 .path(nickname)
-                .type("application/json")
-                .accept("application/json")
-                .put(ClientResponse.class);
+                .request(MediaType.APPLICATION_JSON)
+                .put(null, Response.class);
 
-        Individual individual = cr.getEntity(Individual.class);
+        Individual individual = cr.readEntity(Individual.class);
         System.out.println("get individual: " + individual.getId());
         return individual;
     }
 
-    protected Individual getIndividual(String nickname) throws UniformInterfaceException, ClientHandlerException {
-        ClientResponse cr = webResource.path("individuals")
+    protected Individual getIndividual(String nickname) {
+        Response cr = base.path("individuals")
                 .path(nickname)
-                .type("application/json")
-                .accept("application/json")
-                .get(ClientResponse.class);
+                .request(MediaType.APPLICATION_JSON)
+                .get();
 
-        Individual individual = cr.getEntity(Individual.class);
+        Individual individual = cr.readEntity(Individual.class);
         System.out.println("created individual: " + individual.getId());
         return individual;
 
     }
 
-    private ProjectInformation getProject(String projectKey) throws ClientHandlerException, UniformInterfaceException {
+    private ProjectInformation getProject(String projectKey) {
 
-        ClientResponse cr = webResource.path("projects")
+        Response cr = base.path("projects")
                 .path(projectKey)
-                .type("application/json")
-                .accept("application/json")
-                .get(ClientResponse.class);
+                .request(MediaType.APPLICATION_JSON)
+                .get();
 
-        ProjectInformation piResult = cr.getEntity(ProjectInformation.class);
+        ProjectInformation piResult = cr.readEntity(ProjectInformation.class);
         System.out.println("get project: " + piResult.getProjectKey() + " " + piResult.getName());
         return piResult;
     }
