@@ -4,6 +4,7 @@
  */
 package com.sourcecoding.pb.business.vacation.boundary;
 
+import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
@@ -40,7 +41,7 @@ public class VacationService {
     private ResourceContext resourceContext;
     @Inject
     ResponseBuilder rb;
-
+  
     @GET
     public List<Map<String, Object>> getVacations() {
         //TODO Security check

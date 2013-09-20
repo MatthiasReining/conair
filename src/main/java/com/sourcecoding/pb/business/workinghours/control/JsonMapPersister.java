@@ -4,8 +4,6 @@
  */
 package com.sourcecoding.pb.business.workinghours.control;
 
-import com.sourcecoding.pb.business.authentication.entity.User;
-import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
