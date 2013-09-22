@@ -19,6 +19,7 @@ import jxl.*;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.junit.Ignore;
 
 /**
  *
@@ -26,27 +27,10 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 public class XlsExportTest {
 
-    @Test
+    @Test 
     public void run() throws WriteException, BiffException, IOException {
         JsonReader reader = Json.createReader(this.getClass().getResourceAsStream("/vacation.json"));
         JsonObject json = (JsonObject) reader.read();
-        
-        String s = json.toString();
-        System.out.println( s );
-        JsonObject jo = (JsonObject) Json.createReader(new StringReader(s)).read();
-        System.out.println( jo );
-        
-        Map<String, Object> test = new HashMap<>();
-        test.put("xxx", "yyy");
-        test.put("123", "qwer");
-        System.out.println( test.toString() );
-        
-        ObjectMapper om = new ObjectMapper();
-        String x = om.writeValueAsString(test);
-        System.out.println( x );
-        if (true) return;
-        
-        
 
         File f = new File("d:\\out.xls");
         OutputStream out = new FileOutputStream(f);

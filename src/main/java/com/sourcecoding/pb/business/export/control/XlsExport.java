@@ -30,31 +30,7 @@ import jxl.write.WriteException;
  */
 public class XlsExport {
 
-    private Map<String, JsonArray> scopedCollections = new HashMap<>();
-
-    protected JsonValue getJsonValue(JsonValue jsonStructure, String path) {
-
-        if (jsonStructure.getValueType() != JsonValue.ValueType.OBJECT) {
-            //no path information available
-            return null;
-        }
-
-        JsonObject jsonObj = (JsonObject) jsonStructure;
-        if (path.contains(".")) {
-            String key = path.substring(0, path.indexOf("."));
-            String newPath = path.substring(path.indexOf(".") + 1);
-
-            if (jsonObj.containsKey(key)) {
-                JsonValue newJsonStructure = jsonObj.get(key);
-                return getJsonValue(newJsonStructure, newPath);
-            }
-        }
-        if (jsonObj.containsKey(path)) {
-            return jsonObj.get(path);
-        }
-
-        return null;
-    }
+    private Map<String, Object> scopedCollections = new HashMap<>();
 
     public void run(JsonObject json, Workbook template, OutputStream out) throws IOException, WriteException, BiffException {
         WritableWorkbook workbook = Workbook.createWorkbook(out, template);
@@ -67,8 +43,8 @@ public class XlsExport {
         workbook.write();
         workbook.close();
     }
-
-    private void replaceRows(int replaceRowStart, int replaceRowEnd, WritableSheet sheet, JsonObject json) throws WriteException {
+    
+    private void replaceRows(int replaceRowStart, int replaceRowEnd, WritableSheet sheet, Object json) throws WriteException {
         boolean loopMode = false;
         String currentLoopScope = null;
 
@@ -94,8 +70,9 @@ public class XlsExport {
                         String param[] = expression.split(" ");
                         String scopeName = param[0];
                         String pathName = param[2];
-                        JsonArray jsonArray = (JsonArray) getJsonValue(json, pathName);
-                        scopedCollections.put(scopeName, jsonArray);
+                        Object listValues = DataExtractor.getDataValue(json, pathName);
+                        //JsonArray jsonArray = (JsonArray) getJsonValue(json, pathName);
+                        scopedCollections.put(scopeName, listValues);
                         currentLoopScope = scopeName;
                         //sheet.removeRow(rowNumber);
                         loopMode = true;
@@ -110,19 +87,21 @@ public class XlsExport {
 
 
                         //print Data
-                        JsonArray entries = scopedCollections.get(currentLoopScope);
+                        List<?> entries = (List<?>) scopedCollections.get(currentLoopScope);
 
                         System.out.println("entries: " + entries);
                         for (int i = 0; i < entries.size(); i++) {
-                            JsonObject entry = entries.getJsonObject(i);
+                            Object entry = entries.get(i); //.getJsonObject(i);
 
                             //copy row block
                             copyRows(sheet, loopRows, currentRowNumber);
 
                             //replace data in block
-                            JsonObject scopeObj = Json.createObjectBuilder()
-                                    .add(currentLoopScope, entry)
-                                    .build();
+                            //JsonObject scopeObj = Json.createObjectBuilder()
+                            //        .add(currentLoopScope, entry)
+                            //        .build();
+                            Map<String, Object> scopeObj = new HashMap<>();
+                            scopeObj.put(currentLoopScope, entry);
                             replaceRows(currentRowNumber, currentRowNumber + loopRows.size(), sheet, scopeObj);
 
                             currentRowNumber = currentRowNumber + loopRows.size();
@@ -142,7 +121,8 @@ public class XlsExport {
                             fieldPath = fieldPath.replace("}}", "");
 
                             System.out.println("excel value detected: " + fieldPath);
-                            String value = getJsonValue(json, fieldPath).toString();
+                            String value = DataExtractor.getStringValue(json, fieldPath);
+                            //String value = getJsonValue(json, fieldPath).toString();
                             System.out.println(value);
                             WritableCell modifyCell = sheet.getWritableCell(cell.getColumn(), cell.getRow());
 
