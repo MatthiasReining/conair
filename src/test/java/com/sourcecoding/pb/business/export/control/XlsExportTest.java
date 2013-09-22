@@ -4,13 +4,11 @@
  */
 package com.sourcecoding.pb.business.export.control;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
@@ -18,8 +16,6 @@ import org.junit.Test;
 import jxl.*;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.junit.Ignore;
 
 /**
  *
@@ -32,8 +28,8 @@ public class XlsExportTest {
         JsonReader reader = Json.createReader(this.getClass().getResourceAsStream("/vacation.json"));
         JsonObject json = (JsonObject) reader.read();
 
-        File f = new File("d:\\out.xls");
-        OutputStream out = new FileOutputStream(f);
+        //File f = new File("d:\\out.xls");
+        OutputStream out = new ByteArrayOutputStream();
         Workbook template = Workbook.getWorkbook(this.getClass().getResourceAsStream("/vacation-template-test.xls"));
 
         XlsExport xlsExport = new XlsExport();
