@@ -92,4 +92,8 @@ function VacationCtrl($scope, $http, $routeParams, $modal) {
         $scope.calculateVacationDays();
         $scope.vacation = vacationRecord;
     };
+    
+    $scope.excelDownload = function() {
+        
+    }
 }
