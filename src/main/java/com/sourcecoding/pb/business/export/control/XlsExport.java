@@ -10,10 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.json.Json;
-import javax.json.JsonArray;
 import javax.json.JsonObject;
-import javax.json.JsonValue;
 import jxl.Cell;
 import jxl.CellType;
 import jxl.Workbook;
@@ -32,7 +29,7 @@ public class XlsExport {
 
     private Map<String, Object> scopedCollections = new HashMap<>();
 
-    public void run(JsonObject json, Workbook template, OutputStream out) throws IOException, WriteException, BiffException {
+    public void run(Object json, Workbook template, OutputStream out) throws IOException, WriteException, BiffException {
         WritableWorkbook workbook = Workbook.createWorkbook(out, template);
         WritableSheet sheet = workbook.getSheet(0);
 

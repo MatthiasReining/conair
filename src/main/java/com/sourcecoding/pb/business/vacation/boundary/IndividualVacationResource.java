@@ -5,6 +5,7 @@
 package com.sourcecoding.pb.business.vacation.boundary;
 
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
+import com.sourcecoding.pb.business.export.control.DataExtractor;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
@@ -13,7 +14,6 @@ import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,9 +36,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.registry.infomodel.ExtrinsicObject;
 import org.codehaus.jackson.map.ObjectMapper;
 
 /**
@@ -69,20 +69,13 @@ public class IndividualVacationResource {
 
         String templateName = "vacation-template";
 
-        Map<String, Object> vacationMap = getVaction();
-        ObjectMapper om = new ObjectMapper();
-        String payloadText = om.writeValueAsString(vacationMap);
-        System.out.println("payloadText");
-        System.out.println(payloadText);
-        JsonObject payload = Json.createReader(new StringReader(payloadText)).readObject();
-        payload = Json.createObjectBuilder().add("vacation", payload).build();
-        
-        System.out.println("payload");
-        System.out.println(payload);
+        Map<String, Object> vacationMap = new HashMap<>();
+        vacationMap.put("vacation", getVaction());
+
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-        exportService.generate(templateName, payload, os);
-        String filename = "vacation-yyyy-" + individual.getNickname() + ".xls";
+        exportService.generate(templateName, vacationMap, os);
+        String filename = "vacation-" + DataExtractor.getStringValue(vacationMap, "vacation.vacationYear") + "-" + individual.getNickname() + ".xls";
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = " + filename)
                 .build();

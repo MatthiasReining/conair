@@ -22,7 +22,7 @@ import jxl.write.WriteException;
  */
 public class XlsExportService {
 
-    public void generate(String templateName, JsonObject payload, OutputStream out) {
+    public void generate(String templateName, Object payload, OutputStream out) {
         try {
             InputStream templateStream = this.getClass().getResourceAsStream("/xls-templates/" + templateName + ".xls");
 
