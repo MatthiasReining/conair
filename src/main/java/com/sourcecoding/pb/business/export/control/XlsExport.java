@@ -9,11 +9,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
-import javax.json.JsonObject;
 import jxl.Cell;
 import jxl.CellType;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
 import jxl.write.WritableCell;
@@ -30,7 +31,24 @@ public class XlsExport {
     private Map<String, Object> scopedCollections = new HashMap<>();
 
     public void run(Object json, Workbook template, OutputStream out) throws IOException, WriteException, BiffException {
-        WritableWorkbook workbook = Workbook.createWorkbook(out, template);
+        WorkbookSettings settings = new WorkbookSettings();
+        settings.setWriteAccess("rw");
+        settings.setLocale(new Locale("de", "DE"));
+        
+        //TODO write blog - without setting writeAccess on a linux machine an exception is thrown:
+        /*
+         java.lang.ArrayIndexOutOfBoundsException
+        at java.lang.System.arraycopy(Native Method)
+        at jxl.biff.StringHelper.getBytes(StringHelper.java:127)
+        at jxl.write.biff.WriteAccessRecord.<init>(WriteAccessRecord.java:59)
+        at jxl.write.biff.WritableWorkbookImpl.write(WritableWorkbookImpl.java:726)
+        at com.sourcecoding.pb.business.export.control.XlsExport.run(XlsExport.java:40)
+ 
+         */
+        
+
+
+        WritableWorkbook workbook = Workbook.createWorkbook(out, template, settings);
         WritableSheet sheet = workbook.getSheet(0);
 
         int replaceRowStart = 0;
@@ -40,7 +58,7 @@ public class XlsExport {
         workbook.write();
         workbook.close();
     }
-    
+
     private void replaceRows(int replaceRowStart, int replaceRowEnd, WritableSheet sheet, Object json) throws WriteException {
         boolean loopMode = false;
         String currentLoopScope = null;
