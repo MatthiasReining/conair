@@ -44,6 +44,7 @@ app.config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.
                 when('/resources/individuals', {templateUrl: 'snippets/individuals.html', controller: IndividualsCtrl}).
+                when('/resources/legal-holidays', {templateUrl: 'snippets/legal-holidays.html', controller: LegalHolidaysCtrl}).
                 when('/projects', {templateUrl: 'snippets/project-list.html', controller: ProjectListCtrl}).
                 when('/projects/:projectKey', {templateUrl: 'snippets/project.html', controller: ProjectCtrl}).
                 when('/time-recording', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).

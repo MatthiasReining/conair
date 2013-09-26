@@ -4,7 +4,6 @@
  */
 package com.sourcecoding.pb.business.vacation.entity;
 
-import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -22,16 +21,15 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
+    @NamedQuery(name = LegalHoliday.findAll, query = "SELECT o FROM LegalHoliday o ORDER BY o.legalHolidayState, o.legalHolidayDate"),
     @NamedQuery(name = LegalHoliday.findByDate, query = "SELECT o FROM LegalHoliday o WHERE o.legalHolidayDate = :" + LegalHoliday.queryParam_date),})
 public class LegalHoliday implements Serializable {
-    
-    
-    public static final String findByDate = "LegalHoliday.findByDate";
-    
-    public static final String queryParam_date = "date";
- 
 
+    public static final String findAll = "LegalHoliday.findAll";
+    public static final String findByDate = "LegalHoliday.findByDate";
+    public static final String queryParam_date = "date";
     private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -71,5 +69,4 @@ public class LegalHoliday implements Serializable {
     public void setLegalHolidayState(String legalHolidayState) {
         this.legalHolidayState = legalHolidayState;
     }
-
 }

@@ -14,7 +14,6 @@ import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,8 +22,6 @@ import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.json.Json;
-import javax.json.JsonObject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -38,8 +35,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.registry.infomodel.ExtrinsicObject;
-import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  *

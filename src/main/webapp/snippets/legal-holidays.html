@@ -1,0 +1,29 @@
+<h3>Legal Holidays</h3>
+<h6>List of all legal holidays used for calculation of vacation days</h6>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Legal Holidays</h3>
+    </div>
+    <div class="panel-body">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>state</th>
+                    <th>date</th>
+                    <th>name</th>
+                </tr> 
+            </thead>
+            <tbody data-ng-repeat="lh in legalHolidays">
+                <tr>
+                    <td>{{lh.legalHolidayState}}</td>
+                    <td>{{lh.legalHolidayDate}}</td>
+                    <td>{{lh.legalHolidayName}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

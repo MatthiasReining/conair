@@ -5,6 +5,7 @@
 package com.sourcecoding.pb.business.resources.boundary;
 
 import com.sourcecoding.pb.business.individuals.boundary.IndividualsResource;
+import com.sourcecoding.pb.business.vacation.boundary.LegalHolidayResource;
 import javax.ejb.Stateless;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
@@ -29,5 +30,10 @@ public class ResourcesResource {
     @Path("individuals")
     public IndividualsResource getPeople() {
         return resourceContext.getResource(IndividualsResource.class);
+    }
+
+    @Path("legal-holidays")
+    public LegalHolidayResource getLegalHolidays() {
+        return resourceContext.getResource(LegalHolidayResource.class);
     }
 }
