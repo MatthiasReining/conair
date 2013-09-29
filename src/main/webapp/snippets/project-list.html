@@ -1,94 +1,33 @@
-<!-- Page heading -->
-<div class="page-head">
-    <!-- Page heading -->
-    <h2 class="pull-left">Projects 
-        <!-- page meta -->
-        <span class="page-meta">List of all projects</span>
-    </h2>
+<h3>Projects</h3>
+<h6></h6>
 
 
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/project-list" class="bread-current">Projects</a>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Projects</h3>
     </div>
+    <div class="panel-body">
 
-    <div class="clearfix"></div>
-
-</div>
-<!-- Page heading ends -->
-
-
-
-<!-- Matter -->
-
-<div class="matter">
-    <div class="container-fluid">
-
-        <div class="row-fluid">
-
-            <div class="span12">
-
-
-                <div class="widget worange">
-
-                    <div class="widget-head">
-                        <div class="pull-left">Projects</div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="widget-content">
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>key</th>
-                                    <th>name</th>
-                                </tr> 
-                            </thead>
-                            <tbody id="project-list-data" data-ng-repeat="project in projects">
-                                <tr>
-                                    <td><a href="#/projects/{{project.key}}">{{project.key}}</a></td>
-                                    <td>{{project.name}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-
-
-                    </div>
-
-                    <div class="widget-foot">
-
-                        <div class="pagination pull-right">
-                            <!--<ul>
-                                <li><a href="#">Prev</a></li>
-                                <li><a href="#">1</a></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">Next</a></li>
-                            </ul>-->
-                        </div>
-                        <div class="clearfix"></div> 
-
-                    </div>
-                </div>
-
-
-                <div class="widget-foot">
-                    <!-- Footer goes here -->
-                    
-                </div>
-            </div>  
-
-
-        </div>
-
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>key</th>
+                    <th>name</th>
+                </tr> 
+            </thead>
+            <tbody data-ng-repeat="project in projects">
+                <tr>
+                    <td><a href="#/projects/{{project.key}}">{{project.key}}</a></td>
+                    <td>{{project.name}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <a href="#/projects/new">
+            <button class="btn btn-info">
+                <i class="icon-plus-sign"></i> New Project
+            </button>
+        </a>
     </div>
 </div>
-
-<!-- Matter ends -->
-

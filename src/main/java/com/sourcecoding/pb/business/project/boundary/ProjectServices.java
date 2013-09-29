@@ -10,8 +10,10 @@ import com.sourcecoding.pb.business.restconfig.DateParameter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,37 +35,51 @@ import javax.ws.rs.core.Response;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class ProjectServices {
-    
+
     @PersistenceContext
     EntityManager em;
-    
+
     @PUT
     @Path("v0.1/{key}")
     public ProjectInformation createOrUpdate(@PathParam("key") String key, ProjectInformation pi) {
-        
+
         for (WorkPackage wp : pi.getWorkPackages()) {
             wp.setProjectInformation(pi);
         }
-        
+
         pi = em.merge(pi);
         return pi;
     }
-    
+
     @GET
     @Path("v0.1/{key}")
-    public ProjectInformation getProjectv2(@PathParam("key") String key) {
+    public ProjectInformation getProjectv2Old(@PathParam("key") String key) {
         return em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();
     }
-    
+
     @PUT
     @Path("{key}")
     public Map<String, Object> update(@PathParam("key") String key, Map<String, Object> map) {
-        
-        ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
-                .setParameter(ProjectInformation.findByKey_Param_Key, key)
-                .getSingleResult();
+
+        Long id = null;
+        if (map.containsKey("id")) {
+            id = Long.valueOf(String.valueOf(map.get("id")));
+        }
+
+        ProjectInformation pi;
+        if (id == null) {
+            pi = new ProjectInformation();
+        } else {
+            pi = em.find(ProjectInformation.class, id);
+        }
+
+
+        //ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
+        //        .setParameter(ProjectInformation.findByKey_Param_Key, key)
+        //        .getSingleResult();
+        pi.setProjectKey(String.valueOf(map.get("projectKey")));
         pi.setName(String.valueOf(map.get("name")));
         pi.setProjectManager(String.valueOf(map.get("projectManager")));
 
@@ -76,13 +92,50 @@ public class ProjectServices {
         dateText = String.valueOf(map.get("projectEnd"));
         dateValue = (dateText == null || dateText.isEmpty() || "null".equals(dateText)) ? null : DateParameter.valueOf(dateText);
         pi.setProjectEnd(dateValue);
+
+        Set<WorkPackage> wpEntityList = pi.getWorkPackages();
+        if (wpEntityList == null) {
+            wpEntityList = new HashSet<>();
+        }
+
+        List<Long> existingWpIds = new ArrayList<>();
+        List<Map<String, Object>> wpList = (List<Map<String, Object>>) map.get("workPackages");
+        if (wpList != null) {
+            for (Map<String, Object> wp : wpList) {
+                Long wpId = null;
+                if (wp.containsKey("id")) {
+                    wpId = Long.valueOf(String.valueOf(wp.get("id")));
+                    existingWpIds.add(wpId);
+                }
+
+                WorkPackage wpEntity;
+                if (wpId == null) {
+                    wpEntity = new WorkPackage();
+                    wpEntityList.add(wpEntity);
+                } else {
+                    wpEntity = em.find(WorkPackage.class, wpId);
+                }
+                wpEntity.setProjectInformation(pi);
+                wpEntity.setWpName(String.valueOf(wp.get("wpName")));
+            }
+        }
+
+        List<WorkPackage> wp2remove = new ArrayList<>();
+        for( WorkPackage wp : wpEntityList) {
+            if (!existingWpIds.contains(wp.getId())) {
+                wp2remove.add(wp);
+            }
+        }
+        for (WorkPackage wp : wp2remove)
+            em.remove(wp);
         
-        
+
+
         pi = em.merge(pi);
-        
+
         return convertProjectInformation2Map(pi);
     }
-    
+
     @GET
     @Path("{key}")
     public Map<String, Object> getProject(@PathParam("key") String key) {
@@ -91,24 +144,25 @@ public class ProjectServices {
                 .getSingleResult();
         return convertProjectInformation2Map(pi);
     }
-    
+
     @GET
-    public Map<String, Object> getProjects() {
-        
+    @Path("old")
+    public Map<String, Object> getProjectsOld() {
+
         List<ProjectInformation> projects = em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class)
                 .getResultList();
-        
+
         Map<String, Object> result = new HashMap<>();
-        
+
         for (ProjectInformation projectEntity : projects) {
             Map<String, Object> project = new HashMap<>();
-            
+
             project.put("id", projectEntity.getId());
             project.put("name", projectEntity.getName());
             project.put("key", projectEntity.getProjectKey());
-            
+
             result.put(String.valueOf(projectEntity.getId()), project);
-            
+
             Map<String, Map> workPackages = new HashMap<>();
             project.put("workPackages", workPackages);
             for (WorkPackage wpEntity : projectEntity.getWorkPackages()) {
@@ -120,7 +174,7 @@ public class ProjectServices {
                 wp.put("name", wpEntity.getWpName());
             }
         }
-        
+
         return result;
     }
 
@@ -130,26 +184,25 @@ public class ProjectServices {
      * @return
      */
     @GET
-    @Path("list")
     public List<Object> getProjectList() {
-        
+
         List<ProjectInformation> projects = em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class)
                 .getResultList();
-        
+
         List<Object> result = new ArrayList<>();
-        
+
         for (ProjectInformation projectEntity : projects) {
             Map<String, Object> project = new HashMap<>();
-            
+
             project.put("id", projectEntity.getId());
             project.put("name", projectEntity.getName());
             project.put("key", projectEntity.getProjectKey());
             result.add(project);
         }
-        
+
         return result;
     }
-    
+
     private Map<String, Object> convertProjectInformation2Map(ProjectInformation pi) {
         Map<String, Object> result = new HashMap<>();
         result.put("projectKey", pi.getProjectKey());
@@ -158,6 +211,22 @@ public class ProjectServices {
         result.put("projectStart", DateParameter.valueOf(pi.getProjectStart()));
         result.put("projectEnd", DateParameter.valueOf(pi.getProjectEnd()));
         result.put("projectManager", pi.getProjectManager());
+
+        if (pi.getWorkPackages() != null) {
+            List<Map<String, Object>> workPackages = new ArrayList<>();
+            result.put("workPackages", workPackages);
+
+            for (WorkPackage wp : pi.getWorkPackages()) {
+                Map<String, Object> workPackage = new HashMap<>();
+                workPackages.add(workPackage);
+                workPackage.put("id", wp.getId());
+                workPackage.put("wpName", wp.getWpName());
+                workPackage.put("bookableFrom", wp.getBookabelFrom());
+                workPackage.put("bookableTo", wp.getBookableTo());
+                workPackage.put("limitForWorkingHours", wp.getLimitForWorkingHours());
+            }
+        }
+
         return result;
     }
 }

@@ -1,231 +1,144 @@
-<!-- Page heading -->
-<div class="page-head">
-    <!-- Page heading -->
-    <h2 class="pull-left">Project: {{project.projectKey}} - {{project.name}}
-        <!-- page meta -->
-        <span class="page-meta">Project details</span>
-    </h2>
+<h3>Project: {{project.projectKey}} - {{project.name}}</h3>
+<h6>Project details</h6>
 
 
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/projects" class="bread-current">Projects</a>
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/projects/{{project.projectKey}}" class="bread-current">{{project.projectKey}}</a>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{project.projectKey}} - {{project.name}} | {{project.projectState}}</h3>
     </div>
+    <div class="panel-body">
 
-    <div class="clearfix"></div>
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#general-information">General Information</a></li>
+                <li><a data-toggle="tab" href="#work-packages">Work Packages</a></li>
+                <li><a data-toggle="tab" href="#access">Access</a></li>
+            </ul>
 
-</div>
-<!-- Page heading ends -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="general-information">
+                    <br>
+                    <form class="form-horizontal" data-role="form" id="form-general-information" novalidate>
 
-<!-- Matter -->
-<div class="matter">
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span12">
-
-                <div class="widget worange">
-
-                    <div class="widget-head">
-                        <div class="pull-left">{{project.projectKey}} - {{project.name}} | {{project.projectState}}</div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="widget-content">
-                        <div class="tabbable">
-                            <ul class="nav nav-tabs">
-                                <li class="active"><a href="#general-information" data-toggle="tab">General Information</a></li>
-                                <li><a href="#work-packages" data-toggle="tab">Work Packages</a></li>
-                                <li><a href="#access" data-toggle="tab">Access</a></li>
-                            </ul>
-                            <div class="tab-content">
-
-                                <div class="tab-pane active" id="general-information">
-                                    <div class="padd">
-                                        <h6>General Information</h6>
-                                        <hr />
-
-                                        <div class="form">
-                                            <form class="form-horizontal" id="form-general-information">
-                                                <div class="row-fluid">
-                                                    <div class="span5" >            
-                                                        <!-- ProjectKey -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="projectKey">Key</label>
-                                                            <div class="controls">
-                                                                <span class="input-mini uneditable-input">{{project.projectKey}}</span>
-                                                            </div>
-                                                        </div>   
-
-                                                        <!-- ProjectName -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="name">Project name</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="input-large" name="name" data-ng-model="project.name" placeholder="Enter project name">
-                                                            </div>
-                                                        </div>
-
-                                                        <!-- Project Manager -->
-                                                        <div class="control-group">
-                                                            <label style="width:auto" class="control-label" for="projectManager">Project manager</label>
-                                                            <div class="controls">
-                                                                <input type="text" class="input-large" name="projectManager" data-ng-model="project.projectManager" placeholder="Enter a valid user id">
-                                                            </div>
-                                                        </div>  
-
-                                                    </div>
-
-                                                    <div class="span7" >            
-                                                        <!-- Project Start -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="projectStart">Project start</label>
-                                                            <div class="controls">
-                                                                <div class="input-append" id="project-start-area">
-                                                                    <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectStart" data-ng-model="project.projectStart">
-                                                                    <span class="add-on">
-                                                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>  
-
-                                                        <!-- Project End -->
-                                                        <div class="control-group">
-                                                            <label class="control-label" for="projectEnd">Project end</label>
-                                                            <div class="controls">
-                                                                <div class="input-append datetimepicker" id="project-end-area">
-                                                                    <input data-format="yyyy-MM-dd" class="span6" type="text" name="projectEnd" data-ng-model="project.projectEnd">
-                                                                    <span class="add-on">
-                                                                        <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i>
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>  
-                                                    </div>
-
-                                                </div>
-                                                <div class="form-actions">
-                                                    <!-- Buttons -->
-                                                    <button class="btn btn-success" data-ng-click="sendToServer()">Update</button>
-                                                    <button class="btn">Reset</button>
-                                                </div>
-                                            </form>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-
-
-                                <div class="tab-pane" id="work-packages">
-
-                                    <div class="padd">
-                                        <h6>Work packages</h6>
-                                        <hr />
-                                        <div class="row-fluid">
-                                            <div class="span4" >            
-
-                                                <div class="widget wlightblue">
-
-                                                    <div class="widget-head">
-                                                        <div class="pull-left">Work Packages</div>                                                                
-                                                        <div class="clearfix"></div>
-                                                    </div>
-
-                                                    <div class="widget-content">
-                                                        <table class="table table-bordered ">                                                                   
-                                                            <tbody data-ng-repeat="workPackage in project.workPackages">
-                                                                <tr>                                                                            
-                                                                    <td></td>
-                                                                    <td data-ng-click="selectWP(workPackage)">{{workPackage.wpName}}</td>
-                                                                    <td>active</td>  
-                                                                </tr>
-                                                            </tbody>                                                                   
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="span8" >            
-
-                                                <div class="widget wviolet">
-
-                                                    <div class="widget-head">
-                                                        <div class="pull-left">Work Package: {{currentWP.wpName}}</div>                                                                
-                                                        <div class="clearfix"></div>
-                                                    </div>
-
-                                                    <div class="widget-content">
-                                                        
-                                                            <form class="form-horizontal">
-
-                                                                <!-- WP Name -->
-                                                                <div class="control-group">
-                                                                    <label class="control-label" for="wpName">Name</label>
-                                                                    <div class="controls">
-                                                                        <input type="text" class="input-large" id="wpName" data-ng-model="currentWP.wpName" placeholder="Enter work package name">
-                                                                    </div>
-                                                                </div>
-
-                                                                <!-- Linmit for Working Hours -->
-                                                                <div class="control-group">
-                                                                    <label style="width:auto" class="control-label" for="limitForWorkingHours">Limited Working Hours</label>
-                                                                    <div class="controls">
-                                                                        <input type="text" class="input-large" id="limitForWorkingHours" data-ng-model="currentWP.limitForWorkingHours" placeholder="Enter limit">
-                                                                    </div>
-                                                                </div>  
-                                                            </form>
-                                                        
-
-                                                    </div>
-
-
-                                                </div>
-
-                                            </div>
-                                            <div class="form-actions">
-                                                <!-- Buttons -->
-                                                <button class="btn btn-success" data-ng-click="sendToServer()">Update</button>
-                                                <button class="btn">Reset</button>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-
-
-
-                                </div>
-
-                                <div class="tab-pane" id="access">
-                                    <p>What up girl, this is Section 3.</p>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="projectKey">Key</label>
+                            <div class="col-md-9">
+                                <input type="text" data-ng-model="project.projectKey" id="projectKey" required />
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="name">Project name</label>
+                            <div class="col-md-9">
+                                <input type="text" id="name" data-ng-model="project.name" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="projectManager">Project manager</label>
+                            <div class="col-md-9">
+                                <input type="text" id="projectManager" data-ng-model="project.projectManager" required placeholder="Enter a valid user id">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="projectStart">Project start</label>
+                            <div class="col-md-9">
+                                <input type="text" id="projectStart" data-ng-model="project.projectStart">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="projectEnd">Project end</label>
+                            <div class="col-md-9">
+                                <input type="text" id="projectEnd" data-ng-model="project.projectEnd">
+                            </div>
+                        </div>
+
+                    </form>
+
+
+                </div>
+                <div class="tab-pane" id="work-packages">
+                    <br>
+
+                    <div class="row">
+
+                        <div class="col-md-4">
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Work packages</div>
+                                <div class="panel-body">
+                                    <table class="table table-bordered ">                                                                   
+                                        <tbody data-ng-repeat="workPackage in project.workPackages">
+                                            <tr>                                                                            
+                                                <td data-ng-click="selectWP(workPackage)" style="cursor: pointer">{{workPackage.wpName}}</td>
+                                                <td>
+                                                    <a data-ng-click="removeWP(workPackage)" style="cursor: pointer">
+                                                        <span class="icon-remove" title="Remove work package"></span>
+                                                    </a>
+                                                </td>  
+                                            </tr>
+                                        </tbody>                                                                   
+                                    </table>
+                                </div>
+                                <div class="panel-footer">
+
+                                    <button class="btn btn-info" data-ng-click="newWP()">
+                                        <i class="icon-plus-sign"></i> New work package
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-md-8">
+
+                            <div class="panel panel-default" data-ng-hide="currentWP == null">
+                                <div class="panel-heading">Work Package: {{currentWP.wpName}}</div>
+                                <div class="panel-body">
+
+
+                                    <form class="form-horizontal" data-role="form">
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label" for="wpName">Name</label>
+                                            <div class="col-md-9">
+                                                <input type="text" data-ng-model="currentWP.wpName" id="wpName" required placeholder="Enter work package name"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="col-md-3 control-label" for="limitForWorkingHours">Limited Working Hours</label>
+                                            <div class="col-md-9">
+                                                <input type="number" data-ng-model="currentWP.limitForWorkingHours" id="limitForWorkingHours"/>
+                                            </div>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div class="widget-foot">
-
-                    </div>
                 </div>
+                <div class="tab-pane" id="access">
 
+                    <br>    
+                    <p>construction area...</p>
 
-                <div class="widget-foot">
-                    <!-- Footer goes here -->
 
                 </div>
-            </div>  
-
-
+            </div>
         </div>
+    </div>
+    <div class="panel-footer">
+
+        <button class="btn btn-success" data-ng-click="sendToServer()">Update</button>
+        <button class="btn">Reset</button>
 
     </div>
-</div>
 
-<!-- Matter ends -->
+</div>
