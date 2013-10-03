@@ -24,7 +24,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
 /**
  *
@@ -62,6 +61,7 @@ public class ProjectServices {
     @PUT
     @Path("{key}")
     public Map<String, Object> update(@PathParam("key") String key, Map<String, Object> map) {
+        System.out.println("in upate...");
 
         Long id = null;
         if (map.containsKey("id")) {
@@ -93,55 +93,60 @@ public class ProjectServices {
         dateValue = (dateText == null || dateText.isEmpty() || "null".equals(dateText)) ? null : DateParameter.valueOf(dateText);
         pi.setProjectEnd(dateValue);
 
+        if (pi.getWorkPackages() == null) {
+            pi.setWorkPackages(new HashSet<WorkPackage>());
+        }
         Set<WorkPackage> wpEntityList = pi.getWorkPackages();
-        if (wpEntityList == null) {
-            wpEntityList = new HashSet<>();
+        Map<Long, WorkPackage> wpEntityMap = new HashMap<>();
+        for (WorkPackage wpEntity : pi.getWorkPackages()) {
+            wpEntityMap.put(wpEntity.getId(), wpEntity);
         }
 
-        List<Long> existingWpIds = new ArrayList<>();
+        List<Long> newWpIdExistingList = new ArrayList<>();
         List<Map<String, Object>> wpList = (List<Map<String, Object>>) map.get("workPackages");
         if (wpList != null) {
             for (Map<String, Object> wp : wpList) {
-                Long wpId = null;
-                if (wp.containsKey("id")) {
-                    wpId = Long.valueOf(String.valueOf(wp.get("id")));
-                    existingWpIds.add(wpId);
-                }
 
                 WorkPackage wpEntity;
-                if (wpId == null) {
-                    wpEntity = new WorkPackage();
-                    wpEntityList.add(wpEntity);
+
+                if (wp.containsKey("id")) {
+                    Long wpId = Long.valueOf(String.valueOf(wp.get("id")));
+                    newWpIdExistingList.add(wpId);
+                    wpEntity = wpEntityMap.get(wpId);
                 } else {
-                    wpEntity = em.find(WorkPackage.class, wpId);
+                    wpEntity = new WorkPackage();
+                    pi.getWorkPackages().add(wpEntity);
                 }
                 wpEntity.setProjectInformation(pi);
                 wpEntity.setWpName(String.valueOf(wp.get("wpName")));
+                //TODO add wpEntity.setLimitForWorkingHours(...);
             }
         }
 
-        List<WorkPackage> wp2remove = new ArrayList<>();
-        for( WorkPackage wp : wpEntityList) {
-            if (!existingWpIds.contains(wp.getId())) {
-                wp2remove.add(wp);
-            }
+        //remove entities
+        for (Map.Entry<Long, WorkPackage> entries : wpEntityMap.entrySet()) {
+            Long existingId = entries.getKey();
+            
+            if (! newWpIdExistingList.contains(existingId)) {
+                //entry has to be removed
+                WorkPackage wp2Remove = entries.getValue();
+                pi.getWorkPackages().remove(wp2Remove);
+            }            
         }
-        for (WorkPackage wp : wp2remove)
-            em.remove(wp);
         
-
-
-        pi = em.merge(pi);
-
+        //pi = em.merge(pi);
         return convertProjectInformation2Map(pi);
     }
 
     @GET
     @Path("{key}")
     public Map<String, Object> getProject(@PathParam("key") String key) {
+        System.out.println("in getProjects");
         ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();
+        System.out.println(
+                "wp size: " + pi.getWorkPackages().size());
         return convertProjectInformation2Map(pi);
     }
 
@@ -153,7 +158,6 @@ public class ProjectServices {
                 .getResultList();
 
         Map<String, Object> result = new HashMap<>();
-
         for (ProjectInformation projectEntity : projects) {
             Map<String, Object> project = new HashMap<>();
 
@@ -174,7 +178,6 @@ public class ProjectServices {
                 wp.put("name", wpEntity.getWpName());
             }
         }
-
         return result;
     }
 
@@ -190,7 +193,6 @@ public class ProjectServices {
                 .getResultList();
 
         List<Object> result = new ArrayList<>();
-
         for (ProjectInformation projectEntity : projects) {
             Map<String, Object> project = new HashMap<>();
 
@@ -199,7 +201,6 @@ public class ProjectServices {
             project.put("key", projectEntity.getProjectKey());
             result.add(project);
         }
-
         return result;
     }
 

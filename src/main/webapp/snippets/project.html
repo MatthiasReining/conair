@@ -74,8 +74,8 @@
                                         <tbody data-ng-repeat="workPackage in project.workPackages">
                                             <tr>                                                                            
                                                 <td data-ng-click="selectWP(workPackage)" style="cursor: pointer">{{workPackage.wpName}}</td>
-                                                <td>
-                                                    <a data-ng-click="removeWP(workPackage)" style="cursor: pointer">
+                                                <td data-ng-click="removeWP(workPackage)">
+                                                    <a  style="cursor: pointer">
                                                         <span class="icon-remove" title="Remove work package"></span>
                                                     </a>
                                                 </td>  

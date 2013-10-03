@@ -31,7 +31,7 @@ function ProjectCtrl($scope, $routeParams, $http) {
         $scope.project = {};
         $scope.project.projectKey = 'blub';
     } else {
-        $http.get(serviceURL).success(function(data) {
+        $http.get(serviceURL, { cache: false}).success(function(data) {
             console.log(data);
             //convert date
             data.projectStart = new Date(data.projectStart).getText();
@@ -49,6 +49,10 @@ function ProjectCtrl($scope, $routeParams, $http) {
         $scope.currentWP = newWP;   
     };
     $scope.removeWP = function(workPackage) {
+        console.log(workPackage);
+        var i = $scope.project.workPackages.indexOf(workPackage);
+        console.log('index: ' + i);
+        if (i!==-1) $scope.project.workPackages.splice(i, 1);
         //FIXME remove work package
     };    
     $scope.selectWP = function(workPackage) {

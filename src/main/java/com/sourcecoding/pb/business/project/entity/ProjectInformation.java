@@ -52,7 +52,7 @@ public class ProjectInformation implements Serializable {
      * TODO link to user
      */
     private String projectManager;
-    @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WorkPackage> workPackages;
 
     public Long getId() {
