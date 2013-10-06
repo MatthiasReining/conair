@@ -134,7 +134,7 @@ public class ProjectServices {
             }            
         }
         
-        //pi = em.merge(pi);
+        pi = em.merge(pi);
         return convertProjectInformation2Map(pi);
     }
 

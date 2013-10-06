@@ -30,7 +30,6 @@ function ProjectCtrl($scope, $routeParams, $http) {
 
     if ($routeParams.projectKey == 'new') {
         $scope.project = {};
-        $scope.project.projectKey = 'blub';
     } else {
         $http.get(serviceURL, {cache: false}).success(function(data) {
             console.log(data);
