@@ -16,45 +16,61 @@ function ProjectCtrl($scope, $routeParams, $http) {
 
     var serviceURL = serviceBaseUrl + 'projects/' + $routeParams.projectKey;
     console.log('in ProjectCtrl');
+
     //init click events
     /**
-        $('#project-start-area').datetimepicker().on('changeDate', function(e) {
-        console.log(e.date);
-        datepicker2model(e, $scope);
-    });
-    $('#project-end-area').datetimepicker().on('changeDate', function(e) {
-        datepicker2model(e, $scope);
-    });
-    */
+     $('#project-start-area').datetimepicker().on('changeDate', function(e) {
+     console.log(e.date);
+     datepicker2model(e, $scope);
+     });
+     $('#project-end-area').datetimepicker().on('changeDate', function(e) {
+     datepicker2model(e, $scope);
+     });
+     */
 
     if ($routeParams.projectKey == 'new') {
         $scope.project = {};
         $scope.project.projectKey = 'blub';
     } else {
-        $http.get(serviceURL, { cache: false}).success(function(data) {
+        $http.get(serviceURL, {cache: false}).success(function(data) {
             console.log(data);
-            //convert date
-            data.projectStart = new Date(data.projectStart).getText();
-            data.projectEnd = new Date(data.projectEnd).getText();
+            
             $scope.project = data;
+            //init datepicker
+            $('#projectStart').datepicker('update', $scope.project.projectStart);
+            $('#projectEnd').datepicker('update', $scope.project.projectEnd);
         });
     }
-    
+    $('#projectStart').datepicker({
+        format: "yyyy-mm-dd",
+        language: "de"
+    }).on('changeDate', function(e) {
+        $scope.project.projectStart = e.format('yyyy-mm-dd');
+    });
+    $('#projectEnd').datepicker({
+        format: "yyyy-mm-dd",
+        language: "de"
+    }).on('changeDate', function(e) {
+        $scope.project.projectEnd = e.format('yyyy-mm-dd');
+    });
+
     $scope.newWP = function() {
-        if (! angular.isArray ( $scope.project.workPackages ) ) $scope.project.workPackages = [];
+        if (!angular.isArray($scope.project.workPackages))
+            $scope.project.workPackages = [];
         var newWP = {
             'wpName': '<new work packages>'
         };
-        $scope.project.workPackages.push( newWP );
-        $scope.currentWP = newWP;   
+        $scope.project.workPackages.push(newWP);
+        $scope.currentWP = newWP;
     };
     $scope.removeWP = function(workPackage) {
         console.log(workPackage);
         var i = $scope.project.workPackages.indexOf(workPackage);
         console.log('index: ' + i);
-        if (i!==-1) $scope.project.workPackages.splice(i, 1);
+        if (i !== -1)
+            $scope.project.workPackages.splice(i, 1);
         //FIXME remove work package
-    };    
+    };
     $scope.selectWP = function(workPackage) {
         console.log(workPackage);
         $scope.currentWP = workPackage;

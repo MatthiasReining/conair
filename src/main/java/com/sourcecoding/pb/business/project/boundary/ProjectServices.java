@@ -141,13 +141,10 @@ public class ProjectServices {
     @GET
     @Path("{key}")
     public Map<String, Object> getProject(@PathParam("key") String key) {
-        System.out.println("in getProjects");
         ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();
-        System.out.println(
-                "wp size: " + pi.getWorkPackages().size());
-        return convertProjectInformation2Map(pi);
+       return convertProjectInformation2Map(pi);
     }
 
     @GET
