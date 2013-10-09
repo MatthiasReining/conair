@@ -50,14 +50,6 @@ public class ProjectServices {
         return pi;
     }
 
-    @GET
-    @Path("v0.1/{key}")
-    public ProjectInformation getProjectv2Old(@PathParam("key") String key) {
-        return em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
-                .setParameter(ProjectInformation.findByKey_Param_Key, key)
-                .getSingleResult();
-    }
-
     @PUT
     @Path("{key}")
     public Map<String, Object> update(@PathParam("key") String key, Map<String, Object> map) {
@@ -126,14 +118,14 @@ public class ProjectServices {
         //remove entities
         for (Map.Entry<Long, WorkPackage> entries : wpEntityMap.entrySet()) {
             Long existingId = entries.getKey();
-            
-            if (! newWpIdExistingList.contains(existingId)) {
+
+            if (!newWpIdExistingList.contains(existingId)) {
                 //entry has to be removed
                 WorkPackage wp2Remove = entries.getValue();
                 pi.getWorkPackages().remove(wp2Remove);
-            }            
+            }
         }
-        
+
         pi = em.merge(pi);
         return convertProjectInformation2Map(pi);
     }
@@ -144,12 +136,12 @@ public class ProjectServices {
         ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.findByKey_Param_Key, key)
                 .getSingleResult();
-       return convertProjectInformation2Map(pi);
+        return convertProjectInformation2Map(pi);
     }
 
+
     @GET
-    @Path("old")
-    public Map<String, Object> getProjectsOld() {
+    public Map<String, Object> getProjectList() {
 
         List<ProjectInformation> projects = em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class)
                 .getResultList();
@@ -174,29 +166,6 @@ public class ProjectServices {
                 wp.put("id", wpEntity.getId());
                 wp.put("name", wpEntity.getWpName());
             }
-        }
-        return result;
-    }
-
-    /**
-     * used for project-list.html
-     *
-     * @return
-     */
-    @GET
-    public List<Object> getProjectList() {
-
-        List<ProjectInformation> projects = em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class)
-                .getResultList();
-
-        List<Object> result = new ArrayList<>();
-        for (ProjectInformation projectEntity : projects) {
-            Map<String, Object> project = new HashMap<>();
-
-            project.put("id", projectEntity.getId());
-            project.put("name", projectEntity.getName());
-            project.put("key", projectEntity.getProjectKey());
-            result.add(project);
         }
         return result;
     }

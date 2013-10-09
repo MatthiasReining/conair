@@ -1,80 +1,44 @@
-<!-- Page heading -->
-<div class="page-head">
-    <!-- Page heading -->
-    <h2 class="pull-left">Time Recording 
-        <!-- page meta -->
-        <span class="page-meta">Time recording</span>
-    </h2>
+<h3>Time Recording</h3>
 
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Time recording</h3>
+    </div>
+    <div class="panel-body">
 
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/time-recording" class="bread-current">Time Recording</a>
+        <table class="table table-bordered">
+            <thead style="background-color: #52b9e9; color: #fff">
+                <tr>
+                    <th>project</th>
+                    <th>work package</th>
+                    <th>description</th>
+                    <th data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange">{{workingDay}}</th>
+                </tr> 
+            </thead>
+            <tbody data-ng-repeat="workingHour in timeRecording.workingHours">
+                <tr>
+                    <td>                                        
+                        <select data-ng-model="workingHour.projectId" data-ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
+                    </td>
+                    <td>
+                        <select data-ng-model="workingHour.workPackageId" data-ng-options="workPackage.id as workPackage.name for (workPackageId, workPackage) in projects[workingHour.projectId].workPackages"></select>
+                    </td>
+                    <td>
+                        <input type="text" data-ng-model="workingHour.description" />
+                    </td>
+                    <td data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange">
+                        <input type="number" data-ng-model="workingHour.days[workingDay]" class="tr-workingHour"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    <div class="clearfix"></div>
 
-</div>
-<!-- Page heading ends -->
+    <div class="panel-footer">
 
-
-
-<!-- Matter -->
-
-<div class="matter">
-    <div class="container-fluid">
-
-        <div class="row-fluid">
-
-            <div class="span12">
-
-
-                <div class="widget wlightblue">
-                    <div class="widget-content">
-                        <table class="table table-bordered">
-                            <thead style="background-color: #52b9e9; color: #fff">
-                                <tr>
-                                    <th>project</th>
-                                    <th>work package</th>
-                                    <th>description</th>
-                                    <th data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange">{{workingDay}}</th>
-                                </tr> 
-                            </thead>
-                            <tbody data-ng-repeat="workingHour in timeRecording.workingHours">
-                                <tr>
-                                    <td>                                        
-                                        <select data-ng-model="workingHour.projectId" data-ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
-                                    </td>
-                                    <td>
-                                        <select data-ng-model="workingHour.workPackageId" data-ng-options="workPackage.id as workPackage.name for (workPackageId, workPackage) in projects[workingHour.projectId].workPackages"></select>
-                                    </td>
-                                    <td>
-                                        <input type="text" data-ng-model="workingHour.description" />
-                                    </td>
-                                    <td data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange">
-                                        <input type="number" data-ng-model="workingHour.days[workingDay]" class="tr-workingHour"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="widget-foot">
-                        <!-- Buttons -->
-                        <button class="btn" data-ng-click="addRow()">add row</button>
-                        <button class="btn btn-success" data-ng-click="sendToServer()">Update</button>
-                    </div>
-                </div>
-
-
-            </div>  
-        </div>
-
+        <!-- Buttons -->
+        <button class="btn" data-ng-click="addRow()">add row</button>
+        <button class="btn btn-success" data-ng-click="sendToServer()">Update</button>
     </div>
 </div>
-
-<!-- Matter ends -->
-
