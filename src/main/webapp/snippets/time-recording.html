@@ -12,7 +12,7 @@
                     <th>project</th>
                     <th>work package</th>
                     <th>description</th>
-                    <th data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange">{{workingDay}}</th>
+                    <th data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange track by $index">{{workingDay}}</th>
                 </tr> 
             </thead>
             <tbody data-ng-repeat="workingHour in timeRecording.workingHours">
@@ -26,7 +26,7 @@
                     <td>
                         <input type="text" data-ng-model="workingHour.description" />
                     </td>
-                    <td data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange">
+                    <td data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange track by $index">
                         <input type="number" data-ng-model="workingHour.days[workingDay]" class="tr-workingHour"/>
                     </td>
                 </tr>

@@ -15,6 +15,8 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
     $http.get(serviceBaseUrl + 'time-recording/range/' + weeks).success(function(data) {
         console.log(data);
         $scope.timeRecording = data;
+        console.log( $scope.timeRecording.workingDayRange );
+        console.log('supi');
     });
     $scope.addRow = function() {
         console.log('->addRow');
@@ -25,6 +27,7 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
     $scope.sendToServer = function() {
         console.log('->sendToServer');
         console.log($scope.timeRecording);
+        return;
         $http.put(serviceBaseUrl + "time-recording", $scope.timeRecording).success(function(data) {
             console.log('<--fromServer');
             console.log(data);
