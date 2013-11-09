@@ -9,6 +9,8 @@ import com.sourcecoding.pb.business.authentication.entity.User;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
+import com.sourcecoding.pb.business.project.entity.ProjectInformation;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
 import com.sourcecoding.pb.business.workinghours.control.JsonMapPersister;
 import com.sourcecoding.pb.business.workinghours.control.TimeRecordingLoader;
 import com.sourcecoding.pb.business.workinghours.entity.WorkPackageDescription;
@@ -21,6 +23,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -76,7 +79,6 @@ public class TimeRecordingService {
         String qEnd = dateFormatter.format(c.getTime());
         c.add(Calendar.DATE, -7 * weeks);
 
-
         String qStart = dateFormatter.format(c.getTime());
 
         return getWorkingHoursWithRange(individualId, qStart, qEnd);
@@ -93,7 +95,6 @@ public class TimeRecordingService {
             individualId = currentUser.getId();
         }
 
-
         Date from = DateParameter.valueOf(qStart);
         Date until = DateParameter.valueOf(qEnd);
 
@@ -105,12 +106,145 @@ public class TimeRecordingService {
     }
 
     @PUT
-    public Response udpateTimeRecording(Map<String, Object> payload) {
+    public Response udpateTimeRecording(Map<String, Object> payload, @QueryParam("individualId") Long individualId) {
+        if (individualId == null) {
+            individualId = currentUser.getId();
+        }
+        Individual individual = em.find(Individual.class, individualId);
 
-        Long userId = ((Integer) payload.get("userId")).longValue();
-        System.out.println(userId);
+        Map<String, TimeRecord> existedTRs = new HashMap<>();
+        Map<String, TimeRecord> newTRs = new HashMap<>();
 
-        Individual user = em.find(Individual.class, userId);
+        Date startDate = null;
+        Date endDate = null;
+        Map<String, Integer> wdRange = (Map<String, Integer>) payload.get("workingDayRange");
+        for (String key : wdRange.keySet()) {
+            if (startDate == null) {
+                startDate = DateParameter.valueOf(key);
+            }
+            if (endDate == null) {
+                endDate = DateParameter.valueOf(key);
+            }
+
+            Date tmp = DateParameter.valueOf(key);
+            if (tmp.before(startDate)) {
+                startDate = tmp;
+            }
+            if (tmp.after(endDate)) {
+                endDate = tmp;
+            }
+        }
+
+        //collect existing time records and build a map
+        List<TimeRecord> trList = em.createNamedQuery(TimeRecord.findTimeRecordsInARange, TimeRecord.class)
+                .setParameter(TimeRecord.queryParam_user, individual)
+                .setParameter(TimeRecord.queryParam_startDate, startDate)
+                .setParameter(TimeRecord.queryParam_endDate, endDate)
+                .getResultList();
+        for (TimeRecord tr : trList) {
+            String key = DateParameter.valueOf(tr.getWorkingDay()) + "-"
+                    + tr.getProject().getId() + "-" + tr.getWorkPackage().getId() + "-" + tr.getDescribtion();
+            existedTRs.put(key, tr);
+        }
+
+        //collect new time records and build a map
+        ArrayList<Map<String, Object>> workingHours = (ArrayList<Map<String, Object>>) payload.get("workingHours");
+        for (Map<String, Object> wh : workingHours) {
+            String description = (String) wh.get("description");
+            ProjectInformation project = em.find(ProjectInformation.class, ((Integer) wh.get("projectId")).longValue());
+            WorkPackage workPackage = em.find(WorkPackage.class, ((Integer) wh.get("workPackageId")).longValue());
+            for (Map.Entry<String, Integer> whDays : ((Map<String, Integer>) wh.get("days")).entrySet()) {
+                Date workingDay = DateParameter.valueOf(whDays.getKey());
+                Integer workingTime = whDays.getValue();
+
+                TimeRecord tr = new TimeRecord();
+                tr.setDescribtion(description);
+                tr.setProject(project);
+                tr.setWorkPackage(workPackage);
+                tr.setUser(individual);
+                tr.setWorkingDay(workingDay);
+                tr.setWorkingTime(workingTime);
+                tr.setStatus(0);
+
+                String key = DateParameter.valueOf(tr.getWorkingDay()) + "-"
+                        + tr.getProject().getId() + "-" + tr.getWorkPackage().getId() + "-" + tr.getDescribtion();
+                newTRs.put(key, tr);
+            }
+        }
+        
+        //iterate over existedTR: if not exists in newTR -> remove; else update and remove newTR from MAP
+        //step 2: iterate over newTRs: create with em.
+        for (Map.Entry<String, TimeRecord> existedTR : existedTRs.entrySet()) {
+            //getNewData
+            TimeRecord newTR = newTRs.get(existedTR.getKey());
+            if (newTR == null) {
+                em.remove(existedTR.getValue()); //remove existing
+            } else {
+                TimeRecord tr = existedTR.getValue();
+                tr.setWorkingTime(newTR.getWorkingTime());
+                newTRs.remove( existedTR.getKey()); //remove, because it's updated
+            }            
+        }
+        for (Map.Entry<String, TimeRecord> newTR : newTRs.entrySet()) {
+            em.persist(newTR.getValue());
+        }
+        
+        return Response.ok().build();
+    }
+
+    private Map<Date, WorkingDay> getWorkingDayListFromMap(Map<String, Object> payload, Individual user) {
+        Map<String, Integer> workingDayRange = (Map<String, Integer>) payload.get("workingDayRang");
+        Map<Date, WorkingDay> workingDayEntityRange = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : workingDayRange.entrySet()) {
+            //Init //FIXME load existing data
+            Date wdDate = DateParameter.valueOf(entry.getKey());
+            WorkingDay wd = new WorkingDay();
+            wd.setWorkingDay(wdDate);
+            wd.setStatus(entry.getValue());
+            wd.setUser(user);
+            wd.setWorkingTimeList(new ArrayList<WorkingTime>());
+            workingDayEntityRange.put(wdDate, wd);
+        }
+
+        List<Map<String, Object>> workingHoursList = (List<Map<String, Object>>) (Map<String, Object>) payload.get("workingHours");
+        for (Map<String, Object> workingHourEntry : workingHoursList) {
+            String description = (String) workingHourEntry.get("description");
+            Long wpId = (Long) workingHourEntry.get("workPackageId");
+            WorkPackage wp = em.find(WorkPackage.class, wpId);
+
+            WorkPackageDescription wpd = new WorkPackageDescription();
+            wpd.setDescription(description);
+            wpd.setWorkPackage(wp);
+
+            Map<String, Integer> days = (Map<String, Integer>) workingHourEntry.get("days");
+            for (Map.Entry<String, Integer> dayEntry : days.entrySet()) {
+                Date wdDate = DateParameter.valueOf(dayEntry.getKey());
+                Integer wdTime = dayEntry.getValue();
+
+                WorkingDay wd = workingDayEntityRange.get(wdDate);
+
+                WorkingTime wt = new WorkingTime();
+                wt.setWorkPackage(wp);
+                wt.setWorkPackageDescription(wpd);
+                wt.setWorkingDay(wd);
+                wt.setWorkingTime(wdTime);
+
+                wd.getWorkingTimeList().add(wt);
+            }
+        }
+
+        return workingDayEntityRange;
+    }
+
+    @PUT
+    @Path("old")
+    public Response oldUdpateTimeRecording(Map<String, Object> payload, @QueryParam("individualId") Long individualId) {
+
+        if (individualId == null) {
+            individualId = currentUser.getId();
+        }
+
+        Individual user = em.find(Individual.class, individualId);
         List<Map<String, Object>> workingHours = (List<Map<String, Object>>) payload.get("workingHours");
         System.out.println("workingHours:" + workingHours);
 
@@ -146,11 +280,9 @@ public class TimeRecordingService {
                 em.remove(workingTime);
             }
 
-
             //add new workingtime
             for (Map.Entry<String, Map<String, Object>> wtListMap : keyObj.entrySet()) {
                 Map<String, Object> wtMap = wtListMap.getValue();
-
 
                 Long workPackageId = (Long) wtMap.get(WORKPACKAGE_ID);
                 String description = (String) wtMap.get(DESCRIPTION);
@@ -183,7 +315,6 @@ public class TimeRecordingService {
                 workingDay.getWorkingTimeList().add(wt);
 
             }
-
 
         }
 

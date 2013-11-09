@@ -27,11 +27,10 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
     $scope.sendToServer = function() {
         console.log('->sendToServer');
         console.log($scope.timeRecording);
-        return;
         $http.put(serviceBaseUrl + "time-recording", $scope.timeRecording).success(function(data) {
             console.log('<--fromServer');
             console.log(data);
-            $scope.project = data;
+            //$scope.project = data;
         });
     };
 }

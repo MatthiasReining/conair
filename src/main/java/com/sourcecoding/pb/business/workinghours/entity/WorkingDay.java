@@ -6,6 +6,7 @@ package com.sourcecoding.pb.business.workinghours.entity;
 
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -48,10 +49,10 @@ public class WorkingDay implements Serializable {
     private Individual user;
     private int status; //TODO change to enum and rename to state
     @OneToMany(mappedBy = "workingDay", cascade = CascadeType.ALL)
-    private List<WorkingTime> workingTimeList;
+    private List<WorkingTime> workingTimeList = new ArrayList<>();
     @Temporal(TemporalType.DATE)
     private Date workingDay;
-
+    
     public Long getId() {
         return id;
     }
