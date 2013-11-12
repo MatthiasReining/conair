@@ -12,7 +12,6 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -74,6 +73,7 @@ public class AuthLinkedInService {
         try {
             response.sendRedirect(response.encodeRedirectURL(confirmAccessURL));
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println(e.getMessage());
         }
     }
@@ -129,6 +129,7 @@ public class AuthLinkedInService {
                 System.out.println("contextPath: "+ request.getContextPath());
                 response.sendRedirect(request.getContextPath());
             } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println(e.getMessage());
             }
         }

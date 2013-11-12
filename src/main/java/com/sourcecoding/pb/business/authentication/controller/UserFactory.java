@@ -60,7 +60,7 @@ public class UserFactory implements Serializable {
         }
         user.setId(individual.getId());
         
-        System.out.println("userFactory#oginUser: " + this);
+        System.out.println("userFactory#loginUser: " + this);
         System.out.println("user: " + user);
         currentUser = user;
     }

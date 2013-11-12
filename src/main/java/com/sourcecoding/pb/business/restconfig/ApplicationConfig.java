@@ -50,6 +50,5 @@ public class ApplicationConfig extends Application {
         resources.add(com.sourcecoding.pb.business.vacation.boundary.LegalHolidayResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.TasksResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.VacationService.class);
-        resources.add(com.sourcecoding.pb.business.workinghours.boundary.WorkingHours.class);
     }
 }
