@@ -12,11 +12,11 @@
                     <th>project</th>
                     <th>work package</th>
                     <th>description</th>
-                    <th data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange track by $index">{{workingDay}}</th>
+                    <th class="tr-workingDay" data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange track by $index">{{workingDay}}</th>
                 </tr> 
             </thead>
-            <tbody data-ng-repeat="workingHour in timeRecording.workingHours">
-                <tr>
+            <tbody>
+                <tr data-ng-repeat="workingHour in timeRecording.workingHours">
                     <td>                                        
                         <select data-ng-model="workingHour.projectId" data-ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
                     </td>
@@ -27,10 +27,20 @@
                         <input type="text" data-ng-model="workingHour.description" />
                     </td>
                     <td data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange track by $index">
-                        <input type="number" data-ng-model="workingHour.days[workingDay]" class="tr-workingHour"/>
+                        <input type="number" data-ng-model="workingHour.days[workingDay]" data-ng-change="calculateWorkingDaySum()" class="tr-workingHour"/>
                     </td>
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">                                        
+                    </td>
+                    <td data-ng-repeat="(day, sum) in workingDaySum track by $index">
+                        {{sum}}min (or {{sum / 60 | number: 2}}h)
+                    </td>
+                </tr>
+
+            </tfoot>
         </table>
     </div>
 

@@ -178,8 +178,14 @@ body {
 /* ============== */
 
 .tr-workingHour {
-    width: 27px;
+    width: 54px;
     text-align: right;
+}
+
+.tr-workingDay {
+    width: 92px;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 
