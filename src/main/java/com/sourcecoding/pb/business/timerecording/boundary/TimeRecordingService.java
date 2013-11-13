@@ -60,12 +60,12 @@ public class TimeRecordingService {
         }
 
         Calendar c = Calendar.getInstance();
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        c.add(Calendar.DATE, (-1 * dayOfWeek) + 7);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK); //SUN=1, MON=2, ... SAT=7
+        c.add(Calendar.DATE, (-1 * dayOfWeek) + 8);
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
         String qEnd = dateFormatter.format(c.getTime());
-        c.add(Calendar.DATE, -7 * weeks);
+        c.add(Calendar.DATE, (-7 * weeks) + 1);
 
         String qStart = dateFormatter.format(c.getTime());
 
@@ -106,6 +106,7 @@ public class TimeRecordingService {
         from.setTime(startDate);
         Calendar until = Calendar.getInstance();
         until.setTime(endDate);
+        until.add(Calendar.DATE, 1); //from first day to (including) last day
         while (from.before(until)) {
             wdr.put(DateParameter.valueOf(from), 0);
             from.add(Calendar.DATE, 1);
@@ -124,6 +125,7 @@ public class TimeRecordingService {
                 workingHoursMap.put(key, line);
             }
             Map<String, Object> line = workingHoursMap.get(key);
+            //TODO use status!!!
             Map<String, Integer> dateLine = (Map<String, Integer>) line.get("days");
             dateLine.put(DateParameter.valueOf(tr.getWorkingDay()), tr.getWorkingTime());
         }
