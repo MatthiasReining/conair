@@ -18,16 +18,20 @@
             <tbody>
                 <tr data-ng-repeat="workingHour in timeRecording.workingHours">
                     <td>                                        
-                        <select data-ng-model="workingHour.projectId" data-ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
+                        <select style="width:130px" class="form-control" data-ng-model="workingHour.projectId" data-ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
                     </td>
                     <td>
-                        <select data-ng-model="workingHour.workPackageId" data-ng-options="workPackage.id as workPackage.name for (workPackageId, workPackage) in projects[workingHour.projectId].workPackages"></select>
+                        <select style="width:100px" class="form-control" data-ng-model="workingHour.workPackageId" data-ng-options="workPackage.id as workPackage.name for (workPackageId, workPackage) in projects[workingHour.projectId].workPackages"></select>
                     </td>
                     <td>
-                        <input type="text" data-ng-model="workingHour.description" />
+                        <input type="text" style="width:120px" class="form-control" data-ng-model="workingHour.description" />
                     </td>
-                    <td data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange track by $index">
-                        <input type="number" data-ng-model="workingHour.days[workingDay]" data-ng-change="calculateWorkingDaySum()" class="tr-workingHour"/>
+                    <td class="tr-workingDay" data-ng-repeat="(workingDay, workingDayState) in timeRecording.workingDayRange track by $index">
+                        <input type="number" class="form-control"
+                               title="{{printToolTip(workingHour.days[workingDay]['status'] > 0)}}"
+                               data-ng-model="workingHour.days[workingDay].workingTime" 
+                               data-ng-disabled="workingHour.days[workingDay]['status'] > 0"
+                               data-ng-change="calculateWorkingDaySum()" />
                     </td>
                 </tr>
             </tbody>
@@ -35,7 +39,7 @@
                 <tr>
                     <td colspan="3">                                        
                     </td>
-                    <td data-ng-repeat="(day, sum) in workingDaySum track by $index">
+                    <td class="tr-workingDay" data-ng-repeat="(day, sum) in workingDaySum track by $index">
                         {{sum}}min (or {{sum / 60 | number: 2}}h)
                     </td>
                 </tr>

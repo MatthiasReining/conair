@@ -17,7 +17,6 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
         console.log(data);
         $scope.timeRecording = data;
         console.log($scope.timeRecording.workingDayRange);
-        console.log('supi');
 
         $scope.workingDaySum = {};
         angular.copy($scope.timeRecording.workingDayRange, $scope.workingDaySum);
@@ -40,15 +39,21 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
 
         angular.forEach($scope.timeRecording.workingHours, function(workingHour) {
             angular.forEach($scope.workingDaySum, function(value, key) {
-                if (angular.isNumber(workingHour.days[key])) {
-                    tmpSum[key] = tmpSum[key] + workingHour.days[key];
+                if (!angular.isUndefined(workingHour.days[key])) {
+                    if (angular.isNumber(workingHour.days[key].workingTime)) {
+                        tmpSum[key] = tmpSum[key] + workingHour.days[key].workingTime;
+                    }
                 }
             });
         });
 
         $scope.workingDaySum = tmpSum;
     };
-
+    
+    $scope.printToolTip = function(show) {
+        if (show) return 'This working time is already collected!';
+        return '';
+    };
 
     $scope.sendToServer = function() {
         console.log('->sendToServer');

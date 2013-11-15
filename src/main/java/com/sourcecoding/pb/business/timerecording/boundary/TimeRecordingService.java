@@ -121,15 +121,32 @@ public class TimeRecordingService {
                 line.put("projectId", tr.getProject().getId());
                 line.put("workPackageId", tr.getWorkPackage().getId());
                 line.put("description", tr.getDescribtion());
-                line.put("days", new HashMap<String, Integer>());
+                line.put("days", new HashMap<String, Object>());
                 workingHoursMap.put(key, line);
             }
             Map<String, Object> line = workingHoursMap.get(key);
             //TODO use status!!!
-            Map<String, Integer> dateLine = (Map<String, Integer>) line.get("days");
-            dateLine.put(DateParameter.valueOf(tr.getWorkingDay()), tr.getWorkingTime());
+            Map<String, Object> dateLine = (Map<String, Object>) line.get("days");
+            Map<String, Object> dateLineMap = new HashMap<>();
+            dateLineMap.put("workingTime", tr.getWorkingTime());
+            dateLineMap.put("status", tr.getStatus());
+            dateLine.put(DateParameter.valueOf(tr.getWorkingDay()), dateLineMap);
         }
-         //workingHours        
+
+        Map<String, Object> emptyDateLineMap = new HashMap<>();
+        emptyDateLineMap.put("workingTime", null);
+        emptyDateLineMap.put("status", null);
+        for (Map<String, Object> line : workingHoursMap.values()) {
+            Map<String, Object> dateLine = (Map<String, Object>) line.get("days");
+
+            for (String dateValue : wdr.keySet()) {
+                if (!dateLine.containsKey(dateValue)) {
+                    dateLine.put(dateValue, emptyDateLineMap);
+                }
+            }
+        }
+
+        //workingHours        
         result.put("workingHours", workingHoursMap.values());
 
         return result;
@@ -173,7 +190,9 @@ public class TimeRecordingService {
                 .getResultList();
         for (TimeRecord tr : trList) {
             String key = getKey(tr);
-            existedTRs.put(key, tr);
+            if (tr.getStatus() == 0) {
+                existedTRs.put(key, tr);
+            }
         }
 
         //collect new time records and build a map
@@ -182,9 +201,17 @@ public class TimeRecordingService {
             String description = (String) wh.get("description");
             ProjectInformation project = em.find(ProjectInformation.class, ((Integer) wh.get("projectId")).longValue());
             WorkPackage workPackage = em.find(WorkPackage.class, ((Integer) wh.get("workPackageId")).longValue());
-            for (Map.Entry<String, Integer> whDays : ((Map<String, Integer>) wh.get("days")).entrySet()) {
+            for (Map.Entry<String, Map<String, Object>> whDays : ((Map<String, Map<String, Object>>) wh.get("days")).entrySet()) {
                 Date workingDay = DateParameter.valueOf(whDays.getKey());
-                Integer workingTime = whDays.getValue();
+                Integer workingTime = (Integer) whDays.getValue().get("workingTime");
+                Integer status = (Integer) whDays.getValue().get("status");
+
+                if (workingTime == null) {
+                    continue;
+                }
+                if (status == null) {
+                    status = 0;
+                }
 
                 TimeRecord tr = new TimeRecord();
                 tr.setDescribtion(description);
@@ -193,10 +220,13 @@ public class TimeRecordingService {
                 tr.setUser(individual);
                 tr.setWorkingDay(workingDay);
                 tr.setWorkingTime(workingTime);
-                tr.setStatus(0);
+                tr.setStatus(status);
 
                 String key = getKey(tr);
-                newTRs.put(key, tr);
+
+                if (status == 0) {
+                    newTRs.put(key, tr);
+                }
             }
         }
 

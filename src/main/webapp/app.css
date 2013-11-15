@@ -177,15 +177,13 @@ body {
 /* TIME RECODRING */
 /* ============== */
 
-.tr-workingHour {
-    width: 54px;
-    text-align: right;
-}
-
 .tr-workingDay {
-    width: 92px;
+    text-align: right;
+    min-width: 92px;
+    max-width: 92px;
     overflow: hidden;
     white-space: nowrap;
+    max-width: 92px;
 }
 
 
