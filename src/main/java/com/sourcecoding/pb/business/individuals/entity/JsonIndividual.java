@@ -25,7 +25,7 @@ public class JsonIndividual {
     public Date lastLogin;
     public Integer vacationDaysPerYear;
     public Integer workdaysPerWeek;
-    public String vacationManagerNickName;
+    public Long vacationManagerId;
     public List<String> roles;
 
     public static JsonIndividual create(Individual individual) {
@@ -37,7 +37,7 @@ public class JsonIndividual {
         p.lastLogin = individual.getLastLogin();
         p.vacationDaysPerYear = individual.getVacationDaysPerYear();
         p.workdaysPerWeek = individual.getWorkdaysPerWeek();
-        p.vacationManagerNickName = individual.getVacationManager().getNickname();
+        p.vacationManagerId = individual.getVacationManager().getId();
         p.roles = new ArrayList<>();
         for (IndividualRole ir : individual.getRoles())
             p.roles.add(ir.getRoleName());

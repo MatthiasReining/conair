@@ -7,8 +7,18 @@ function IndividualsCtrl($scope, $http) {
         console.log(data);
         $scope.individuals = data;
     });
+    
+    
     $scope.selectIndividual = function(individual) {
         $scope.currentIndividual = individual;
+    };
+    $scope.addNewIndividual = function() {
+        var newIndividual = {
+            linkedInId: "set-linkedIn-Id",
+            id: -1
+        };
+        $scope.individuals.push(newIndividual);
+        $scope.currentIndividual = newIndividual;
     };
     $scope.sendToServer = function() {
         console.log($scope.currentIndividual);

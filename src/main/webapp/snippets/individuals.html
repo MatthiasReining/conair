@@ -14,7 +14,9 @@
                             <td data-ng-click="selectIndividual(i)" style="cursor: pointer">{{i.nickname}} ({{i.emailAddress}})</td>
                         </tr>
                     </tbody>
-                </table>           
+                </table>   
+                
+                <button type="button" data-ng-click="addNewIndividual()" class="btn btn-primary">New Individual</button>
             </div>
 
             <div class="col-md-8">
@@ -65,7 +67,7 @@
                             <div class="form-group">
                                 <label class="col-md-6 control-label" for="vacationManagerNickName">Vacation Manager</label>
                                 <div class="col-md-6">
-                                    <input type="text" class="form-control" id="vacationManagerNickName" data-ng-model="currentIndividual.vacationManagerNickName">
+                                    <select class="form-control" data-ng-model="currentIndividual.vacationManagerId" data-ng-options="p.id as p.nickname for p in individuals" />
                                 </div>
                             </div>
 

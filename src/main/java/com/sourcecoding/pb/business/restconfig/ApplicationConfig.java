@@ -39,7 +39,6 @@ public class ApplicationConfig extends Application {
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.sourcecoding.pb.business.authentication.boundary.AuthLinkedInService.class);
         resources.add(com.sourcecoding.pb.business.authentication.boundary.AuthService.class);
-        resources.add(com.sourcecoding.pb.business.individuals.boundary.IndividualService.class);
         resources.add(com.sourcecoding.pb.business.individuals.boundary.IndividualsResource.class);
         resources.add(com.sourcecoding.pb.business.meta.boundary.VersionService.class);
         resources.add(com.sourcecoding.pb.business.perdiemcharges.boundary.PerDiemService.class);

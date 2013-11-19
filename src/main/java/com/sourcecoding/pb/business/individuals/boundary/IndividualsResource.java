@@ -28,19 +28,17 @@ import javax.ws.rs.core.Response;
 @Stateless
 public class IndividualsResource {
 
-    @Inject
-    IndividualService individualService;
-    
-    
     @PersistenceContext
     EntityManager em;
-
 
     @GET
     public Response getIndividuals() {
         List<JsonIndividual> result = new ArrayList<>();
 
-        for (Individual individual : individualService.getAll()) {
+        List<Individual> individuals = em.createNamedQuery(Individual.findAll, Individual.class)
+                .getResultList();
+
+        for (Individual individual : individuals) {
             JsonIndividual p = JsonIndividual.create(individual);
             result.add(p);
         }
@@ -51,17 +49,24 @@ public class IndividualsResource {
     @PUT
     public Response updateOrCreateIndividual(JsonIndividual jsonIndividual) {
         Individual individual = null;
-        System.out.println("id: "+ jsonIndividual.id);
-        if (jsonIndividual.id > 0) {
+        System.out.println("id: " + jsonIndividual.id);
+        if (jsonIndividual.id <= 0) {
+            //create new Individual
+            individual = new Individual();
+            individual = em.merge(individual);
+
+        } else {
+            //load existing individual
             individual = em.find(Individual.class, jsonIndividual.id);
             System.out.println("individual: " + individual.getId());
         }
-        
+
         individual.setLinkedInId(jsonIndividual.linkedInId);
         individual.setNickname(jsonIndividual.nickname);
         individual.setVacationDaysPerYear(jsonIndividual.vacationDaysPerYear);
         individual.setWorkdaysPerWeek(jsonIndividual.workdaysPerWeek);
-        
+        individual.setVacationManager(em.find(Individual.class, jsonIndividual.vacationManagerId));
+
         //TODO set Roles
         //TODO set Working Manager
         return Response.ok().build();
