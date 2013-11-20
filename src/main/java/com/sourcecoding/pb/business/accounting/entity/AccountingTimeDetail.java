@@ -3,20 +3,19 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.timerecording.entity;
+package com.sourcecoding.pb.business.accounting.entity;
 
 import com.sourcecoding.pb.business.individuals.entity.Individual;
-import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -25,22 +24,20 @@ import javax.persistence.TemporalType;
  * @author Matthias
  */
 @Entity
-@NamedQueries({
-    @NamedQuery(name = TimeRecord.findTimeRecordsInARange, query = "SELECT wt FROM TimeRecord wt WHERE wt.user = :" + TimeRecord.queryParam_user + " AND wt.workingDay BETWEEN :" + TimeRecord.queryParam_startDate + " AND :" + TimeRecord.queryParam_endDate + " ORDER BY wt.workingDay"),
-    @NamedQuery(name = TimeRecord.findTimeRecordsInARangeByProjectAndStatus, query = "SELECT wt FROM TimeRecord wt WHERE wt.project = :" + TimeRecord.queryParam_project + " AND wt.status = :" + TimeRecord.queryParam_status + " AND wt.workingDay BETWEEN :" + TimeRecord.queryParam_startDate + " AND :" + TimeRecord.queryParam_endDate + " ORDER BY wt.workingDay")
-})
-public class TimeRecord implements Serializable {
+public class AccountingTimeDetail implements Serializable {
 
-    public static final String findTimeRecordsInARange = "TimeRecord.findTimeRecordsInARange";
-    public static final String findTimeRecordsInARangeByProjectAndStatus = "TimeRecord.findTimeRecordsInARangeByProjectAndStatus";
-    
-    public static final String queryParam_user = "user"; 
-    public static final String queryParam_startDate = "startDate";
-    public static final String queryParam_endDate = "endDate";
-    public static final String queryParam_status = "status";
-    public static final String queryParam_project = "project";
-   
     private static final long serialVersionUID = 1L;
+
+    public AccountingTimeDetail() {
+    }
+
+    public AccountingTimeDetail(TimeRecord tr) {
+        this.describtion = tr.getDescribtion();
+        this.user = tr.getUser();
+        this.workPackage = tr.getWorkPackage();
+        this.workingDay = tr.getWorkingDay();
+        this.workingTime = tr.getWorkingTime();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -49,17 +46,20 @@ public class TimeRecord implements Serializable {
     @ManyToOne
     private Individual user;
 
-    private int status;
+    private String status;
 
     @Temporal(TemporalType.DATE)
     private Date workingDay;
+
     @ManyToOne
-    private ProjectInformation project;
+    private AccountingPeriod accountingPeriod;
     @ManyToOne
     private WorkPackage workPackage;
 
     private String describtion;
     private Integer workingTime;
+
+    private BigDecimal price;
 
     public Long getId() {
         return id;
@@ -69,11 +69,19 @@ public class TimeRecord implements Serializable {
         this.id = id;
     }
 
-    public int getStatus() {
+    public Individual getUser() {
+        return user;
+    }
+
+    public void setUser(Individual user) {
+        this.user = user;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -85,12 +93,12 @@ public class TimeRecord implements Serializable {
         this.workingDay = workingDay;
     }
 
-    public ProjectInformation getProject() {
-        return project;
+    public AccountingPeriod getAccountingPeriod() {
+        return accountingPeriod;
     }
 
-    public void setProject(ProjectInformation project) {
-        this.project = project;
+    public void setAccountingPeriod(AccountingPeriod accountingPeriod) {
+        this.accountingPeriod = accountingPeriod;
     }
 
     public WorkPackage getWorkPackage() {
@@ -117,12 +125,12 @@ public class TimeRecord implements Serializable {
         this.workingTime = workingTime;
     }
 
-    public Individual getUser() {
-        return user;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setUser(Individual user) {
-        this.user = user;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
 }
