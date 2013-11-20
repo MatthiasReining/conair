@@ -11,7 +11,6 @@ import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
-import com.sourcecoding.pb.business.workinghours.control.TimeRecordingLoader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,8 +42,6 @@ import javax.ws.rs.core.Response;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TimeRecordingService {
 
-    @Inject
-    TimeRecordingLoader trl;
     @Inject
     @CurrentUser
     User currentUser;

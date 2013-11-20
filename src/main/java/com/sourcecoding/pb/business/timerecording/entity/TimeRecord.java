@@ -8,7 +8,6 @@ package com.sourcecoding.pb.business.timerecording.entity;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
-import com.sourcecoding.pb.business.workinghours.entity.WorkingDay;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
@@ -27,7 +26,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = TimeRecord.findTimeRecordsInARange, query = "SELECT wt FROM TimeRecord wt WHERE wt.user = :" + WorkingDay.queryParam_user + " AND wt.workingDay BETWEEN :" + WorkingDay.queryParam_startDate + " AND :" + WorkingDay.queryParam_endDate + " ORDER BY wt.workingDay")
+    @NamedQuery(name = TimeRecord.findTimeRecordsInARange, query = "SELECT wt FROM TimeRecord wt WHERE wt.user = :" + TimeRecord.queryParam_user + " AND wt.workingDay BETWEEN :" + TimeRecord.queryParam_startDate + " AND :" + TimeRecord.queryParam_endDate + " ORDER BY wt.workingDay")
 })
 public class TimeRecord implements Serializable {
 
