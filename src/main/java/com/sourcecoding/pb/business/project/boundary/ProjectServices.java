@@ -5,6 +5,7 @@
 package com.sourcecoding.pb.business.project.boundary;
 
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
+import com.sourcecoding.pb.business.project.entity.ProjectMember;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
 import java.util.ArrayList;
@@ -39,18 +40,6 @@ public class ProjectServices {
     EntityManager em;
 
     @PUT
-    @Path("v0.1/{key}")
-    public ProjectInformation createOrUpdate(@PathParam("key") String key, ProjectInformation pi) {
-
-        for (WorkPackage wp : pi.getWorkPackages()) {
-            wp.setProjectInformation(pi);
-        }
-
-        pi = em.merge(pi);
-        return pi;
-    }
-
-    @PUT
     @Path("{key}")
     public Map<String, Object> update(@PathParam("key") String key, Map<String, Object> map) {
         System.out.println("in upate...");
@@ -66,7 +55,6 @@ public class ProjectServices {
         } else {
             pi = em.find(ProjectInformation.class, id);
         }
-
 
         //ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
         //        .setParameter(ProjectInformation.findByKey_Param_Key, key)
@@ -139,7 +127,6 @@ public class ProjectServices {
         return convertProjectInformation2Map(pi);
     }
 
-
     @GET
     public Map<String, Object> getProjectList() {
 
@@ -191,6 +178,22 @@ public class ProjectServices {
                 workPackage.put("bookableFrom", wp.getBookabelFrom());
                 workPackage.put("bookableTo", wp.getBookableTo());
                 workPackage.put("limitForWorkingHours", wp.getLimitForWorkingHours());
+            }
+        }
+        
+        if (pi.getMembers() != null) {
+            List<Map<String, Object>> members = new ArrayList<>();
+            result.put("members", members);
+
+            for (ProjectMember pm : pi.getMembers()) {
+                Map<String, Object> member = new HashMap<>();
+                members.add(member);
+                member.put("id", pm.getId());
+                member.put("individual-nickname", pm.getIndividual().getNickname());
+                member.put("individual-id", pm.getIndividual().getId());
+                member.put("memberFrom", DateParameter.valueOf(pm.getMemberFrom()));
+                member.put("memberTo", DateParameter.valueOf(pm.getMemberTo()));
+                member.put("price", pm.getPrice());
             }
         }
 

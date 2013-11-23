@@ -7,10 +7,13 @@ package com.sourcecoding.pb.business.export.control;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import jxl.Cell;
 import jxl.CellType;
 import jxl.Workbook;
@@ -28,128 +31,172 @@ import jxl.write.WriteException;
  */
 public class XlsExport {
 
-    private Map<String, Object> scopedCollections = new HashMap<>();
+    private static final String ROOT_KEY = "_root_";
+    private final Map<String, Object> scopedCollections = new HashMap<>();
 
     public void run(Object json, Workbook template, OutputStream out) throws IOException, WriteException, BiffException {
         WorkbookSettings settings = new WorkbookSettings();
         settings.setWriteAccess("rw");
         settings.setLocale(new Locale("de", "DE"));
-        
+
         //TODO write blog - without setting writeAccess on a linux machine an exception is thrown:
         /*
          java.lang.ArrayIndexOutOfBoundsException
-        at java.lang.System.arraycopy(Native Method)
-        at jxl.biff.StringHelper.getBytes(StringHelper.java:127)
-        at jxl.write.biff.WriteAccessRecord.<init>(WriteAccessRecord.java:59)
-        at jxl.write.biff.WritableWorkbookImpl.write(WritableWorkbookImpl.java:726)
-        at com.sourcecoding.pb.business.export.control.XlsExport.run(XlsExport.java:40)
+         at java.lang.System.arraycopy(Native Method)
+         at jxl.biff.StringHelper.getBytes(StringHelper.java:127)
+         at jxl.write.biff.WriteAccessRecord.<init>(WriteAccessRecord.java:59)
+         at jxl.write.biff.WritableWorkbookImpl.write(WritableWorkbookImpl.java:726)
+         at com.sourcecoding.pb.business.export.control.XlsExport.run(XlsExport.java:40)
  
          */
-        
-
-
         WritableWorkbook workbook = Workbook.createWorkbook(out, template, settings);
         WritableSheet sheet = workbook.getSheet(0);
 
         int replaceRowStart = 0;
         int replaceRowEnd = sheet.getRows();
-        replaceRows(replaceRowStart, replaceRowEnd, sheet, json);
+
+        scopedCollections.put(ROOT_KEY, json);
+
+        replaceRows(replaceRowStart, replaceRowEnd, sheet);
 
         workbook.write();
         workbook.close();
     }
 
-    private void replaceRows(int replaceRowStart, int replaceRowEnd, WritableSheet sheet, Object json) throws WriteException {
-        boolean loopMode = false;
-        String currentLoopScope = null;
+    private int replaceRows(int replaceRowStart, int replaceRowEnd, WritableSheet sheet) throws WriteException {
+        int additionalLines = 0;
 
-        List<Cell[]> loopRows = null;
+        System.out.println("-->replaceRows: replaceRowStart: " + replaceRowStart + "; replaceRowEnd: " + replaceRowEnd);
 
         for (int currentRowNumber = replaceRowStart; currentRowNumber < replaceRowEnd; currentRowNumber++) {
 
-            System.out.println("Row: " + convertToString(sheet.getRow(currentRowNumber)));
+            System.out.println("work on row " + currentRowNumber + "  -> " + convertToString(sheet.getRow(currentRowNumber)));
 
-            if (loopMode) {
-                //copy rows
-                loopRows.add(sheet.getRow(currentRowNumber));
-            }
             for (Cell cell : sheet.getRow(currentRowNumber)) {
-                if (cell.getContents().startsWith("{{")) {
+                if (cell.getContents().startsWith("{{")  && cell.getContents().endsWith("}}")) {
                     String formula = cell.getContents();
-
 
                     if (formula.startsWith("{{repeat:")) {
                         //repeat
-                        String expression = formula.substring("{{{repeat:".length());
+                        String expression = formula.substring("{{repeat: ".length());
                         expression = expression.replace("}}", "").trim();
-                        String param[] = expression.split(" ");
-                        String scopeName = param[0];
-                        String pathName = param[2];
-                        Object listValues = DataExtractor.getDataValue(json, pathName);
-                        //JsonArray jsonArray = (JsonArray) getJsonValue(json, pathName);
-                        scopedCollections.put(scopeName, listValues);
-                        currentLoopScope = scopeName;
-                        //sheet.removeRow(rowNumber);
-                        loopMode = true;
-                        loopRows = new ArrayList<>();
-                        sheet.removeRow(currentRowNumber);
-                        currentRowNumber--;
-                    } else if (formula.startsWith("{{end-of-repeat")) {
-                        loopMode = false;
-                        loopRows.remove(loopRows.size() - 1);
-                        int numberOfRows2Remove = loopRows.size();
-                        int definitionLoopRowNumber = currentRowNumber - numberOfRows2Remove;
+                        
+                        String pathName = expression.substring(expression.indexOf("in") + 3).trim();
+                        String scopeName = expression.substring(0, expression.indexOf("in")).trim();
+                        
 
+                        System.out.println("  -->loop (variable: " + scopeName + ")! " + formula);
 
-                        //print Data
-                        List<?> entries = (List<?>) scopedCollections.get(currentLoopScope);
+                        //find end of repeat!
+                        int loopMetaInfoStartLine = currentRowNumber;
+                        List<Cell[]> loopContent = new ArrayList<>();
 
-                        System.out.println("entries: " + entries);
-                        for (int i = 0; i < entries.size(); i++) {
-                            Object entry = entries.get(i); //.getJsonObject(i);
+                        boolean endTagAvailable = false;
+                        for (int loopRowNumber = currentRowNumber + 1; loopRowNumber < replaceRowEnd; loopRowNumber++) {
+                            for (Cell loopCell : sheet.getRow(loopRowNumber)) {
+                                if (loopCell.getContents().startsWith("{{end-of-repeat: " + scopeName)) {
+                                    endTagAvailable = true;
+                                    break;
+                                }
+                            }
+                            if (endTagAvailable)
+                                break;
+                            loopContent.add(sheet.getRow(loopRowNumber));
+                        }
 
+                        if (!endTagAvailable)
+                            throw new RuntimeException("no end-of-repeat found ({{end-of-repeat: " + scopeName + "}})");
+
+                        Object listValues = DataExtractor.getDataValue(scopedCollections.get(ROOT_KEY), pathName);
+                        if (listValues == null)
+                            listValues = DataExtractor.getDataValue(scopedCollections, pathName);
+
+                        if (listValues == null)
+                            throw new RuntimeException("no data for path '" + pathName + "' found");
+
+                        Iterable c = null;
+                        if (listValues instanceof Collection) {
+                            c = (Iterable) ((Collection) listValues);
+                        } else if (listValues instanceof Map) {
+                            c = (Iterable) ((Map) listValues).entrySet();
+                        } else {
+                            throw new RuntimeException("repeat is only possible for Collections and Maps! (" + scopeName + ")");
+                        }
+
+                        int loopBlockLines = loopContent.size();
+
+                        currentRowNumber = currentRowNumber + loopBlockLines + 2; //two lines meta information 'repeat'
+
+                        for (Object loopValue : c) {
                             //copy row block
-                            copyRows(sheet, loopRows, currentRowNumber);
+                            System.out.println("  copy block (" + loopContent.size() + " lines; at row " + currentRowNumber + ")");
+                            copyRows(sheet, loopContent, currentRowNumber);
+                            additionalLines += loopBlockLines;
 
-                            //replace data in block
-                            //JsonObject scopeObj = Json.createObjectBuilder()
-                            //        .add(currentLoopScope, entry)
-                            //        .build();
-                            Map<String, Object> scopeObj = new HashMap<>();
-                            scopeObj.put(currentLoopScope, entry);
-                            replaceRows(currentRowNumber, currentRowNumber + loopRows.size(), sheet, scopeObj);
+                            System.out.println("put into scopedCollection: " + scopeName + " : " + loopValue);
 
-                            currentRowNumber = currentRowNumber + loopRows.size();
+                            System.out.println( "loopValue type: "+ loopValue.getClass());
+                            if (loopValue instanceof Map.Entry) {
+                                scopeName = scopeName.replace("(", "");
+                                scopeName = scopeName.replace(")", "");
+                                System.out.println("scopeName: " + scopeName);
+                                String scopeKeyName = scopeName.split(",")[0].trim();
+                                String scopeValueName = scopeName.split(",")[1].trim();
+                                System.out.println("scopedMap key: " + scopeKeyName + "/" + scopeValueName);
+                                Map.Entry<String, Object> entry = (Map.Entry<String, Object>)loopValue;
+                                scopedCollections.put(scopeKeyName, entry.getKey());
+                                scopedCollections.put(scopeValueName, entry.getValue());
+                            } else {
+                                scopedCollections.put(scopeName, loopValue);
+                            }
+
+                            int newLines = replaceRows(currentRowNumber, (currentRowNumber + loopBlockLines), sheet);
+                            additionalLines += newLines;
+
+                            System.out.println("newLines: " + newLines);
+
+                            currentRowNumber += loopBlockLines + newLines;
+                            replaceRowEnd += loopBlockLines + newLines;
+
                         }
 
-                        sheet.removeRow(currentRowNumber); //line {{end-of-repeat
-                        //remove existing rows
-                        System.out.println("remove " + numberOfRows2Remove + " lines from " + definitionLoopRowNumber);
-                        for (int i = 0; i < numberOfRows2Remove; i++) {
-                            sheet.removeRow(definitionLoopRowNumber);
+                        for (int i = 0; i < (loopBlockLines + 2); i++) {
+                            sheet.removeRow(loopMetaInfoStartLine);
+                            additionalLines--;
+                            currentRowNumber--;
                         }
+                        currentRowNumber--;
 
                     } else {
                         //replace
-                        if (loopMode == false) {
-                            String fieldPath = formula.replace("{{", "");
-                            fieldPath = fieldPath.replace("}}", "");
 
-                            System.out.println("excel value detected: " + fieldPath);
-                            String value = DataExtractor.getStringValue(json, fieldPath);
-                            //String value = getJsonValue(json, fieldPath).toString();
-                            System.out.println(value);
-                            WritableCell modifyCell = sheet.getWritableCell(cell.getColumn(), cell.getRow());
+                        System.out.println("  field found: " + formula);
+                        String fieldPath = formula.replace("{{", "");
+                        fieldPath = fieldPath.replace("}}", "");
 
-                            if (modifyCell.getType() == CellType.LABEL) {
-                                Label l = (Label) cell;
-                                l.setString(value);
-                            }
+                        String value = DataExtractor.getStringValue(scopedCollections.get(ROOT_KEY), fieldPath);
+                        if (value == null) {
+                            System.out.println("lookup for " + fieldPath + " in " + scopedCollections );
+                            value = DataExtractor.getStringValue(scopedCollections, fieldPath);
+                        }
+                        if (value == null) {
+                            //skip
+                            System.out.println("  no value found for field {{" + fieldPath + "}}");
+                            continue;
+                        }
+                        System.out.println("  field {{" + fieldPath + "}} is replaced with value: " + value);
+
+                        WritableCell modifyCell = sheet.getWritableCell(cell.getColumn(), cell.getRow());
+
+                        if (modifyCell.getType() == CellType.LABEL) {
+                            Label l = (Label) cell;
+                            l.setString(value);
                         }
                     }
                 }
             }
         }
+        return additionalLines;
     }
 
     private String convertToString(Cell[] cells) {
@@ -169,9 +216,7 @@ public class XlsExport {
             int cellcounter = 0;
             for (Cell readCell : cells) {
                 WritableCell cellSource = sheet.getWritableCell(readCell.getColumn(), readCell.getRow());
-                System.out.println("cellSource: " + cellSource.getRow() + "/" + cellSource.getColumn() + " = " + cellSource.getContents());
                 WritableCell newCell = cellSource.copyTo(cellcounter, insertRowNumber);
-                System.out.println("newCell: " + newCell.getRow() + "/" + newCell.getColumn() + " = " + newCell.getContents());
                 sheet.addCell(newCell);
                 cellcounter++;
             }

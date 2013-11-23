@@ -7,6 +7,7 @@ package com.sourcecoding.pb.business.project.entity;
 import com.sourcecoding.pb.business.restconfig.JsonDateAdapter;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -48,6 +49,10 @@ public class ProjectInformation implements Serializable {
     @XmlJavaTypeAdapter(JsonDateAdapter.class)
     private Date projectEnd;
     private Integer limitForWorkingHours;
+    
+    @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectMember> members;
+    
     /**
      * TODO link to user
      */
@@ -118,4 +123,14 @@ public class ProjectInformation implements Serializable {
     public void setLimitForWorkingHours(Integer limitForWorkingHours) {
         this.limitForWorkingHours = limitForWorkingHours;
     }
+
+    public List<ProjectMember> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<ProjectMember> members) {
+        this.members = members;
+    }
+    
+    
 }

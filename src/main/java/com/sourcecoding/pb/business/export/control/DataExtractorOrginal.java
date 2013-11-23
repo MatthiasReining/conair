@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author Matthias
  */
-public class DataExtractor {
+public class DataExtractorOrginal {
     
     public static String getStringValue(Object dataStructure, String path) {
         
@@ -33,7 +33,7 @@ public class DataExtractor {
             resultText = resultText.substring(0, resultText.length() - 1);
         }
         
-        //System.out.println(result.getClass() + " - " + resultText);
+        System.out.println(result.getClass() + " - " + resultText);
         return resultText;
     }
     
@@ -68,7 +68,7 @@ public class DataExtractor {
                 Method m = obj.getClass().getMethod(methodName, new Class[]{});
                 return (m != null);
             } catch (NoSuchMethodException ex) {
-                Logger.getLogger(DataExtractor.class
+                Logger.getLogger(DataExtractorOrginal.class
                         .getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
@@ -86,7 +86,7 @@ public class DataExtractor {
                 Method m = obj.getClass().getMethod(methodName, new Class[]{});
                 return m.invoke(obj);
             } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-                Logger.getLogger(DataExtractor.class
+                Logger.getLogger(DataExtractorOrginal.class
                         .getName()).log(Level.SEVERE, null, ex);
                 return null;
             }

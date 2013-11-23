@@ -8,7 +8,9 @@ package com.sourcecoding.pb.business.accounting.controller;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriod;
 import com.sourcecoding.pb.business.accounting.entity.AccountingTimeDetail;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
+import com.sourcecoding.pb.business.project.entity.ProjectMember;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -44,6 +46,16 @@ public class AccountingTimeController {
             AccountingTimeDetail adt = new AccountingTimeDetail(tr);
             adt.setAccountingPeriod(ap);
             adt.setStatus("N");
+            
+            //TODO check if select is to slow for ever entry... date is changed for every iteration
+            ProjectMember pm = em.createNamedQuery(ProjectMember.findByDateRange, ProjectMember.class)
+                    .setParameter(ProjectMember.queryParam_individual, tr.getUser())
+                    .setParameter(ProjectMember.queryParam_project, projectInformation)
+                    .setParameter(ProjectMember.queryParam_date, tr.getWorkingDay())
+                    .getSingleResult();
+            
+            BigDecimal price = pm.getPrice().divide(new BigDecimal("60")).multiply(BigDecimal.valueOf(tr.getWorkingTime()));
+            adt.setPrice(price);
             ap.getAccoutingTimeDetails().add(adt);            
         }
 

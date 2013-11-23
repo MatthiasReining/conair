@@ -6,6 +6,7 @@
 package com.sourcecoding.pb.business.accounting.entity;
 
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
+import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,6 +17,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,7 +31,7 @@ import javax.persistence.TemporalType;
 public class AccountingPeriod implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
