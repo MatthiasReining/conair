@@ -12,13 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import jxl.Cell;
 import jxl.CellType;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
+import jxl.write.NumberFormats;
 import jxl.write.WritableCell;
+import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -71,17 +75,16 @@ public class XlsExport {
             System.out.println("work on row " + currentRowNumber + "  -> " + convertToString(sheet.getRow(currentRowNumber)));
 
             for (Cell cell : sheet.getRow(currentRowNumber)) {
-                if (cell.getContents().startsWith("{{")  && cell.getContents().endsWith("}}")) {
-                    String formula = cell.getContents();
+                String formula = cell.getContents();
 
+                if (formula.contains("{{") && formula.contains("}}")) {
                     if (formula.startsWith("{{repeat:")) {
                         //repeat
                         String expression = formula.substring("{{repeat: ".length());
                         expression = expression.replace("}}", "").trim();
-                        
+
                         String pathName = expression.substring(expression.indexOf("in") + 3).trim();
                         String scopeName = expression.substring(0, expression.indexOf("in")).trim();
-                        
 
                         System.out.println("  -->loop (variable: " + scopeName + ")! " + formula);
 
@@ -133,7 +136,7 @@ public class XlsExport {
 
                             System.out.println("put into scopedCollection: " + scopeName + " : " + loopValue);
 
-                            System.out.println( "loopValue type: "+ loopValue.getClass());
+                            System.out.println("loopValue type: " + loopValue.getClass());
                             if (loopValue instanceof Map.Entry) {
                                 scopeName = scopeName.replace("(", "");
                                 scopeName = scopeName.replace(")", "");
@@ -141,7 +144,7 @@ public class XlsExport {
                                 String scopeKeyName = scopeName.split(",")[0].trim();
                                 String scopeValueName = scopeName.split(",")[1].trim();
                                 System.out.println("scopedMap key: " + scopeKeyName + "/" + scopeValueName);
-                                Map.Entry<String, Object> entry = (Map.Entry<String, Object>)loopValue;
+                                Map.Entry<String, Object> entry = (Map.Entry<String, Object>) loopValue;
                                 scopedCollections.put(scopeKeyName, entry.getKey());
                                 scopedCollections.put(scopeValueName, entry.getValue());
                             } else {
@@ -168,27 +171,44 @@ public class XlsExport {
                     } else {
                         //replace
 
-                        System.out.println("  field found: " + formula);
-                        String fieldPath = formula.replace("{{", "");
-                        fieldPath = fieldPath.replace("}}", "");
+                        //loop for more than one replacements 
+                        String value = formula;
+                        List<String> fields = getFields(formula);
+                        for (String field : fields) {
+                            String fieldPath = field.replace("{{", "").replace("}}", "");
 
-                        String value = DataExtractor.getStringValue(scopedCollections.get(ROOT_KEY), fieldPath);
-                        if (value == null) {
-                            System.out.println("lookup for " + fieldPath + " in " + scopedCollections );
-                            value = DataExtractor.getStringValue(scopedCollections, fieldPath);
+                            String innerValue = DataExtractor.getStringValue(scopedCollections.get(ROOT_KEY), fieldPath);
+                            if (innerValue == null) {
+                                System.out.println("lookup for " + fieldPath + " in " + scopedCollections);
+                                innerValue = DataExtractor.getStringValue(scopedCollections, fieldPath);
+                            }
+                            if (innerValue == null) {
+                                //skip
+                                System.out.println("  no value found for field {{" + fieldPath + "}}");
+                                //continue;
+                            }
+                            value = value.replace(field, innerValue);
                         }
-                        if (value == null) {
-                            //skip
-                            System.out.println("  no value found for field {{" + fieldPath + "}}");
-                            continue;
-                        }
-                        System.out.println("  field {{" + fieldPath + "}} is replaced with value: " + value);
+                        System.out.println("  field '" + formula + "' is replaced with value: " + value);
 
                         WritableCell modifyCell = sheet.getWritableCell(cell.getColumn(), cell.getRow());
 
                         if (modifyCell.getType() == CellType.LABEL) {
                             Label l = (Label) cell;
                             l.setString(value);
+                            cell.getCellFormat();
+
+                            try {
+                                double d = Double.parseDouble(value);
+                                System.out.println( "Number value: " + value);
+                                System.out.println( cell.getCellFormat() + " - " + cell.getCellFormat().getFormat());
+                                WritableCellFormat integerFormat = new WritableCellFormat(cell.getCellFormat());
+                                jxl.write.Number number2 = new jxl.write.Number(cell.getColumn(), cell.getRow(), d, integerFormat);
+                                sheet.addCell(number2);
+                            } catch (NumberFormatException nfe) {
+                                //no number
+                            }
+
                         }
                     }
                 }
@@ -220,5 +240,20 @@ public class XlsExport {
             }
             insertRowNumber++;
         }
+    }
+
+    List<String> getFields(String formulaValue) {
+
+        List<String> result = new ArrayList<>();
+        String patternString = "(\\{\\{[^\\}]+\\}\\})";
+
+        Pattern pattern = Pattern.compile(patternString, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(formulaValue);
+
+        while (matcher.find()) {
+            result.add(matcher.group(1));
+            System.out.println("found: " + matcher.group(1));
+        }
+        return result;
     }
 }

@@ -46,21 +46,34 @@ public class XlsExportLoopMapTest {
 
         Map<String, Object> person = new HashMap<>();
         personList.add(person);
-        person.put("lastname", "Reichert");
-        person.put("firstname", "Jürgen");
-        person.put("totalHours", "152");
-        person.put("totalDays", "19");
-        person.put("pricePerHour", "118,75");
-        person.put("totalPrice", "18050,00");
+        person.put("lastname", "Mouse");
+        person.put("firstname", "Mini");
+        person.put("totalHours", 152);
+        person.put("totalDays", 19);
+        person.put("pricePerHour", 18.75);
+        person.put("totalPrice", 18050.00);
 
         person = new HashMap<>();
         personList.add(person);
         person.put("lastname", "Mustermann");
         person.put("firstname", "Max");
-        person.put("totalHours", "120");
-        person.put("totalDays", "15");
-        person.put("pricePerHour", "118,75");
-        person.put("totalPrice", "14000,00");
+        person.put("totalHours", 120);
+        person.put("totalDays", 15);
+        person.put("pricePerHour", 118.75);
+        person.put("totalPrice", 14000.00);
+        
+        personList = new ArrayList<>();
+
+        peopleByRole.put("Junior Consultant", personList);
+
+        person = new HashMap<>();
+        personList.add(person);
+        person.put("lastname", "Duck");
+        person.put("firstname", "Daisy");
+        person.put("totalHours", 152);
+        person.put("totalDays", 19);
+        person.put("pricePerHour", 118.75);
+        person.put("totalPrice", 28050.00);
 
     }
 
