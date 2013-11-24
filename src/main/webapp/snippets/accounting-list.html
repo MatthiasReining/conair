@@ -1,0 +1,38 @@
+<h3>Accounting</h3>
+<h6></h6>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Accounting Periods | {{project.projectKey}} {{project.name}}</h3>
+    </div>
+    <div class="panel-body">
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>status</th>
+                    <th>number</th>
+                    <th>period</th>
+                    <th>sum</th>
+                </tr> 
+            </thead>
+            <tbody data-ng-repeat="ap in accountingPeriods">
+                <tr>
+                    <td>{{ap.accountingStatus}}</td>
+                    <td><a href="#">{{ap.accountingNumber}}</a></td>                    
+                    <td>{{ap.periodFrom | date:'mediumDate'}} - {{ap.periodTo | date:'mediumDate'}}
+                    </td>
+                    <td>{{ap.price | currency:ap.accountingCurrency}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        <a href="#/projects/new">
+            <button class="btn btn-info">
+                <i class="icon-plus-sign"></i> New Accounting
+            </button>
+        </a>
+    </div>
+</div>

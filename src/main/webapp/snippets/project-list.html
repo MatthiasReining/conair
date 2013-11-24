@@ -13,12 +13,14 @@
                 <tr>
                     <th>key</th>
                     <th>name</th>
+                    <th></th>
                 </tr> 
             </thead>
             <tbody data-ng-repeat="project in projects">
                 <tr>
                     <td><a href="#/projects/{{project.key}}">{{project.key}}</a></td>
                     <td>{{project.name}}</td>
+                    <td><a href="#/accounting/{{project.key}}">[Accounting]</a></td>
                 </tr>
             </tbody>
         </table>

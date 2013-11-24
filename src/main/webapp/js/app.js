@@ -47,6 +47,7 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/resources/legal-holidays', {templateUrl: 'snippets/legal-holidays.html', controller: LegalHolidaysCtrl}).
                 when('/projects', {templateUrl: 'snippets/project-list.html', controller: ProjectListCtrl}).
                 when('/projects/:projectKey', {templateUrl: 'snippets/project.html', controller: ProjectCtrl}).
+                when('/accounting/:projectKey', {templateUrl: 'snippets/accounting-list.html', controller: AccountingListCtrl}).
                 when('/time-recording', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/time-recording/weeks/:weeks', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/vacations/:individualId', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).

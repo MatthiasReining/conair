@@ -34,6 +34,8 @@ public class AccountingTimeController {
         ap.setPeriodTo(periodTo);
         ap.setProjectInformation(projectInformation);
         ap = em.merge(ap);
+        
+        BigDecimal apPrice = new BigDecimal("0.0");
 
         List<TimeRecord> trList = em.createNamedQuery(TimeRecord.findTimeRecordsInARangeByProjectAndStatus, TimeRecord.class)
                 .setParameter(TimeRecord.queryParam_project, projectInformation)
@@ -60,11 +62,18 @@ public class AccountingTimeController {
             BigDecimal price = priceHour.divide(new BigDecimal("60")).multiply(BigDecimal.valueOf(tr.getWorkingTime()));
             adt.setPriceHour(priceHour);
             adt.setPrice(price);
-            ap.getAccoutingTimeDetails().add(adt);       
+            ap.getAccoutingTimeDetails().add(adt);  
             
-            ap.setTaxRate(new BigDecimal("19")); //FIXME configure
+            apPrice = apPrice.add(price);
+            
+            
         }
 
+        ap.setTaxRate(new BigDecimal("19")); //FIXME configure
+        ap.setPrice(apPrice);
+        
+        ap.setAccountingNumber("2-fix"); //FIXME number generator
+        ap.setAccountingCurrency("EUR"); //FIXME currency is hard coded
     }
 
 }

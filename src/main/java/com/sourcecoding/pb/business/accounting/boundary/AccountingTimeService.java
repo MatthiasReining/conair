@@ -8,9 +8,11 @@ package com.sourcecoding.pb.business.accounting.boundary;
 import com.sourcecoding.pb.business.accounting.controller.AccountingTimeController;
 import com.sourcecoding.pb.business.accounting.entity.AccountingContainer;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriod;
+import com.sourcecoding.pb.business.accounting.entity.AccountingPeriodDTO;
 import com.sourcecoding.pb.business.accounting.entity.AccountingTimeDetail;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
+import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -48,6 +50,23 @@ public class AccountingTimeService {
 
     @Inject
     XlsExportService exportService;
+    
+    @GET
+    @Path("{projectKey}")
+    public Response getAccountingPeriods(@PathParam("projectKey") String projectKey) {
+        
+        ProjectInformation project = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
+                .setParameter(ProjectInformation.queryParam_projectKey, projectKey)
+                .getSingleResult();
+        
+        List<AccountingPeriod> apList = em.createNamedQuery(AccountingPeriod.findByProject, AccountingPeriod.class)
+                .setParameter(AccountingPeriod.queryParam_project, project)
+                .getResultList();
+        
+        List<AccountingPeriodDTO> payload = AccountingPeriodDTO.create(apList);
+        
+        return Response.ok(payload).build();
+    }
 
     @GET //TODO change to post or put
     @Path("projects/{projectId}")

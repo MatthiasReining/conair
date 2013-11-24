@@ -29,13 +29,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @Entity
 @NamedQueries({
     @NamedQuery(name = ProjectInformation.findAllValidProjects, query = "SELECT pi FROM ProjectInformation pi"),
-    @NamedQuery(name = ProjectInformation.findByKey, query = "SELECT pi FROM ProjectInformation pi WHERE pi.projectKey= :" + ProjectInformation.findByKey_Param_Key),})
+    @NamedQuery(name = ProjectInformation.findByKey, query = "SELECT pi FROM ProjectInformation pi WHERE pi.projectKey= :" + ProjectInformation.queryParam_projectKey),})
 public class ProjectInformation implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String findAllValidProjects = "ProjectInformation#findAllValidProjects";
     public static final String findByKey = "ProjectInformation#findByKey";
-    public static final String findByKey_Param_Key = "key";
+    public static final String queryParam_projectKey = "key";
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;

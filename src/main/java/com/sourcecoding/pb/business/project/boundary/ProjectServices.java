@@ -57,7 +57,7 @@ public class ProjectServices {
         }
 
         //ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
-        //        .setParameter(ProjectInformation.findByKey_Param_Key, key)
+        //        .setParameter(ProjectInformation.queryParam_projectKey, key)
         //        .getSingleResult();
         pi.setProjectKey(String.valueOf(map.get("projectKey")));
         pi.setName(String.valueOf(map.get("name")));
@@ -122,7 +122,7 @@ public class ProjectServices {
     @Path("{key}")
     public Map<String, Object> getProject(@PathParam("key") String key) {
         ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
-                .setParameter(ProjectInformation.findByKey_Param_Key, key)
+                .setParameter(ProjectInformation.queryParam_projectKey, key)
                 .getSingleResult();
         return convertProjectInformation2Map(pi);
     }
