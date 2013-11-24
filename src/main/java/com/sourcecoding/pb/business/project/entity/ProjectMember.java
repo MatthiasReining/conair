@@ -5,10 +5,12 @@
  */
 package com.sourcecoding.pb.business.project.entity;
 
+import com.sourcecoding.pb.business.accounting.entity.AccountingTimeDetail;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,7 +37,6 @@ public class ProjectMember implements Serializable {
     public static final String queryParam_date = "memberDate";
     public static final String queryParam_project = "project";
 
-    
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -45,8 +46,19 @@ public class ProjectMember implements Serializable {
 
     @ManyToOne
     private Individual individual;
+    /**
+     * This title is used for the invoice. Initial the title from
+     * {@link Individual} is used. Therefore title is duplicated, you have the
+     * opportunity to use a different title.
+     */
+    private String title;
 
-    private BigDecimal price;
+    /**
+     * The price for one hour. This price is used for the initial calculation at
+     * {@link AccountingTimeDetail}.
+     */
+    @Column(precision = 10, scale = 2)
+    private BigDecimal priceHour;
 
     @Temporal(TemporalType.DATE)
     private Date memberFrom;
@@ -78,14 +90,6 @@ public class ProjectMember implements Serializable {
         this.individual = individual;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
     public Date getMemberFrom() {
         return memberFrom;
     }
@@ -100,6 +104,22 @@ public class ProjectMember implements Serializable {
 
     public void setMemberTo(Date memberTo) {
         this.memberTo = memberTo;
+    }
+
+    public BigDecimal getPriceHour() {
+        return priceHour;
+    }
+
+    public void setPriceHour(BigDecimal priceHour) {
+        this.priceHour = priceHour;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
 }

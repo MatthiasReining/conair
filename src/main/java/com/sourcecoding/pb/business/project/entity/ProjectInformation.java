@@ -4,6 +4,7 @@
  */
 package com.sourcecoding.pb.business.project.entity;
 
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.restconfig.JsonDateAdapter;
 import java.io.Serializable;
 import java.util.Date;
@@ -59,6 +60,14 @@ public class ProjectInformation implements Serializable {
     private String projectManager;
     @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WorkPackage> workPackages;
+    
+    public ProjectMember getProjectMemberByIndividual(Individual individual) {
+        for (ProjectMember pm : members) {
+            if (pm.getIndividual().getId() == individual.getId())
+                return pm;
+        }
+        return null;
+    }
 
     public Long getId() {
         return id;

@@ -187,7 +187,8 @@ public class XlsExport {
                                 System.out.println("  no value found for field {{" + fieldPath + "}}");
                                 //continue;
                             }
-                            value = value.replace(field, innerValue);
+                            if (innerValue != null)
+                                value = value.replace(field, innerValue);
                         }
                         System.out.println("  field '" + formula + "' is replaced with value: " + value);
 
@@ -200,8 +201,8 @@ public class XlsExport {
 
                             try {
                                 double d = Double.parseDouble(value);
-                                System.out.println( "Number value: " + value);
-                                System.out.println( cell.getCellFormat() + " - " + cell.getCellFormat().getFormat());
+                                System.out.println("Number value: " + value);
+                                System.out.println(cell.getCellFormat() + " - " + cell.getCellFormat().getFormat());
                                 WritableCellFormat integerFormat = new WritableCellFormat(cell.getCellFormat());
                                 jxl.write.Number number2 = new jxl.write.Number(cell.getColumn(), cell.getRow(), d, integerFormat);
                                 sheet.addCell(number2);

@@ -54,9 +54,15 @@ public class AccountingTimeController {
                     .setParameter(ProjectMember.queryParam_date, tr.getWorkingDay())
                     .getSingleResult();
             
-            BigDecimal price = pm.getPrice().divide(new BigDecimal("60")).multiply(BigDecimal.valueOf(tr.getWorkingTime()));
+            BigDecimal priceHour = pm.getPriceHour();
+            System.out.println( pm.getPriceHour());
+            //use minutes for calculation
+            BigDecimal price = priceHour.divide(new BigDecimal("60")).multiply(BigDecimal.valueOf(tr.getWorkingTime()));
+            adt.setPriceHour(priceHour);
             adt.setPrice(price);
-            ap.getAccoutingTimeDetails().add(adt);            
+            ap.getAccoutingTimeDetails().add(adt);       
+            
+            ap.setTaxRate(new BigDecimal("19")); //FIXME configure
         }
 
     }

@@ -6,19 +6,18 @@
 package com.sourcecoding.pb.business.accounting.entity;
 
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
-import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,7 +30,7 @@ import javax.persistence.TemporalType;
 public class AccountingPeriod implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -44,6 +43,9 @@ public class AccountingPeriod implements Serializable {
 
     @Temporal(TemporalType.DATE)
     private Date periodTo;
+
+    @Column(precision = 6, scale = 2)
+    private BigDecimal taxRate;
 
     @OneToMany(mappedBy = "accountingPeriod", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AccountingTimeDetail> accoutingTimeDetails = new ArrayList<>();
@@ -86,6 +88,14 @@ public class AccountingPeriod implements Serializable {
 
     public void setPeriodTo(Date periodTo) {
         this.periodTo = periodTo;
+    }
+
+    public BigDecimal getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTaxRate(BigDecimal taxRate) {
+        this.taxRate = taxRate;
     }
 
 }

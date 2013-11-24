@@ -193,7 +193,7 @@ public class ProjectServices {
                 member.put("individual-id", pm.getIndividual().getId());
                 member.put("memberFrom", DateParameter.valueOf(pm.getMemberFrom()));
                 member.put("memberTo", DateParameter.valueOf(pm.getMemberTo()));
-                member.put("price", pm.getPrice());
+                member.put("priceHour", pm.getPriceHour());
             }
         }
 

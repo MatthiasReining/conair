@@ -7,10 +7,13 @@ package com.sourcecoding.pb.business.accounting.boundary;
 
 import com.sourcecoding.pb.business.accounting.controller.AccountingTimeController;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriod;
+import com.sourcecoding.pb.business.accounting.entity.AccountingTimeDetail;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
-import com.sourcecoding.pb.business.export.control.DataExtractor;
+import com.sourcecoding.pb.business.individuals.entity.Individual;
+import com.sourcecoding.pb.business.restconfig.DateParameter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -45,7 +48,7 @@ public class AccountingTimeService {
     @Inject
     XlsExportService exportService;
 
-    @GET
+    @GET //TODO change to post or put
     @Path("projects/{projectId}")
     public Response collectTimeRecords(@PathParam("projectId") Long projectId) {
 
@@ -72,32 +75,67 @@ public class AccountingTimeService {
         String templateName = "accounting-template";
 
         Map<String, Object> accountingMap = new HashMap<>();
-        accountingMap.put("accountingDate", "2013-11-23");
+        accountingMap.put("accountingDate", DateParameter.valueOf(new Date()));
 
-        Map<String, Object> peopleByRole = new LinkedHashMap<>();
+        accountingMap.put("accountingPeriodFrom", DateParameter.valueOf(ap.getPeriodFrom()));
+        accountingMap.put("accountingPeriodTo", DateParameter.valueOf(ap.getPeriodTo()));
+        accountingMap.put("projectKey", ap.getProjectInformation().getProjectKey());
+        accountingMap.put("projectName", ap.getProjectInformation().getName());
+        accountingMap.put("accountingNumber", "2");
+
+        List<Object[]> result = em.createQuery("SELECT pm.title, atd.user, atd.priceHour, SUM(atd.workingTime), SUM(atd.price) FROM AccountingTimeDetail atd, ProjectMember pm WHERE atd.user = pm.individual AND atd.accountingPeriod = :period GROUP BY pm.title, atd.user, atd.priceHour")
+                .setParameter("period", ap)
+                .getResultList();
+        System.out.println("--> nach query: " + result);
+
+        Map<String, Map<String, Object>> peopleByRole = new LinkedHashMap<>();
         accountingMap.put("peopleByRole", peopleByRole);
+        
+        BigDecimal totalNet = new BigDecimal("0.0");
 
-        List<Map<String, Object>> personList = new ArrayList<>();
+        for (Object[] o : result) {
+            String title = (String) o[0];
+            Individual individual = (Individual) o[1];
+            BigDecimal priceHour = (BigDecimal) o[2];
+            Long workingTime = (Long) o[3];
+            BigDecimal price = (BigDecimal) o[4];
 
-        peopleByRole.put("Senior Consultant", personList);
+            Map<String, Object> peopleByRoleContent;
+            List<Map<String, Object>> personList;
+            if (peopleByRole.containsKey(title)) {
+                peopleByRoleContent = peopleByRole.get(title);
+            } else {
+                peopleByRoleContent = new HashMap<>();
+                personList = new ArrayList<>();
+                peopleByRoleContent.put("people", personList);
+                peopleByRoleContent.put("sum", new BigDecimal("0.0"));
+                peopleByRole.put(title, peopleByRoleContent);
+            }
+            personList = (List<Map<String, Object>>) peopleByRoleContent.get("people");
+            
+            Map<String, Object> person = new HashMap<>();
+            personList.add(person);
+            person.put("lastname", "TODO_lastname");
+            person.put("firstname", individual.getNickname());
+            person.put("totalHours", workingTime / 60.0); //important to use double values 60.0
+            person.put("totalDays", workingTime / 60.0 / 8.0); //important to use double values 8.0
+            person.put("pricePerHour", priceHour);
+            person.put("totalPrice", price);
+            
+            BigDecimal sum = (BigDecimal) peopleByRoleContent.get("sum");
+            peopleByRoleContent.put("sum", sum.add(price));
+            
+            totalNet = totalNet.add(price);
 
-        Map<String, Object> person = new HashMap<>();
-        personList.add(person);
-        person.put("lastname", "Reichert");
-        person.put("firstname", "Jürgen");
-        person.put("totalHours", "152");
-        person.put("totalDays", "19");
-        person.put("pricePerHour", "118,75");
-        person.put("totalPrice", "18050,00");
+        }
 
-        person = new HashMap<>();
-        personList.add(person);
-        person.put("lastname", "Mustermann");
-        person.put("firstname", "Max");
-        person.put("totalHours", "120");
-        person.put("totalDays", "15");
-        person.put("pricePerHour", "118,75");
-        person.put("totalPrice", "14000,00");
+        double taxFactor = ap.getTaxRate().doubleValue() / 100;
+        
+        accountingMap.put("taxRate", ap.getTaxRate().longValue());
+        accountingMap.put("accountingNet", totalNet);
+        accountingMap.put("accountingTax", totalNet.doubleValue() * taxFactor);
+        accountingMap.put("accountingGross", totalNet.doubleValue() * (1+taxFactor));
+
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
