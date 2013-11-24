@@ -6,6 +6,7 @@
 package com.sourcecoding.pb.business.accounting.boundary;
 
 import com.sourcecoding.pb.business.accounting.controller.AccountingTimeController;
+import com.sourcecoding.pb.business.accounting.entity.AccountingContainer;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriod;
 import com.sourcecoding.pb.business.accounting.entity.AccountingTimeDetail;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
@@ -74,24 +75,20 @@ public class AccountingTimeService {
 
         String templateName = "accounting-template";
 
-        Map<String, Object> accountingMap = new HashMap<>();
-        accountingMap.put("accountingDate", DateParameter.valueOf(new Date()));
+        AccountingContainer ac = new AccountingContainer();
 
-        accountingMap.put("accountingPeriodFrom", DateParameter.valueOf(ap.getPeriodFrom()));
-        accountingMap.put("accountingPeriodTo", DateParameter.valueOf(ap.getPeriodTo()));
-        accountingMap.put("projectKey", ap.getProjectInformation().getProjectKey());
-        accountingMap.put("projectName", ap.getProjectInformation().getName());
-        accountingMap.put("accountingNumber", "2");
+        ac.accountingDate = new Date();
+        ac.accountingNumber = "2";
+
+        ac.accountingPeriodFrom = DateParameter.valueOf(ap.getPeriodFrom());
+        ac.accountingPeriodTo = DateParameter.valueOf(ap.getPeriodTo());
+        ac.projectKey = ap.getProjectInformation().getProjectKey();
+        ac.projectName = ap.getProjectInformation().getName();
+        ac.taxRate = ap.getTaxRate().longValue();
 
         List<Object[]> result = em.createQuery("SELECT pm.title, atd.user, atd.priceHour, SUM(atd.workingTime), SUM(atd.price) FROM AccountingTimeDetail atd, ProjectMember pm WHERE atd.user = pm.individual AND atd.accountingPeriod = :period GROUP BY pm.title, atd.user, atd.priceHour")
                 .setParameter("period", ap)
                 .getResultList();
-        System.out.println("--> nach query: " + result);
-
-        Map<String, Map<String, Object>> peopleByRole = new LinkedHashMap<>();
-        accountingMap.put("peopleByRole", peopleByRole);
-        
-        BigDecimal totalNet = new BigDecimal("0.0");
 
         for (Object[] o : result) {
             String title = (String) o[0];
@@ -100,49 +97,19 @@ public class AccountingTimeService {
             Long workingTime = (Long) o[3];
             BigDecimal price = (BigDecimal) o[4];
 
-            Map<String, Object> peopleByRoleContent;
-            List<Map<String, Object>> personList;
-            if (peopleByRole.containsKey(title)) {
-                peopleByRoleContent = peopleByRole.get(title);
-            } else {
-                peopleByRoleContent = new HashMap<>();
-                personList = new ArrayList<>();
-                peopleByRoleContent.put("people", personList);
-                peopleByRoleContent.put("sum", new BigDecimal("0.0"));
-                peopleByRole.put(title, peopleByRoleContent);
-            }
-            personList = (List<Map<String, Object>>) peopleByRoleContent.get("people");
-            
-            Map<String, Object> person = new HashMap<>();
-            personList.add(person);
-            person.put("lastname", "TODO_lastname");
-            person.put("firstname", individual.getNickname());
-            person.put("totalHours", workingTime / 60.0); //important to use double values 60.0
-            person.put("totalDays", workingTime / 60.0 / 8.0); //important to use double values 8.0
-            person.put("pricePerHour", priceHour);
-            person.put("totalPrice", price);
-            
-            BigDecimal sum = (BigDecimal) peopleByRoleContent.get("sum");
-            peopleByRoleContent.put("sum", sum.add(price));
-            
-            totalNet = totalNet.add(price);
-
+            ac.addPerson(ac.new Person(
+                    title, "TODO_lastname", individual.getNickname(),
+                    workingTime / 60.0, workingTime / 60.0 / 8.0, priceHour, price));
+            //important to use double values 60.0, 8.0
         }
-
-        double taxFactor = ap.getTaxRate().doubleValue() / 100;
-        
-        accountingMap.put("taxRate", ap.getTaxRate().longValue());
-        accountingMap.put("accountingNet", totalNet);
-        accountingMap.put("accountingTax", totalNet.doubleValue() * taxFactor);
-        accountingMap.put("accountingGross", totalNet.doubleValue() * (1+taxFactor));
-
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-        exportService.generate(templateName, accountingMap, os);
+        exportService.generate(templateName, ac, os);
         String filename = "accounting-" + projectId + "-" + periodId + ".xls";
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = " + filename)
                 .build();
     }
-}
+
+   }
