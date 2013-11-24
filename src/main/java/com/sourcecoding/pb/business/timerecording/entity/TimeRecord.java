@@ -58,7 +58,7 @@ public class TimeRecord implements Serializable {
     @ManyToOne
     private WorkPackage workPackage;
 
-    private String describtion;
+    private String describtion; //FIXME tippfehler!
     private Integer workingTime;
 
     public Long getId() {

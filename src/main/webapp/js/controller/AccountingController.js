@@ -8,15 +8,24 @@ function AccountingListCtrl($scope, $routeParams, $http) {
         console.log(data);
         $scope.project = data;
     });
-    
+
     $http.get(serviceBaseUrl + 'accounting/' + $routeParams.projectKey).success(function(data) {
         console.log(data);
         $scope.accountingPeriods = data;
     });
-    
-    
-    
-    
+}
+
+
+
+function AccountingCtrl($scope, $routeParams, $http) {
+    $('.panel-heading').css('background-color', 'orange');
+    $('.panel-heading').css('color', 'white');
+
+    //init
+    $http.get(serviceBaseUrl + 'accounting/' + $routeParams.projectKey + '/periods/' + $routeParams.accountingPeriodId).success(function(data) {
+        console.log(data);
+        $scope.ap = data;
+    });
 
 
 }

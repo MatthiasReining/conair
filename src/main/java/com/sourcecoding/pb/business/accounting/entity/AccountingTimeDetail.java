@@ -6,7 +6,6 @@
 package com.sourcecoding.pb.business.accounting.entity;
 
 import com.sourcecoding.pb.business.individuals.entity.Individual;
-import com.sourcecoding.pb.business.project.entity.ProjectMember;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
 import java.io.Serializable;
@@ -18,8 +17,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -45,7 +42,7 @@ public class AccountingTimeDetail implements Serializable {
     }
 
     public AccountingTimeDetail(TimeRecord tr) {
-        this.describtion = tr.getDescribtion();
+        this.description = tr.getDescribtion();
         this.user = tr.getUser();
         this.workPackage = tr.getWorkPackage();
         this.workingDay = tr.getWorkingDay();
@@ -69,7 +66,7 @@ public class AccountingTimeDetail implements Serializable {
     @ManyToOne
     private WorkPackage workPackage;
 
-    private String describtion;
+    private String description;
     private Integer workingTime;
 
     @Column(precision = 10, scale = 2)
@@ -125,12 +122,12 @@ public class AccountingTimeDetail implements Serializable {
         this.workPackage = workPackage;
     }
 
-    public String getDescribtion() {
-        return describtion;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescribtion(String describtion) {
-        this.describtion = describtion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getWorkingTime() {

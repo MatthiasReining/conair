@@ -9,7 +9,6 @@ import com.sourcecoding.pb.business.accounting.controller.AccountingTimeControll
 import com.sourcecoding.pb.business.accounting.entity.AccountingContainer;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriod;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriodDTO;
-import com.sourcecoding.pb.business.accounting.entity.AccountingTimeDetail;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
@@ -17,12 +16,8 @@ import com.sourcecoding.pb.business.restconfig.DateParameter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -50,21 +45,32 @@ public class AccountingTimeService {
 
     @Inject
     XlsExportService exportService;
-    
+
     @GET
     @Path("{projectKey}")
     public Response getAccountingPeriods(@PathParam("projectKey") String projectKey) {
-        
+
         ProjectInformation project = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
                 .setParameter(ProjectInformation.queryParam_projectKey, projectKey)
                 .getSingleResult();
-        
+
         List<AccountingPeriod> apList = em.createNamedQuery(AccountingPeriod.findByProject, AccountingPeriod.class)
                 .setParameter(AccountingPeriod.queryParam_project, project)
                 .getResultList();
-        
+
         List<AccountingPeriodDTO> payload = AccountingPeriodDTO.create(apList);
-        
+
+        return Response.ok(payload).build();
+    }
+
+    @GET
+    @Path("{projectKey}/periods/{apId}")
+    public Response getAccountingPeriodDetails(@PathParam("projectKey") String projectKey,
+            @PathParam("apId") Long apId) {
+
+        AccountingPeriod ap = em.find(AccountingPeriod.class, apId);
+
+        AccountingPeriodDTO payload = AccountingPeriodDTO.create(ap, true);
         return Response.ok(payload).build();
     }
 
@@ -131,4 +137,4 @@ public class AccountingTimeService {
                 .build();
     }
 
-   }
+}

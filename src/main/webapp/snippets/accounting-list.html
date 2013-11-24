@@ -20,7 +20,7 @@
             <tbody data-ng-repeat="ap in accountingPeriods">
                 <tr>
                     <td>{{ap.accountingStatus}}</td>
-                    <td><a href="#">{{ap.accountingNumber}}</a></td>                    
+                    <td><a href="#/accounting/{{project.projectKey}}/periods/{{ap.id}}">{{ap.accountingNumber}}</a></td>                    
                     <td>{{ap.periodFrom | date:'mediumDate'}} - {{ap.periodTo | date:'mediumDate'}}
                     </td>
                     <td>{{ap.price | currency:ap.accountingCurrency}}</td>
