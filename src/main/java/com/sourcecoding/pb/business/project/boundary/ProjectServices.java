@@ -4,6 +4,7 @@
  */
 package com.sourcecoding.pb.business.project.boundary;
 
+import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.ProjectMember;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
@@ -56,12 +57,9 @@ public class ProjectServices {
             pi = em.find(ProjectInformation.class, id);
         }
 
-        //ProjectInformation pi = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
-        //        .setParameter(ProjectInformation.queryParam_projectKey, key)
-        //        .getSingleResult();
         pi.setProjectKey(String.valueOf(map.get("projectKey")));
         pi.setName(String.valueOf(map.get("name")));
-        pi.setProjectManager(String.valueOf(map.get("projectManager")));
+        pi.setProjectManager(em.find(Individual.class, ((Integer)map.get("projectManagerId")).longValue()));
 
         //projectStart
         String dateText = String.valueOf(map.get("projectStart"));
@@ -164,7 +162,8 @@ public class ProjectServices {
         result.put("id", pi.getId());
         result.put("projectStart", DateParameter.valueOf(pi.getProjectStart()));
         result.put("projectEnd", DateParameter.valueOf(pi.getProjectEnd()));
-        result.put("projectManager", pi.getProjectManager());
+        if (pi.getProjectManager() != null)
+            result.put("projectManagerId", pi.getProjectManager().getId());
 
         if (pi.getWorkPackages() != null) {
             List<Map<String, Object>> workPackages = new ArrayList<>();
@@ -180,7 +179,7 @@ public class ProjectServices {
                 workPackage.put("limitForWorkingHours", wp.getLimitForWorkingHours());
             }
         }
-        
+
         if (pi.getMembers() != null) {
             List<Map<String, Object>> members = new ArrayList<>();
             result.put("members", members);

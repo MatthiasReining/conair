@@ -41,26 +41,26 @@ public class ProjectInformation implements Serializable {
     private Long id;
     private String projectKey;
     private String name;
-    
+
     @Temporal(TemporalType.DATE)
     @XmlJavaTypeAdapter(JsonDateAdapter.class)
     private Date projectStart;
-    
+
     @Temporal(TemporalType.DATE)
     @XmlJavaTypeAdapter(JsonDateAdapter.class)
     private Date projectEnd;
     private Integer limitForWorkingHours;
-    
+
     @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectMember> members;
-    
+
     /**
      * TODO link to user
      */
-    private String projectManager;
+    private Individual projectManager;
     @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WorkPackage> workPackages;
-    
+
     public ProjectMember getProjectMemberByIndividual(Individual individual) {
         for (ProjectMember pm : members) {
             if (pm.getIndividual().getId() == individual.getId())
@@ -117,11 +117,11 @@ public class ProjectInformation implements Serializable {
         this.projectEnd = projectEnd;
     }
 
-    public String getProjectManager() {
+    public Individual getProjectManager() {
         return projectManager;
     }
 
-    public void setProjectManager(String projectManager) {
+    public void setProjectManager(Individual projectManager) {
         this.projectManager = projectManager;
     }
 
@@ -140,6 +140,5 @@ public class ProjectInformation implements Serializable {
     public void setMembers(List<ProjectMember> members) {
         this.members = members;
     }
-    
-    
+
 }

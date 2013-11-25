@@ -35,6 +35,7 @@ public class AccountingPeriodDTO {
                 AccountingTimeDetailDTO atdDTO = dto.new AccountingTimeDetailDTO();
                 dto.accountingTimeDetails.add(atdDTO);
                 
+                atdDTO.id = atd.getId();
                 atdDTO.description = atd.getDescription();
                 atdDTO.price = atd.getPrice();
                 atdDTO.priceHour = atd.getPriceHour();
@@ -75,6 +76,7 @@ public class AccountingPeriodDTO {
 
     public class AccountingTimeDetailDTO {
 
+        public Long id;
         public Individual user;
         public String status;
         @XmlJavaTypeAdapter(JsonDateTimeAdapter.class)

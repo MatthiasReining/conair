@@ -23,36 +23,36 @@
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="projectKey">Key</label>
-                            <div class="col-md-9">
-                                <input type="text" data-ng-model="project.projectKey" id="projectKey" required />
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" data-ng-model="project.projectKey" id="projectKey" required />
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="name">Project name</label>
-                            <div class="col-md-9">
-                                <input type="text" id="name" data-ng-model="project.name" required>
+                            <div class="col-md-4">
+                                <input type="text" class="form-control" id="name" data-ng-model="project.name" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="col-md-3 control-label" for="projectManager">Project manager</label>
-                            <div class="col-md-9">
-                                <input type="text" id="projectManager" data-ng-model="project.projectManager" required placeholder="Enter a valid user id">
+                            <label class="col-md-3 control-label">Project manager</label>
+                            <div class="col-md-4">
+                                <select class="form-control" data-ng-model="project.projectManagerId" data-ng-options="p.id as p.nickname for p in individuals" ></select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="projectStart">Project start</label>
-                            <div class="col-md-9">
-                                <input type="text" id="projectStart" data-ng-model="project.projectStart">
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="projectStart" data-ng-model="project.projectStart">
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label class="col-md-3 control-label" for="projectEnd">Project end</label>
-                            <div class="col-md-9">
-                                <input type="text" id="projectEnd" data-ng-model="project.projectEnd">
+                            <div class="col-md-2">
+                                <input type="text" class="form-control" id="projectEnd" data-ng-model="project.projectEnd">
                             </div>
                         </div>
 

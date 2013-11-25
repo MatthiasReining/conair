@@ -12,6 +12,12 @@ function ProjectListCtrl($scope, $http) {
 function ProjectCtrl($scope, $routeParams, $http) {
     $('.panel-heading').css('background-color', 'orange');
     $('.panel-heading').css('color', 'white');
+    
+    
+    $http.get(serviceBaseUrl + 'resources/individuals').success(function(data) {
+        console.log(data);
+        $scope.individuals = data;
+    });
 
 
     var serviceURL = serviceBaseUrl + 'projects/' + $routeParams.projectKey;
