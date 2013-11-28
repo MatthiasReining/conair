@@ -60,7 +60,7 @@ public class AccountingPeriod implements Serializable {
 
     private String accountingNumber;
 
-    private String accountingStatus;
+    private int accountingStatus;
     private String accountingCurrency;
 
     @OneToMany(mappedBy = "accountingPeriod", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -130,20 +130,20 @@ public class AccountingPeriod implements Serializable {
         this.price = price;
     }
 
-    public String getAccountingStatus() {
-        return accountingStatus;
-    }
-
-    public void setAccountingStatus(String accountingStatus) {
-        this.accountingStatus = accountingStatus;
-    }
-
     public String getAccountingCurrency() {
         return accountingCurrency;
     }
 
     public void setAccountingCurrency(String accountingCurrency) {
         this.accountingCurrency = accountingCurrency;
+    }
+
+    public int getAccountingStatus() {
+        return accountingStatus;
+    }
+
+    public void setAccountingStatus(int accountingStatus) {
+        this.accountingStatus = accountingStatus;
     }
 
 }

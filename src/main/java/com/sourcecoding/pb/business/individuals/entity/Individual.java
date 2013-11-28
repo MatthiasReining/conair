@@ -6,7 +6,6 @@ package com.sourcecoding.pb.business.individuals.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -16,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -36,13 +34,12 @@ public class Individual implements Serializable {
 
     private static final long serialVersionUID = 1L;
     public static final String findByNickname = "Individual#findByNickname";
-    public static final String findByLinkedInId = "Individual#findByLinkedInId";    
+    public static final String findByLinkedInId = "Individual#findByLinkedInId";
     public static final String findAll = "Individual#findAll";
-    
+
     public static final String queryParam_nickname = "nickname";
     public static final String queryParam_socialNetId = "socialNetId";
-    
-   
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -50,29 +47,36 @@ public class Individual implements Serializable {
     private String linkedInId;
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastLogin;
-    
+
+    private String firstname;
+    private String lastname;
+
     private Integer vacationDaysPerYear;
     private Integer workdaysPerWeek;
-    
+
     @XmlTransient
     @OneToOne
     private Individual vacationManager;
-    
+
     @XmlTransient
     @ManyToMany(mappedBy = "individual", cascade = CascadeType.ALL)
     private Set<IndividualRole> roles;
-    
+
     private String emailAddress;
-    
-    
+
     public boolean hasRole(String roleName) {
-        for (IndividualRole ir : getRoles())
-            if (ir.getRoleName().equals(roleName)) return true;
+        for (IndividualRole ir : getRoles()) {
+            if (ir.getRoleName().equals(roleName))
+                return true;
+        }
         return false;
     }
+
     public boolean hasRole(IndividualRole individualRole) {
-        for (IndividualRole ir : getRoles())
-            if (ir.getId().equals(individualRole.getId())) return true;
+        for (IndividualRole ir : getRoles()) {
+            if (ir.getId().equals(individualRole.getId()))
+                return true;
+        }
         return false;
     }
 
@@ -147,6 +151,21 @@ public class Individual implements Serializable {
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
-    
-    
+
+    public String getFirstname() {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
 }

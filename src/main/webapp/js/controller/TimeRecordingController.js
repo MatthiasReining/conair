@@ -25,8 +25,15 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
     });
     $scope.addRow = function() {
         console.log('->addRow');
+        var days = {};
+        angular.forEach($scope.workingDaySum, function(value, key) {
+            days[key] = {
+                "workingTime": null,
+                "status": 0
+            };
+        });
         $scope.timeRecording.workingHours.push({
-            "days": {}
+            "days": days
         });
     };
 
@@ -49,9 +56,10 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
 
         $scope.workingDaySum = tmpSum;
     };
-    
+
     $scope.printToolTip = function(show) {
-        if (show) return 'This working time is already collected!';
+        if (show)
+            return 'This working time is already collected!';
         return '';
     };
 

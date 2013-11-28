@@ -21,18 +21,53 @@
                 <tr>
                     <td>{{ap.accountingStatus}}</td>
                     <td><a href="#/accounting/{{project.projectKey}}/periods/{{ap.id}}">{{ap.accountingNumber}}</a></td>                    
-                    <td>{{ap.periodFrom | date:'mediumDate'}} - {{ap.periodTo | date:'mediumDate'}}
+                    <td>{{ap.periodFrom| date:'mediumDate'}} - {{ap.periodTo| date:'mediumDate'}}
                     </td>
-                    <td>{{ap.price | currency:ap.accountingCurrency}}</td>
+                    <td>{{ap.price| currency:ap.accountingCurrency}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="panel-footer">
-        <a href="#/projects/new">
-            <button class="btn btn-info">
-                <i class="icon-plus-sign"></i> New Accounting
-            </button>
-        </a>
+
+        <button class="btn btn-info" data-ng-click="showNewPeriod = true">
+            <i class="icon-plus-sign"></i> New Accounting Period
+        </button>
+
+        <div class="row" data-ng-show="showNewPeriod">
+            <hr>
+
+            <div class="col-md-offset-3 col-md-5">
+                <div class="panel panel-default" >
+                    <div class="panel-heading">
+                        <h3 class="panel-title">New Accounting Period</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form class="form-horizontal" data-role="form" novalidate>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Period From</label>
+                                <div class="col-md-7">
+                                    <input class="form-control input-sm dpWorkingDay" id="periodFrom" placeholder="empty for projectstart" type="text" data-ng-model="newPeriod.periodFrom">                                       
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">Period To</label>
+                                <div class="col-md-7">                                            
+                                    <input class="form-control input-sm dpWorkingDay" id="periodTo" type="text" data-ng-model="newPeriod.periodTo" required>
+                                </div>
+                            </div>
+
+                            <p class="text-right">
+                                <button class="btn" data-ng-click="showNewPeriod = false">Cancel</button>
+                                <button class="btn btn-success" data-ng-click="createNewPeriod()">Create new period</button>
+                            </p>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>

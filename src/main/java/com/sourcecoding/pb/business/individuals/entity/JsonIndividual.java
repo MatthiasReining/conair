@@ -19,6 +19,8 @@ public class JsonIndividual {
 
     public Long id;
     public String nickname;
+    public String firstname;
+    public String lastname;
     public String emailAddress;
     public String linkedInId;
     @XmlJavaTypeAdapter(JsonDateTimeAdapter.class)
@@ -32,6 +34,8 @@ public class JsonIndividual {
         JsonIndividual p = new JsonIndividual();
         p.id = individual.getId();
         p.nickname = individual.getNickname();
+        p.firstname = individual.getFirstname();
+        p.lastname = individual.getLastname();
         p.emailAddress = individual.getEmailAddress();
         p.linkedInId = individual.getLinkedInId();
         p.lastLogin = individual.getLastLogin();

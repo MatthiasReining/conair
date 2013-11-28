@@ -49,7 +49,7 @@ public class TimeRecord implements Serializable {
     @ManyToOne
     private Individual user;
 
-    private int status;
+    private long status;
 
     @Temporal(TemporalType.DATE)
     private Date workingDay;
@@ -69,11 +69,11 @@ public class TimeRecord implements Serializable {
         this.id = id;
     }
 
-    public int getStatus() {
+    public long getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(long status) {
         this.status = status;
     }
 

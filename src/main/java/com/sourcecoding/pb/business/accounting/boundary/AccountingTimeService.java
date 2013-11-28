@@ -18,11 +18,13 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -74,6 +76,26 @@ public class AccountingTimeService {
         return Response.ok(payload).build();
     }
 
+    @POST
+    @Path("{projectKey}")
+    public Response createAccountingPeriod(@PathParam("projectKey") String projectKey, Map<String, Object> map) {
+
+        ProjectInformation project = em.createNamedQuery(ProjectInformation.findByKey, ProjectInformation.class)
+                .setParameter(ProjectInformation.queryParam_projectKey, projectKey)
+                .getSingleResult();
+
+        Date periodTo = DateParameter.valueOf((String)map.get("periodTo"));
+        Date periodFrom = DateParameter.valueOf((String)map.get("periodFrom"));
+        
+        if (periodFrom == null ) {
+            periodFrom = project.getProjectStart();
+        }
+
+        atc.collectTimeRecords(project.getId(), periodFrom, periodTo);
+
+        return getAccountingPeriods(projectKey);
+    }
+
     @GET //TODO change to post or put
     @Path("projects/{projectId}")
     public Response collectTimeRecords(@PathParam("projectId") Long projectId) {
@@ -91,9 +113,9 @@ public class AccountingTimeService {
     }
 
     @GET
-    @Path("projects/{projectId}/periods/{periodId}/xls")
+    @Path("{projectKey}/periods/{periodId}/xls")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getAccountingPeriodXLS(@PathParam("projectId") Long projectId, @PathParam("periodId") Long periodId) throws IOException {
+    public Response getAccountingPeriodXLS(@PathParam("projectKey") String projectKey, @PathParam("periodId") Long periodId) throws IOException {
 
         System.out.println("periodId:" + periodId);
         AccountingPeriod ap = em.find(AccountingPeriod.class, periodId);
@@ -103,7 +125,7 @@ public class AccountingTimeService {
         AccountingContainer ac = new AccountingContainer();
 
         ac.accountingDate = new Date();
-        ac.accountingNumber = "2";
+        ac.accountingNumber = ap.getAccountingNumber();
 
         ac.accountingPeriodFrom = DateParameter.valueOf(ap.getPeriodFrom());
         ac.accountingPeriodTo = DateParameter.valueOf(ap.getPeriodTo());
@@ -123,7 +145,7 @@ public class AccountingTimeService {
             BigDecimal price = (BigDecimal) o[4];
 
             ac.addPerson(ac.new Person(
-                    title, "TODO_lastname", individual.getNickname(),
+                    title, individual.getLastname(), individual.getNickname(),
                     workingTime / 60.0, workingTime / 60.0 / 8.0, priceHour, price));
             //important to use double values 60.0, 8.0
         }
@@ -131,7 +153,7 @@ public class AccountingTimeService {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         exportService.generate(templateName, ac, os);
-        String filename = "accounting-" + projectId + "-" + periodId + ".xls";
+        String filename = "accounting-" + projectKey + "-" + ap.getAccountingNumber() + ".xls";
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = " + filename)
                 .build();

@@ -5,7 +5,7 @@
  */
 package com.sourcecoding.pb.business.accounting.entity;
 
-import com.sourcecoding.pb.business.individuals.entity.Individual;
+import com.sourcecoding.pb.business.restconfig.JsonDateAdapter;
 import com.sourcecoding.pb.business.restconfig.JsonDateTimeAdapter;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class AccountingPeriodDTO {
                 atdDTO.price = atd.getPrice();
                 atdDTO.priceHour = atd.getPriceHour();
                 atdDTO.status = atd.getStatus();
-                //atdDTO.user = atd.getUser();
+                atdDTO.userId = atd.getUser().getId();
                 atdDTO.workPackageId = atd.getWorkPackage().getId();
                 atdDTO.workingDay = atd.getWorkingDay();
                 atdDTO.workingTime = atd.getWorkingTime();
@@ -70,16 +70,16 @@ public class AccountingPeriodDTO {
     public BigDecimal taxRate;
     public BigDecimal price;
     public String accountingNumber;
-    public String accoutingStatus;
+    public int accoutingStatus;
     public String accountingCurrency;
     public List<AccountingTimeDetailDTO> accountingTimeDetails = new ArrayList<>();
 
     public class AccountingTimeDetailDTO {
 
         public Long id;
-        public Individual user;
+        public Long userId;
         public String status;
-        @XmlJavaTypeAdapter(JsonDateTimeAdapter.class)
+        @XmlJavaTypeAdapter(JsonDateAdapter.class)
         public Date workingDay;
         
         

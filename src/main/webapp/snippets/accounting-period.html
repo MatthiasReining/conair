@@ -4,7 +4,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Accounting Period | {{ap.accountingNumber}}: {{ap.periodFrom | date:'mediumDate'}} - {{ap.periodTo | date:'mediumDate'}}</h3>
+        <h3 class="panel-title">Accounting Period | {{ap.accountingNumber}}: {{ap.periodFrom| date:'mediumDate'}} - {{ap.periodTo| date:'mediumDate'}}</h3>
     </div>
     <div class="panel-body">
 
@@ -12,28 +12,43 @@
             <thead>
                 <tr>
                     <th>working day</th>
+                    <th>user</th>
                     <th>description</th>
                     <th>working time</th>
-                    <th>price</th>
                     <th>price hour</th>
+                    <th>price</th>
                 </tr> 
             </thead>
             <tbody data-ng-repeat="atd in ap.accountingTimeDetails">
                 <tr>
-                    <td>{{atd.workingDay| date:'mediumDate'}}</td>
-                    <td>{{atd.description}}</td>
-                    <td>{{atd.workingTime}}</td>
-                    <td>{{atd.price | currency:ap.accountingCurrency}}</td>
-                    <td>{{atd.priceHour | currency:ap.accountingCurrency}}</td>
+                    <td>
+                        <input type="text" id="wdId{{atd.id}}" class="form-control dpWorkingDay" data-ng-model="atd.workingDay" />
+                    </td>
+                    <td>
+                        <select class="form-control" data-ng-model="atd.userId" data-ng-options="p.id as p.nickname for p in individuals" ></select>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" data-ng-model="atd.description">
+                    </td>
+                    <td>
+                        <input type="number" class="form-control" data-ng-model="atd.workingTime" />
+                    </td>                    
+                    <td>
+                        <input type="number" class="form-control" data-ng-model="atd.priceHour" />
+                        {{ap.accountingCurrency}}
+                    </td>
+                    <td>{{atd.price| currency:ap.accountingCurrency}}</td>
                 </tr>
             </tbody>
         </table>
     </div>
     <div class="panel-footer">
-        <a href="#/projects/new">
-            <button class="btn btn-info">
-                <i class="icon-plus-sign"></i> Update
-            </button>
-        </a>
+        <button class="btn btn-info" data-ng-click="updateAccountingPeriod()">
+            <i class="icon-plus-sign"></i> Update
+        </button>
+
+        <button class="btn btn-info" data-ng-click="createInvoice()">
+            <i class="icon-list-alt"></i> Create Invoice
+        </button>
     </div>
 </div>

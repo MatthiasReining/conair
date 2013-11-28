@@ -25,7 +25,7 @@ public class AccountingTimeController {
     @PersistenceContext
     EntityManager em;
 
-    public void collectTimeRecords(Long projectId, Date periodFrom, Date periodTo) {
+    public AccountingPeriod collectTimeRecords(Long projectId, Date periodFrom, Date periodTo) {
 
         ProjectInformation projectInformation = em.find(ProjectInformation.class, projectId);
         
@@ -33,6 +33,13 @@ public class AccountingTimeController {
         ap.setPeriodFrom(periodFrom);
         ap.setPeriodTo(periodTo);
         ap.setProjectInformation(projectInformation);
+        ap.setAccountingStatus(0);
+                
+        ap.setTaxRate(new BigDecimal("19")); //FIXME configure
+        ap.setAccountingNumber("2-fix"); //FIXME number generator
+        ap.setAccountingCurrency("EUR"); //FIXME currency is hard coded
+        
+        
         ap = em.merge(ap);
         
         BigDecimal apPrice = new BigDecimal("0.0");
@@ -44,7 +51,9 @@ public class AccountingTimeController {
                 .setParameter(TimeRecord.queryParam_endDate, periodTo)
                 .getResultList();
         for (TimeRecord tr : trList) {
-            //tr.setStatus(ap.getId());
+            
+            tr.setStatus(ap.getId());
+            
             AccountingTimeDetail adt = new AccountingTimeDetail(tr);
             adt.setAccountingPeriod(ap);
             adt.setStatus("N");
@@ -64,16 +73,11 @@ public class AccountingTimeController {
             adt.setPrice(price);
             ap.getAccoutingTimeDetails().add(adt);  
             
-            apPrice = apPrice.add(price);
-            
-            
+            apPrice = apPrice.add(price);            
         }
-
-        ap.setTaxRate(new BigDecimal("19")); //FIXME configure
         ap.setPrice(apPrice);
-        
-        ap.setAccountingNumber("2-fix"); //FIXME number generator
-        ap.setAccountingCurrency("EUR"); //FIXME currency is hard coded
+
+        return ap;
     }
 
 }

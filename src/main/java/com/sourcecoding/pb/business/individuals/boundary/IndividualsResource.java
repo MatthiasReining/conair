@@ -9,7 +9,6 @@ import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
@@ -63,6 +62,8 @@ public class IndividualsResource {
 
         individual.setLinkedInId(jsonIndividual.linkedInId);
         individual.setNickname(jsonIndividual.nickname);
+        individual.setFirstname(jsonIndividual.firstname);
+        individual.setLastname(jsonIndividual.lastname);
         individual.setVacationDaysPerYear(jsonIndividual.vacationDaysPerYear);
         individual.setWorkdaysPerWeek(jsonIndividual.workdaysPerWeek);
         individual.setVacationManager(em.find(Individual.class, jsonIndividual.vacationManagerId));
