@@ -58,6 +58,7 @@ public class ProjectServices {
         }
 
         pi.setProjectKey(String.valueOf(map.get("projectKey")));
+        pi.setInvoiceTemplateURL(String.valueOf(map.get("invoiceTemplateURL")));
         pi.setName(String.valueOf(map.get("name")));
         pi.setProjectManager(em.find(Individual.class, ((Integer)map.get("projectManagerId")).longValue()));
 
@@ -159,6 +160,7 @@ public class ProjectServices {
         Map<String, Object> result = new HashMap<>();
         result.put("projectKey", pi.getProjectKey());
         result.put("name", pi.getName());
+        result.put("invoiceTemplateURL", pi.getInvoiceTemplateURL());
         result.put("id", pi.getId());
         result.put("projectStart", DateParameter.valueOf(pi.getProjectStart()));
         result.put("projectEnd", DateParameter.valueOf(pi.getProjectEnd()));

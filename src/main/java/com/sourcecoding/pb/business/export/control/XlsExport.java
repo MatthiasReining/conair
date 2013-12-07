@@ -40,6 +40,7 @@ public class XlsExport {
         WorkbookSettings settings = new WorkbookSettings();
         settings.setWriteAccess("rw");
         settings.setLocale(new Locale("de", "DE"));
+        settings.setEncoding("UTF-8");
 
         //TODO write blog - without setting writeAccess on a linux machine an exception is thrown:
         /*

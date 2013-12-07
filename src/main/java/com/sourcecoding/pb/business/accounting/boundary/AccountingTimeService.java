@@ -120,8 +120,6 @@ public class AccountingTimeService {
         System.out.println("periodId:" + periodId);
         AccountingPeriod ap = em.find(AccountingPeriod.class, periodId);
 
-        String templateName = "accounting-template";
-
         AccountingContainer ac = new AccountingContainer();
 
         ac.accountingDate = new Date();
@@ -150,9 +148,12 @@ public class AccountingTimeService {
             //important to use double values 60.0, 8.0
         }
 
+        
+        String invoiceTemplateURL = ap.getProjectInformation().getInvoiceTemplateURL();
+        System.out.println( invoiceTemplateURL);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
-        exportService.generate(templateName, ac, os);
+        exportService.generate(invoiceTemplateURL, ac, os);
         String filename = "accounting-" + projectKey + "-" + ap.getAccountingNumber() + ".xls";
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = " + filename)

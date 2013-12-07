@@ -18,6 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
@@ -54,12 +55,12 @@ public class ProjectInformation implements Serializable {
     @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProjectMember> members;
 
-    /**
-     * TODO link to user
-     */
+    @OneToOne
     private Individual projectManager;
     @OneToMany(mappedBy = "projectInformation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<WorkPackage> workPackages;
+
+    private String invoiceTemplateURL;
 
     public ProjectMember getProjectMemberByIndividual(Individual individual) {
         for (ProjectMember pm : members) {
@@ -139,6 +140,14 @@ public class ProjectInformation implements Serializable {
 
     public void setMembers(List<ProjectMember> members) {
         this.members = members;
+    }
+
+    public String getInvoiceTemplateURL() {
+        return invoiceTemplateURL;
+    }
+
+    public void setInvoiceTemplateURL(String invoiceTemplateURL) {
+        this.invoiceTemplateURL = invoiceTemplateURL;
     }
 
 }

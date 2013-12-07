@@ -4,6 +4,8 @@
  */
 package com.sourcecoding.pb.business.vacation.boundary;
 
+import com.sourcecoding.pb.business.configuration.boundary.Configurator;
+import com.sourcecoding.pb.business.configuration.entity.Configuration;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.export.control.DataExtractor;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
@@ -14,12 +16,15 @@ import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -51,7 +56,11 @@ public class IndividualVacationResource {
     VacationCalculator vacationCalculator;
     @Inject
     XlsExportService exportService;
+
     private Individual individual;
+
+    @Inject
+    Configurator configurator;
 
     public void setIndividual(Individual individual) {
         this.individual = individual;
@@ -62,14 +71,14 @@ public class IndividualVacationResource {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getVacationXls() throws IOException {
 
-        String templateName = "vacation-template";
+        String templateUrl = configurator.getValue("xls-template-path-for-vacation");
+        System.out.println(templateUrl);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         Map<String, Object> vacationMap = new HashMap<>();
         vacationMap.put("vacation", getVaction());
 
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-
-        exportService.generate(templateName, vacationMap, os);
+        exportService.generate(templateUrl, vacationMap, os);
         String filename = "vacation-" + DataExtractor.getStringValue(vacationMap, "vacation.vacationYear") + "-" + individual.getNickname() + ".xls";
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = " + filename)
@@ -100,7 +109,6 @@ public class IndividualVacationResource {
         List<String> vacationDays = new ArrayList<>();
         result.put("vacationDays", vacationDays);
 
-
         int vacationDaysThisYear = 0;
         for (VacationRecord vr : vy.getVacationRecords()) {
             Map<String, Object> vrMap = new HashMap<>();
@@ -124,7 +132,6 @@ public class IndividualVacationResource {
         int numberOfVacationDaysTotal = vy.getResidualLeaveYearBefore() + vy.getNumberOfVacationDays();
         result.put("numberOfVacationDaysTotal", numberOfVacationDaysTotal);
         result.put("vacationDaysThisYear", vacationDaysThisYear);
-
 
         return result;
     }
@@ -171,7 +178,6 @@ public class IndividualVacationResource {
             return Response.status(Response.Status.PRECONDITION_FAILED).entity(errors).build();
         }
 
-
         Calendar from = DateParameter.calendarValueOf(payload.get("vacationFrom").toString());
         Integer year = from.get(Calendar.YEAR);
         VacationYear vy = getVacationYear(year, individual);
@@ -179,7 +185,6 @@ public class IndividualVacationResource {
             vy.setVacationRecords(new ArrayList<VacationRecord>());
         }
         List<VacationRecord> vrList = vy.getVacationRecords();
-
 
         VacationRecord vr = new VacationRecord();
         vr.setVacationYear(vy);
@@ -192,7 +197,6 @@ public class IndividualVacationResource {
         vrList.add(vr);
 
         vacationCalculator.calculateAllVacationDays(vy);
-
 
         return Response.ok().build();
     }

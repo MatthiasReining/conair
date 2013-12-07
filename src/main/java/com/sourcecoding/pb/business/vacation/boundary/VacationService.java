@@ -4,6 +4,7 @@
  */
 package com.sourcecoding.pb.business.vacation.boundary;
 
+import com.sourcecoding.pb.business.configuration.boundary.Configurator;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.export.control.DataExtractor;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
@@ -49,22 +50,23 @@ public class VacationService {
     @Inject
     XlsExportService exportService;
 
+    @Inject
+    Configurator configurator;
+
     @GET
     @Path("xls")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getVacationsXls() throws IOException {
-        
-        
-        String templateName = "vacations-template";
+
+        String templateUrl = configurator.getValue("xls-template-path-for-vacation-overview");
+        System.out.println(templateUrl);
 
         Map<String, Object> vacationMap = new HashMap<>();
         vacationMap.put("vacations", getVacations());
         vacationMap.put("vacationYear", "2013"); //FIXME hard coded year
 
-
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-
-        exportService.generate(templateName, vacationMap, os);
+        exportService.generate(templateUrl, vacationMap, os);
         String filename = "vacations-" + DataExtractor.getStringValue(vacationMap, "vacationYear") + ".xls";
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = " + filename)
