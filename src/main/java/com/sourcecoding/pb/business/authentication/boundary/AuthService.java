@@ -24,9 +24,8 @@ import javax.ws.rs.core.Response;
  */
 @Path("auth")
 @Stateless
-public class AuthService implements Serializable {
+public class AuthService {
 
-    private static final long serialVersionUID = 1L;
     @Inject
     @CurrentUser
     User user;

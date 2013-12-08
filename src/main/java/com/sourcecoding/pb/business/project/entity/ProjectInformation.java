@@ -64,7 +64,7 @@ public class ProjectInformation implements Serializable {
 
     public ProjectMember getProjectMemberByIndividual(Individual individual) {
         for (ProjectMember pm : members) {
-            if (pm.getIndividual().getId() == individual.getId())
+            if (pm.getIndividual().getId().equals(individual.getId()))
                 return pm;
         }
         return null;
