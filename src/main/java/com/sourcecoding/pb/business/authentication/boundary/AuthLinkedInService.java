@@ -86,7 +86,7 @@ public class AuthLinkedInService {
       
         System.out.println("login/session-id:" + request.getSession(true).getId());
         System.out.println("login-userFactory:" + userFactory);
-        String oauth_token = request.getParameter("oauth_token");
+        //String oauth_token = request.getParameter("oauth_token");
         String oauth_verifier = request.getParameter("oauth_verifier");
         String username = request.getParameter("username");
 

@@ -8,8 +8,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -75,8 +73,8 @@ public class DataExtractor {
             //getter
             String methodName = "get" + keyPath.substring(0, 1).toUpperCase() + keyPath.substring(1);
             try {                
-                Method m = obj.getClass().getMethod(methodName, new Class[]{});
-                return (m != null);
+                obj.getClass().getMethod(methodName, new Class[]{});
+                return true;
             } catch (NoSuchMethodException ex) {
                 System.out.println("no method '" + methodName + "' is available");
                 return false;

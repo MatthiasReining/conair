@@ -75,7 +75,7 @@ public class ProjectServices {
         if (pi.getWorkPackages() == null) {
             pi.setWorkPackages(new HashSet<WorkPackage>());
         }
-        Set<WorkPackage> wpEntityList = pi.getWorkPackages();
+        
         Map<Long, WorkPackage> wpEntityMap = new HashMap<>();
         for (WorkPackage wpEntity : pi.getWorkPackages()) {
             wpEntityMap.put(wpEntity.getId(), wpEntity);
