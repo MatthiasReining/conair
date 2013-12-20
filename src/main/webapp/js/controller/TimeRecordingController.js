@@ -5,6 +5,9 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
     $('.panel-heading').css('color', 'white');
 
     var weeks = $routeParams.weeks;
+    var qStart = $routeParams.qStart;
+    var qEnd = $routeParams.qEnd;
+
     if (angular.isUndefined(weeks))
         weeks = '2';
 
@@ -13,16 +16,34 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
         console.log(data);
         $scope.projects = data;
     });
-    $http.get(serviceBaseUrl + 'time-recording/range/' + weeks).success(function(data) {
-        console.log(data);
-        $scope.timeRecording = data;
-        console.log($scope.timeRecording.workingDayRange);
 
-        $scope.workingDaySum = {};
-        angular.copy($scope.timeRecording.workingDayRange, $scope.workingDaySum);
-        console.log($scope.workingDaySum);
-        $scope.calculateWorkingDaySum();
-    });
+    if (angular.isUndefined(qStart)) {
+        console.log("do a week query");
+        //use week query
+        $http.get(serviceBaseUrl + 'time-recording/range/' + weeks).success(function(data) {
+            console.log(data);
+            $scope.timeRecording = data;
+            console.log($scope.timeRecording.workingDayRange);
+
+            $scope.workingDaySum = {};
+            angular.copy($scope.timeRecording.workingDayRange, $scope.workingDaySum);
+            console.log($scope.workingDaySum);
+            $scope.calculateWorkingDaySum();
+        });
+    } else {
+        //use range query
+        console.log("do a range query")
+        $http.get(serviceBaseUrl + 'time-recording/range?qStart=' + qStart + '&qEnd=' + qEnd).success(function(data) {
+            console.log(data);
+            $scope.timeRecording = data;
+            console.log($scope.timeRecording.workingDayRange);
+
+            $scope.workingDaySum = {};
+            angular.copy($scope.timeRecording.workingDayRange, $scope.workingDaySum);
+            console.log($scope.workingDaySum);
+            $scope.calculateWorkingDaySum();
+        });
+    }
     $scope.addRow = function() {
         console.log('->addRow');
         var days = {};

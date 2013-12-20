@@ -51,6 +51,7 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/accounting/:projectKey/periods/:accountingPeriodId', {templateUrl: 'snippets/accounting-period.html', controller: AccountingCtrl}).
                 when('/time-recording', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/time-recording/weeks/:weeks', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
+                when('/time-recording/range', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/vacations/:individualId', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).
                 when('/vacation-manager', {templateUrl: 'snippets/vacation-manager.html', controller: VacationManagerCtrl}).
                 when('/travel-costs-list', {templateUrl: 'snippets/travel-costs-list.html', controller: TravelCostsListCtrl}).
