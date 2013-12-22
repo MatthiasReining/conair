@@ -20,7 +20,6 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
-import jxl.write.NumberFormats;
 import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
@@ -39,7 +38,6 @@ public class XlsExport {
     public void run(Object json, Workbook template, OutputStream out) throws IOException, WriteException, BiffException {
         WorkbookSettings settings = new WorkbookSettings();
         settings.setWriteAccess("rw");
-        settings.setLocale(new Locale("de", "DE"));
         settings.setEncoding("Cp1252");
 
         //TODO write blog - without setting writeAccess on a linux machine an exception is thrown:

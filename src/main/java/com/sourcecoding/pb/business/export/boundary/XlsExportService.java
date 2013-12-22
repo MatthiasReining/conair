@@ -5,14 +5,11 @@
 package com.sourcecoding.pb.business.export.boundary;
 
 import com.sourcecoding.pb.business.export.control.XlsExport;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.URL;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 
@@ -29,7 +26,10 @@ public class XlsExportService {
             URL url = new URL(templateURL);
             
             XlsExport xls = new XlsExport();
-            Workbook template = Workbook.getWorkbook(url.openStream());
+            
+            WorkbookSettings settings = new WorkbookSettings();
+            settings.setEncoding("Cp1252");        
+            Workbook template = Workbook.getWorkbook(url.openStream(), settings);
             xls.run(payload, template, out);
 
         } catch (IOException | WriteException | BiffException ex) {
