@@ -1,7 +1,7 @@
 'use strict';
 
 
-function VacationCtrl($scope, $http, $routeParams, $modal) {
+function VacationCtrl($scope, $http, $routeParams, $modal, $location) {
     $('.panel-heading').css('background-color', 'mediumvioletred');
     $('.panel-heading').css('color', 'white');
     var serviceURL = serviceBaseUrl + 'vacations/' + $routeParams.individualId;
@@ -23,7 +23,12 @@ function VacationCtrl($scope, $http, $routeParams, $modal) {
         $scope.vacation.vacationUntil = end.format('YYYY-MM-DD');
     });
     var refresh = function() {
-        $http.get(serviceURL).success(function(data) {
+        var params = {};
+        console.log( $location.search().year );
+        if ($location.search().year !== undefined)
+            params.year = $location.search().year;
+        console.log( params);
+        $http.get(serviceURL,{params: params} ).success(function(data) {
             console.log(data);
             //convert date
 

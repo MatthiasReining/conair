@@ -5,7 +5,6 @@
 package com.sourcecoding.pb.business.vacation.boundary;
 
 import com.sourcecoding.pb.business.configuration.boundary.Configurator;
-import com.sourcecoding.pb.business.configuration.entity.Configuration;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.export.control.DataExtractor;
 import com.sourcecoding.pb.business.restconfig.DateParameter;
@@ -16,15 +15,12 @@ import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -69,14 +65,14 @@ public class IndividualVacationResource {
     @GET
     @Path("xls")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getVacationXls() throws IOException {
+    public Response getVacationXls(@QueryParam("year") Integer year) throws IOException {
 
         String templateUrl = configurator.getValue("xls-template-path-for-vacation");
         System.out.println(templateUrl);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         Map<String, Object> vacationMap = new HashMap<>();
-        vacationMap.put("vacation", getVaction());
+        vacationMap.put("vacation", getVaction(year));
 
         exportService.generate(templateUrl, vacationMap, os);
         String filename = "vacation-" + DataExtractor.getStringValue(vacationMap, "vacation.vacationYear") + "-" + individual.getNickname() + ".xls";
@@ -86,10 +82,11 @@ public class IndividualVacationResource {
     }
 
     @GET
-    public Map<String, Object> getVaction() {
+    public Map<String, Object> getVaction(@QueryParam("year") Integer year) {
         Map<String, Object> result = new HashMap<>();
 
-        Integer year = Calendar.getInstance().get(Calendar.YEAR);
+        if (year == null)
+            year = Calendar.getInstance().get(Calendar.YEAR);
 
         List<VacationYear> vyList = em.createNamedQuery(VacationYear.findByDate, VacationYear.class)
                 .setParameter(VacationYear.queryParam_individual, individual)
