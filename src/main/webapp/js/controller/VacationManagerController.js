@@ -1,12 +1,17 @@
 'use strict';
 
-function VacationManagerCtrl($scope, $routeParams, $http) {
+function VacationManagerCtrl($scope, $routeParams, $http, $location) {
     $('.panel-heading').css('background-color', 'mediumvioletred');
     $('.panel-heading').css('color', 'white');
 
-    $http.get(serviceBaseUrl + 'vacations').success(function(data) {
+    var params = {};
+    if ($location.search().year !== undefined)
+        params.year = $location.search().year;
+        
+    $http.get(serviceBaseUrl + 'vacations', {params: params}).success(function(data) {
         console.log(data);
         $scope.vacations = data;
+        $scope.vacationYear = $scope.vacations[0].vacationYear;
         var progess100percent = 45; //totalDays + residualLeaveYearBefore, means ca. 28 + puffer
 
         angular.forEach($scope.vacations, function(value) {
@@ -36,6 +41,12 @@ function VacationManagerCtrl($scope, $routeParams, $http) {
 
         });
     });
+    
+    $scope.changeYear = function() {    
+        console.log($location.path());
+        console.log($location.search());
+        $location.search('year', $scope.vacationYear);
+    };
 
     $scope.changeNumberOfVacationDays = function(vacation) {
         var url = serviceBaseUrl + 'vacations/' + vacation.individualId + '/admin/' + vacation.vacationYear + '/change-number-of-vacation-days';

@@ -26,6 +26,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.container.ResourceContext;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -56,14 +57,18 @@ public class VacationService {
     @GET
     @Path("xls")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getVacationsXls() throws IOException {
+    public Response getVacationsXls(@QueryParam("year") Integer year) throws IOException {
 
         String templateUrl = configurator.getValue("xls-template-path-for-vacation-overview");
         System.out.println(templateUrl);
+        
+        if (year == null)
+            year = Calendar.getInstance().get(Calendar.YEAR);
+
 
         Map<String, Object> vacationMap = new HashMap<>();
-        vacationMap.put("vacations", getVacations());
-        vacationMap.put("vacationYear", "2013"); //FIXME hard coded year
+        vacationMap.put("vacations", getVacations(year));
+        vacationMap.put("vacationYear", year.toString());
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         exportService.generate(templateUrl, vacationMap, os);
@@ -74,15 +79,16 @@ public class VacationService {
     }
 
     @GET
-    public List<Map<String, Object>> getVacations() {
+    public List<Map<String, Object>> getVacations(@QueryParam("year") Integer year) {
         //TODO Security check
 
         List<Map<String, Object>> result = new ArrayList<>();
 
-        Integer currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        if (year == null)
+            year = Calendar.getInstance().get(Calendar.YEAR);
 
         List<VacationYear> vyList = em.createNamedQuery(VacationYear.findAllByYear, VacationYear.class)
-                .setParameter(VacationYear.queryParam_year, currentYear)
+                .setParameter(VacationYear.queryParam_year, year)
                 .getResultList();
 
         for (VacationYear vy : vyList) {
