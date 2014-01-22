@@ -33,6 +33,7 @@ function VacationCtrl($scope, $http, $routeParams, $modal, $location) {
             //convert date
 
             $scope.vacations = data;
+            $scope.vacationYear = $scope.vacations.vacationYear;
             var vacationDays = $scope.vacations.vacationDays;
             var vacationDaysByMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             for (var i = 0; i < vacationDays.length; i++) {
@@ -40,10 +41,16 @@ function VacationCtrl($scope, $http, $routeParams, $modal, $location) {
                 vacationDaysByMonth[d.getMonth()] = vacationDaysByMonth[d.getMonth()] + 1;
             }
             $('#vacation-bar-chart').sparkline(vacationDaysByMonth, {type: 'bar', height: '80px', barWidth: 46, barSpacing: 8});
+            
         });
     };
     //initalize load
     refresh();
+    
+    $scope.changeYear = function() {        
+        $location.search('year', $scope.vacationYear);
+    };
+    
     $scope.removeVacationRecord = function(vacationRecord) {
 
         var title = 'Remove vacation request';
