@@ -12,8 +12,18 @@ function VacationManagerCtrl($scope, $routeParams, $http, $location) {
         console.log(data);
         $scope.vacations = data;
         $scope.vacationYear = $scope.vacations[0].vacationYear;
-        var progess100percent = 45; //totalDays + residualLeaveYearBefore, means ca. 28 + puffer
+        
+        //determine max percentage (number of vacation days + residual leave year before)
+        var progess100percent = 30;
+        angular.forEach($scope.vacations, function(value) {
+            var totalVacationDays = value.numberOfVacationDays + value.residualLeaveYearBefore;
+            if (progess100percent < totalVacationDays)
+                progess100percent = totalVacationDays;
+        });
+        progess100percent += 3; //buffer
 
+        
+        
         angular.forEach($scope.vacations, function(value) {
 
             var vacationDaysPerYear = value.numberOfVacationDays;
