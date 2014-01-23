@@ -47,6 +47,13 @@ function VacationManagerCtrl($scope, $routeParams, $http, $location) {
         console.log($location.search());
         $location.search('year', $scope.vacationYear);
     };
+    
+    $scope.takeoverResidualLeave = function() {
+        console.log( $scope.vacationYear );
+         $http.put(serviceBaseUrl + 'vacations/jobs/takeover-residual-leave/' + $scope.vacationYear, $location.search()).success(function(data) {
+             console.log( data );
+         });
+    };
 
     $scope.changeNumberOfVacationDays = function(vacation) {
         var url = serviceBaseUrl + 'vacations/' + vacation.individualId + '/admin/' + vacation.vacationYear + '/change-number-of-vacation-days';

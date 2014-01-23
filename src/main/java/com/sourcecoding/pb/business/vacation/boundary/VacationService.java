@@ -9,6 +9,8 @@ import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.export.control.DataExtractor;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
+import com.sourcecoding.pb.business.vacation.control.VacationCalculator;
+import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -20,9 +22,11 @@ import java.util.Map;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -50,6 +54,8 @@ public class VacationService {
     ResponseBuilder rb;
     @Inject
     XlsExportService exportService;
+    @Inject
+    VacationCalculator vacationCalculator;
 
     @Inject
     Configurator configurator;
@@ -61,10 +67,9 @@ public class VacationService {
 
         String templateUrl = configurator.getValue("xls-template-path-for-vacation-overview");
         System.out.println(templateUrl);
-        
+
         if (year == null)
             year = Calendar.getInstance().get(Calendar.YEAR);
-
 
         Map<String, Object> vacationMap = new HashMap<>();
         vacationMap.put("vacations", getVacations(year));
@@ -107,6 +112,42 @@ public class VacationService {
         //FIXME setter for slsb :-( search for a better solution!
         ivr.setIndividual(individual);
         return ivr;
+    }
+
+    @Path("jobs/takeover-residual-leave/{year}")
+    @PUT
+    public void takeoverResidualLeave(@PathParam("year") Integer year) {
+        System.out.println("year: " + year);
+
+        List<VacationYear> vyList = em.createNamedQuery(VacationYear.findAllByYear, VacationYear.class)
+                .setParameter(VacationYear.queryParam_year, year)
+                .getResultList();
+        Integer newYear = year;
+        newYear++;
+        System.out.println("newYear: " + newYear);
+
+        for (VacationYear vy : vyList) {
+
+            System.out.println( vy.getIndividual().getFirstname() + " - " + vy.getResidualLeave());
+            VacationYear newVy;
+            try {
+                newVy = em.createNamedQuery(VacationYear.findByDate, VacationYear.class)
+                        .setParameter(VacationYear.queryParam_individual, vy.getIndividual())
+                        .setParameter(VacationYear.queryParam_year, newYear)
+                        .getSingleResult();
+            } catch (NoResultException e) {
+                newVy = new VacationYear();
+                newVy.setIndividual(vy.getIndividual());
+                newVy.setVacationYear(newYear);
+                newVy.setVacationRecords(new ArrayList<VacationRecord>());
+                newVy.setNumberOfVacationDays(vy.getIndividual().getVacationDaysPerYear()); 
+                em.persist(newVy);
+                newVy = em.merge(newVy);
+            }
+            newVy.setResidualLeaveYearBefore(vy.getResidualLeave());
+
+            vacationCalculator.calculateAllVacationDays(newVy);
+        }
     }
 
     @Path("tasks")
