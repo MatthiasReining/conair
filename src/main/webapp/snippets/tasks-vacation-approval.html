@@ -1,120 +1,83 @@
-<!-- Page heading -->
-<div class="page-head">
-    <!-- Page heading -->
-    <h2 class="pull-left">Tasks 
-        <!-- page meta -->
-        <span class="page-meta">Vacation Approval</span>
-    </h2>
+<h3>Tasks <small>Vacation Approval</small></h3>
+<h6>Approval for Time Off - {{vacation.individualNickName}}</h6>
 
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/travel-costs" class="bread-current">Travel Costs</a>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Approval for Time Off - {{vacation.individualNickName}}</h3>
     </div>
+    <div class="panel-body">
 
-    <div class="clearfix"></div>
-
-</div>
-<!-- Page heading ends -->
+        <form class="form-horizontal" data-role="form" name="requestForm" novalidate>
 
 
-
-<!-- Matter -->
-
-<div class="matter">
-    <div class="container-fluid">
-
-        <div class="row-fluid">
-            <div class="span12">
-                <div class="widget wviolet">
-                    <div class="widget-head">
-                        <div class="pull-left">Approval for Time Off - {{vacation.individualNickName}} </div>
-                        <div class="widget-icons pull-right">
-                            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="widget-content" >
-                        <!-- content -->
-                        <div class="padd">
-
-                            <!-- Form starts.  -->
-                            <form class="form-horizontal">
-                                <div class="control-group">
-                                    <label class="control-label">Individual</label>
-                                    <div class="controls">
-                                        {{vacation.individualNickName}}
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="vacationFrom">Vacation from</label>
-                                    <div class="controls">
-                                        {{vacation.vacationFrom}}
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="vacationUntil">Vacation Until</label>
-                                    <div class="controls">
-                                        {{vacation.vacationUntil}}
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label">Legal holidays in this time</label>
-                                    <div class="controls">
-                                        <ul>
-                                            <li data-ng-repeat="legalHoliday in vacation.calcDays.legalHolidays">
-                                                {{legalHoliday.date}} - {{legalHoliday.name}}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label" for="numberOfDays">Vacation Days</label>
-                                    <div class="controls">
-                                        <input type="number" id="numberOfDays" data-ng-model="vacation.numberOfDays">
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label">Info</label>
-                                    <div class="controls">
-                                        Number of Vacation Days per Year : {{vacation.numberOfVacationDays}}<br/>
-                                        Work Days per Year : {{vacation.workDaysPerWeek}}<br/>
-                                        Residual Leave : {{vacation.residualLeave}}
-                                    </div>
-                                </div>
-
-                                <div class="control-group">
-                                    <label class="control-label" for="message">Messags</label>
-                                    <div class="controls">
-                                        <textarea id="message" data-ng-model="vacation.message"></textarea>
-                                    </div>
-                                </div>
-
-
-                                <hr />
-                                <b>Request for Time Off:</b> 
-                                <button class="btn" data-ng-click="rejectRequestForTimeOff()">Reject </button>
-                                <button class="btn btn-success" data-ng-click="approveRequestForTimeOff()">Approve</button>
-
-                            </form>
-
-                        </div>
-
-
-
-                    </div>
+            <div class="form-group">
+                <label class="col-md-3 control-label">Individual</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">{{vacation.individualNickName}}</p>
                 </div>
             </div>
-        </div>
 
+            <div class="form-group">
+                <label class="col-md-3 control-label">Vacation from</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">{{vacation.vacationFrom}}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Vacation Until</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">{{vacation.vacationUntil}}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Legal holidays in this time</label>
+                <div class="col-md-9">
+                    <ul>
+                        <li data-ng-repeat="legalHoliday in vacation.calcDays.legalHolidays">
+                            <p class="form-control-static">{{legalHoliday.date}} - {{legalHoliday.name}}
+                            </p>
+                        </li>
+                    </ul>                    
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Vacation Days</label>
+                <div class="col-md-1">
+                    <input type="number" class="form-control" id="numberOfDays" data-ng-model="vacation.numberOfDays">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Info</label>
+                <div class="col-md-9">
+                    <p class="form-control-static">
+                        Number of Vacation Days per Year : <b>{{vacation.numberOfVacationDays}}</b><br/>
+                        Work Days per Year : <b>{{vacation.workDaysPerWeek}}</b><br/>
+                        Residual Leave : <b>{{vacation.residualLeave}}</b>
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-3 control-label">Messags</label>
+                <div class="col-md-9">
+                    <textarea id="message" data-ng-model="vacation.message" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+
+
+            <hr>
+
+            <b>Request for Time Off:</b> 
+            <button class="btn" data-ng-click="rejectRequestForTimeOff()">Reject </button>
+            <button class="btn btn-success" data-ng-click="approveRequestForTimeOff()">Approve</button>
+
+
+        </form>
 
     </div>
 </div>
-<!-- Matter ends -->
 

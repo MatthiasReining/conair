@@ -109,6 +109,9 @@ function TravelCostsCtrl($scope, $http) {
 }
 
 function TaskVacationApprovalListCtrl($scope, $http) {
+    $('.panel-heading').css('background-color', 'wheat');
+    $('.panel-heading').css('color', 'black');
+
     $http.get(serviceBaseUrl + 'vacations/tasks').success(function(data) {
         console.log(data);
         $scope.tasks = data;
@@ -116,6 +119,10 @@ function TaskVacationApprovalListCtrl($scope, $http) {
 }
 
 function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
+    $('.panel-heading').css('background-color', 'wheat');
+    $('.panel-heading').css('color', 'black');
+
+
     $http.get(serviceBaseUrl + 'vacations/tasks/' + $routeParams.vacationRecordId).success(function(data) {
         console.log(data);
         $scope.vacation = data;
