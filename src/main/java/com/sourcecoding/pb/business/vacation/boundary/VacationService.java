@@ -128,7 +128,7 @@ public class VacationService {
 
         for (VacationYear vy : vyList) {
 
-            System.out.println( vy.getIndividual().getFirstname() + " - " + vy.getResidualLeave());
+            System.out.println(vy.getIndividual().getFirstname() + " - " + vy.getResidualLeave());
             VacationYear newVy;
             try {
                 newVy = em.createNamedQuery(VacationYear.findByDate, VacationYear.class)
@@ -140,13 +140,14 @@ public class VacationService {
                 newVy.setIndividual(vy.getIndividual());
                 newVy.setVacationYear(newYear);
                 newVy.setVacationRecords(new ArrayList<VacationRecord>());
-                newVy.setNumberOfVacationDays(vy.getIndividual().getVacationDaysPerYear()); 
+                newVy.setNumberOfVacationDays(vy.getIndividual().getVacationDaysPerYear());
                 em.persist(newVy);
                 newVy = em.merge(newVy);
             }
             newVy.setResidualLeaveYearBefore(vy.getResidualLeave());
+            newVy.setNumberOfVacationDays(vy.getIndividual().getVacationDaysPerYear());
 
-            vacationCalculator.calculateAllVacationDays(newVy);
+            vacationCalculator.calculateAllVacationDays(newVy); 
         }
     }
 
