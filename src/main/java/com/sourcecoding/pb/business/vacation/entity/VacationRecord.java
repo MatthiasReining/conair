@@ -30,12 +30,12 @@ public class VacationRecord implements Serializable {
     public static final String findByApprovalState = "VacationRecord.findByApprovalState";
     public static final String queryParam_approvalState = "approvalState";
     public static final String queryParam_vacationManager = "vacationManager";
-    
+
     public static final int APPROVAL_STATE_NEW = 0;
     public static final int APPROVAL_STATE_FOR_APPROVAL = 1;
     public static final int APPROVAL_STATE_APPROVED = 5;
     public static final int APPROVAL_STATE_REJECTED = 9;
-    
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -50,7 +50,9 @@ public class VacationRecord implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date vacationUntil;
     private Integer approvalState;
-    
+
+    private String vacationComment;
+
     public Long getId() {
         return id;
     }
@@ -105,5 +107,13 @@ public class VacationRecord implements Serializable {
 
     public void setVacationYear(VacationYear vacationYear) {
         this.vacationYear = vacationYear;
+    }
+
+    public String getVacationComment() {
+        return vacationComment;
+    }
+
+    public void setVacationComment(String vacationComment) {
+        this.vacationComment = vacationComment;
     }
 }

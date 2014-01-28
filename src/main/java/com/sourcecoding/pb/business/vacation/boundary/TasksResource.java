@@ -76,6 +76,9 @@ public class TasksResource {
         VacationRecord vr = em.find(VacationRecord.class, vacationRecordId);
 
         vr.setApprovalState(VacationRecord.APPROVAL_STATE_APPROVED);
+        vr.setNumberOfDays((Integer) payload.get("numberOfDays"));        
+        vr.setVacationComment((String)payload.get("message"));        
+        
         vacationCalculator.calculateAllVacationDays(vr.getVacationYear());
 
         return null;
