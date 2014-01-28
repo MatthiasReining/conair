@@ -24,14 +24,15 @@
     <div class="panel-body">
         <div data-ng-repeat="vacation in vacations" >
             <div class="row" >
-                <div class="col-md-2">
+                <div class="col-md-1">
                     <a href="#/vacations/{{vacation.individualId}}">{{vacation.individualNickName}}</a>
                 </div>
-                <div class="col-md-1">
-                    <span title="approved vacation days ({{vacation.approvedVacationDays}})">{{vacation.approvedVacationDays}}</span> of
+                <div class="col-md-3">
+                    taken <span title="approved vacation days ({{vacation.approvedVacationDays}})">{{vacation.approvedVacationDays}}</span> of
                     <span title="number of vacation days ({{vacation.numberOfVacationDays}}) + residual leave of the year before ({{vacation.residualLeaveYearBefore}})">{{vacation.numberOfVacationDays + vacation.residualLeaveYearBefore}}</span>
+                    <span title="{{vacation.residualLeave}} total residual leave">(open {{vacation.residualLeave}})</span>
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-7">
                     <div class="progress">
                         <div class="progress-bar"
                              data-ng-repeat="progress in vacation.progress" 
