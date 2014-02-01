@@ -137,7 +137,7 @@ function TaskVacationApprovalCtrl($scope, $routeParams, $http) {
             alert("genehmigt");
         });
     };
-}
+};
 
 
 var MsgBoxCtrl = function($scope, $modalInstance, content) {

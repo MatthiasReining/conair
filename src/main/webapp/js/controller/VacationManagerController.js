@@ -1,18 +1,18 @@
 'use strict';
 
-function VacationManagerCtrl($scope, $routeParams, $http, $location) {
+function VacationManagerCtrl($scope, $http, $location, msgbox) {
     $('.panel-heading').css('background-color', 'mediumvioletred');
     $('.panel-heading').css('color', 'white');
 
     var params = {};
     if ($location.search().year !== undefined)
         params.year = $location.search().year;
-        
+
     $http.get(serviceBaseUrl + 'vacations', {params: params}).success(function(data) {
         console.log(data);
         $scope.vacations = data;
         $scope.vacationYear = $scope.vacations[0].vacationYear;
-        
+
         //determine max percentage (number of vacation days + residual leave year before)
         var progess100percent = 30;
         angular.forEach($scope.vacations, function(value) {
@@ -22,8 +22,8 @@ function VacationManagerCtrl($scope, $routeParams, $http, $location) {
         });
         progess100percent += 3; //buffer
 
-        
-        
+
+
         angular.forEach($scope.vacations, function(value) {
 
             var vacationDaysPerYear = value.numberOfVacationDays;
@@ -43,26 +43,34 @@ function VacationManagerCtrl($scope, $routeParams, $http, $location) {
             value.progress = [
                 {"type": "this-year-approved", "typeText": "approved", "value": thisYearApproved, "percent": thisYearApprovedProgress, "color": "green"},
                 {"type": "this-year-residual-leave", "typeText": "residual leave", "value": thisYearResidualLeave, "percent": thisYearResidualLeaveProgress, "color": "red"},
-                {"type": "appendix-approved", "typeText": "approved", "value": appendixApproved, "percent": appendixApprovedProgress, "color": "orangered"},
-                {"type": "appendix-residual-leave", "typeText": "residual leave (year before)", "value": appendixResidualLeave, "percent": appendixResidualLeaveProgress, "color": "yellowgreen"}
+                {"type": "appendix-approved", "typeText": "approved", "value": appendixApproved, "percent": appendixApprovedProgress, "color": "yellowgreen"},
+                {"type": "appendix-residual-leave", "typeText": "residual leave (year before)", "value": appendixResidualLeave, "percent": appendixResidualLeaveProgress, "color": "indianred"}
             ];
             console.log('--> ' + vacationDaysPerYear);
             console.log(value.progress);
 
         });
     });
-    
-    $scope.changeYear = function() {    
+
+    $scope.changeYear = function() {
         console.log($location.path());
         console.log($location.search());
         $location.search('year', $scope.vacationYear);
     };
-    
+
     $scope.takeoverResidualLeave = function() {
-        console.log( $scope.vacationYear );
-         $http.put(serviceBaseUrl + 'vacations/jobs/takeover-residual-leave/' + $scope.vacationYear, $location.search()).success(function(data) {
-             console.log( data );
-         });
+        var title = 'Vacation Takeover';
+        var message = 'Start batch job for year ' + $scope.vacationYear;
+
+        msgbox.open({title: title, message: message}, function() {
+            $http.put(serviceBaseUrl + 'vacations/jobs/takeover-residual-leave/' + $scope.vacationYear, $location.search()).success(function(data) {
+                var title = 'Vacation Takeover';
+                var message = 'Job finished...';
+
+                msgbox.open({title: title, message: message, hideCancelBtn: true});
+            });
+        });
+
     };
 
     $scope.changeNumberOfVacationDays = function(vacation) {

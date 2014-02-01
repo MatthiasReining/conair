@@ -7,8 +7,8 @@
             <div class="form-group">
                 <span class="input-sm">Year</span>
                 <select class="form-control input-sm" style="width:80px" data-ng-model="vacationYear" data-ng-change="changeYear()">
-                    <option ng-selected="vacationYear==='2013'">2013</option>
-                    <option ng-selected="vacationYear==='2014'">2014</option>  
+                    <option ng-selected="vacationYear === '2013'">2013</option>
+                    <option ng-selected="vacationYear === '2014'">2014</option>  
                 </select>
             </div>    
         </form>
@@ -87,9 +87,18 @@
 
             <div class="form-group">
                 <label class="col-md-3 control-label">Vacation Days Calculated</label>
-                <div class="col-md-9">
+                <div class="col-md-2">
                     {{vacation.calculateVacationDays}}&nbsp;&nbsp;
                     <button type="submit" data-ng-click="calculateVacationDays()" class="btn btn-info">Recalc</button>
+                </div>
+                <div class="col-md-7">
+                    <p class="form-control-static" data-ng-show="vacation.legalHolidays.length > 0">
+                        Legal Holidays: 
+                        <span data-ng-repeat="legalHoliday in vacation.legalHolidays">
+                            <b>{{legalHoliday.name}}</b> ({{legalHoliday.date}})
+                            <span data-ng-hide="$last">, </span>
+                        </span>
+                    </p>                    
                 </div>
             </div>
 

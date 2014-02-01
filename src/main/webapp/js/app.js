@@ -19,9 +19,9 @@ Date.prototype.getText = function() {
 String.prototype.convert2Date = function() {
     var dateArray = this.valueOf().split('-');
     var year = parseInt(dateArray[0]);
-    var month = parseInt(dateArray[1])-1;
+    var month = parseInt(dateArray[1]) - 1;
     var day = parseInt(dateArray[2]);
-    return new Date( year, month, day);
+    return new Date(year, month, day);
 };
 
 function datepicker2model(e, $scope) {
@@ -36,10 +36,10 @@ function datepicker2model(e, $scope) {
 ;
 
 
-var app = angular.module('conair',  ['ui.bootstrap']);
-//var app = angular.module('conair',  []);
+var app = angular.module('conair', ['ui.bootstrap']);
 
-    
+app.service('msgbox', ['$modal', MsgBoxService]);
+  
 app.config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.
@@ -60,7 +60,6 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/travel-costs', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
                 when('/tasks-vacation-approval-list', {templateUrl: 'snippets/tasks-vacation-approval-list.html', controller: TaskVacationApprovalListCtrl}).
                 when('/tasks-vacation-approval/:vacationRecordId', {templateUrl: 'snippets/tasks-vacation-approval.html', controller: TaskVacationApprovalCtrl}).
-                
                 otherwise({redirectTo: '/projects'});
     }]);
 
@@ -88,15 +87,15 @@ angular.element(document).ready(function() {
         version = data.version;
         angular.bootstrap(document, ['conair']);
     }).error(function(data, status) {
-        
+
         console.log("auth error.. " + status);
         console.log(data);
-        
+
         window.location = "login.html";
     });
 
 
 });
-    
-    
+
+
 moment.lang('de');

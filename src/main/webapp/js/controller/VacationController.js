@@ -1,7 +1,7 @@
 'use strict';
 
 
-function VacationCtrl($scope, $http, $routeParams, $modal, $location) {
+function VacationCtrl($scope, $http, $routeParams, $location,  msgbox) {
     $('.panel-heading').css('background-color', 'mediumvioletred');
     $('.panel-heading').css('color', 'white');
     var serviceURL = serviceBaseUrl + 'vacations/' + $routeParams.individualId;
@@ -52,15 +52,17 @@ function VacationCtrl($scope, $http, $routeParams, $modal, $location) {
     };
     
     $scope.removeVacationRecord = function(vacationRecord) {
-
+        
         var title = 'Remove vacation request';
         var message = 'Should vacation request removed? (from ' + vacationRecord.vacationFrom + ')';
-        MsgBox($modal, {title: title, message: message}, function() {
+        
+        
+        msgbox.open({title: title, message: message}, function() {
             console.log('remove record ' + vacationRecord);
             $http.delete(serviceURL + '/' + vacationRecord.id).success(function(data) {
                 refresh();
             });
-        });
+        });        
     };
     $scope.calculateVacationDays = function() {
         $http.get(serviceURL + '/calculateVacationDays',
@@ -68,18 +70,15 @@ function VacationCtrl($scope, $http, $routeParams, $modal, $location) {
                         'vacationUntil': $scope.vacation.vacationUntil
                     }}
         ).success(function(data) {
-            console.log('<--fromServer');
-            console.log(data);
             $scope.vacation.calculateVacationDays = data.vacationDays;
             $scope.vacation.numberOfDays = data.vacationDays;
+            $scope.vacation.legalHolidays = data.legalHolidays;
         });
     };
     $scope.issueRequestForTimeOff = function() {
         console.log($scope.requestForm.$valid);
         if (!$scope.requestForm.$valid)
             return;
-        console.log('->sendToServer');
-        console.log($scope.vacation);
         $scope.vacation.individualId = $routeParams.individualId;
         $http.post(serviceURL, $scope.vacation)
                 .success(function(data) {
@@ -89,8 +88,12 @@ function VacationCtrl($scope, $http, $routeParams, $modal, $location) {
             $scope.vacation.calculateVacationDays = null;
             $scope.vacation.numberOfDays = null;
             $('#vacationFromUntil').val('');
-
-            MsgBox($modal, {title: 'Request for Time Off', message: 'Your request for time off was submitted', hideCancelBtn: true});
+      
+            var title = 'Request for Time Off';
+            var message = 'Your request for time off was submitted';
+        
+            msgbox.open({title: title, message: message, hideCancelBtn: true} );  
+            
         }).error(function(data) {
             console.log(data);
             // called asynchronously if an error occurs

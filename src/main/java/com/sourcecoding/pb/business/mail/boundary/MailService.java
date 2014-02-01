@@ -63,7 +63,8 @@ public class MailService {
                     InternetAddress.parse(mailTo));
             message.setSubject(subject);
             message.setText(body);
-            Transport.send(message);
+            //FIXME mail is not send
+            //Transport.send(message);
 
             System.out.println("Mail send done...");
 
