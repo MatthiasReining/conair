@@ -8,7 +8,6 @@ package com.sourcecoding.pb.business.configuration.boundary;
 import com.sourcecoding.pb.business.configuration.entity.Configuration;
 import java.math.BigDecimal;
 import javax.ejb.Stateless;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -43,5 +42,17 @@ public class Configurator {
     public BigDecimal getBigDecimalValue(String key) {
         return new BigDecimal(getValue(key));
     }
+    
+    public Boolean getBoolean(String key) {
+        return Boolean.valueOf(getValue(key));
+    }
 
+    
+    public static String VACATION_NEW_REQUEST_SEND_EMAIL = "vacation-new-request-send-email";
+    
+    public static String XLS_TEMPLATE_PATH_FOR_VACATION = "xls-template-path-for-vacation";
+    public static String XLS_TEMPLATE_PATH_FOR_VACATION_OVERVIEW = "xls-template-path-for-vacation-overview";
+        
+    
+    
 }

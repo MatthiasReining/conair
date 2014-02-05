@@ -65,7 +65,7 @@ public class VacationService {
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getVacationsXls(@QueryParam("year") Integer year) throws IOException {
 
-        String templateUrl = configurator.getValue("xls-template-path-for-vacation-overview");
+        String templateUrl = configurator.getValue(Configurator.XLS_TEMPLATE_PATH_FOR_VACATION_OVERVIEW);
         System.out.println(templateUrl);
 
         if (year == null)

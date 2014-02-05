@@ -199,15 +199,14 @@ public class IndividualVacationResource {
 
         vacationCalculator.calculateAllVacationDays(vy);
 
-        String body = individual.getNickname() + " hat einen Urlaubsantrag eingereicht.\n\n";
-        System.out.println("vor send EMail");        
-        mailService.asyncSend(individual.getVacationManager().getEmailAddress(), "Urlaubsantrag", body);
-        System.out.println("nach send EMail");
-
+        if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
+            String body = individual.getNickname() + " hat einen Urlaubsantrag eingereicht.\n\n";
+            System.out.println("vor send EMail");
+            mailService.asyncSend(individual.getVacationManager().getEmailAddress(), "Urlaubsantrag", body);
+            System.out.println("nach send EMail");
+        }
         return Response.ok().build();
     }
-
-    
 
     private VacationYear createNewVacationYear(Individual individual, Integer year) {
         VacationYear vy = new VacationYear();

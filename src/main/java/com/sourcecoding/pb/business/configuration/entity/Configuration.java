@@ -5,7 +5,6 @@
  */
 package com.sourcecoding.pb.business.configuration.entity;
 
-import com.sourcecoding.pb.business.accounting.entity.AccountingPeriod;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
