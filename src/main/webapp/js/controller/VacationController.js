@@ -51,6 +51,14 @@ function VacationCtrl($scope, $http, $routeParams, $location,  msgbox) {
         $location.search('year', $scope.vacationYear);
     };
     
+    $scope.showHideComment = function(index) {
+        console.log($scope.showComment);
+        console.log(index);
+        if ($scope.showComment === index)
+            $scope.showComment = -1;
+        else
+            $scope.showComment = index;        
+    };
     $scope.removeVacationRecord = function(vacationRecord) {
         
         var title = 'Remove vacation request';
@@ -100,12 +108,6 @@ function VacationCtrl($scope, $http, $routeParams, $location,  msgbox) {
             // or server returns response with status
             // code outside of the <200, 400) range
         });
-    };
-    $scope.selectVacationRecord = function(vacationRecord) {
-        console.log(vacationRecord);
-        $scope.vacation = vacationRecord;
-        $scope.calculateVacationDays();
-        $scope.vacation = vacationRecord;
     };
     
     $scope.excelDownload = function() {

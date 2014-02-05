@@ -137,15 +137,23 @@
             </thead>
             <tbody data-ng-repeat="vacationRecord in vacations.vacationRecords">
                 <tr>
-                    <td data-ng-click="selectVacationRecord(vacationRecord)">
-                        {{vacationRecord.vacationFrom}}
-                    </td>
+                    <td>{{vacationRecord.vacationFrom}}</td>
                     <td>{{vacationRecord.vacationUntil}}</td>
                     <td>{{vacationRecord.numberOfDays}}</td>
-                    <td>{{stateText[vacationRecord.approvalState]}}</td>
-                    <td><a data-ng-click="removeVacationRecord(vacationRecord)" data-ng-show="vacationRecord.approvalState < 2">
+                    <td>{{stateText[vacationRecord.approvalState]}}</td>                    
+                    <td>
+                        <a href="" data-ng-click="showHideComment($index)" data-ng-show="vacationRecord.comment !== null" >
+                            <span class="icon-envelope" title="Nachricht anzeigen"></span>
+                        </a>
+
+                        <a href="" data-ng-click="removeVacationRecord(vacationRecord)" data-ng-show="vacationRecord.approvalState < 2">
                             <span class="icon-remove" title="Urlaubsantrag löschen"></span>
                         </a>
+                    </td>
+                </tr>
+                <tr data-ng-show="showComment === $index">
+                    <td colspan="5">
+                        <div class="alert alert-info"><b>Comment</b><br>{{vacationRecord.comment}}</div>
                     </td>
                 </tr>
             </tbody>

@@ -122,6 +122,7 @@ public class IndividualVacationResource {
             String vacationUntil = DateParameter.valueOf(vr.getVacationUntil());
             vrMap.put("vacationFrom", vacationFrom);
             vrMap.put("vacationUntil", vacationUntil);
+            vrMap.put("comment", vr.getVacationComment());
             vrMap.put("id", vr.getId());
 
             Map<String, Object> vacationDaysMap = calculateVacationDays(vacationFrom, vacationUntil);

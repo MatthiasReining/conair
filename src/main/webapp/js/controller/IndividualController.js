@@ -1,5 +1,5 @@
 
-function IndividualsCtrl($scope, $http) {
+function IndividualsCtrl($scope, $http, msgbox) {
     $('.panel-heading').css('background-color', 'mediumvioletred');
     $('.panel-heading').css('color', 'white');
 
@@ -23,9 +23,7 @@ function IndividualsCtrl($scope, $http) {
     $scope.sendToServer = function() {
         console.log($scope.currentIndividual);
         $http.put(serviceBaseUrl + 'resources/individuals', $scope.currentIndividual).success(function(data) {
-            console.log('<--fromServer');
-            console.log(data);
-            alert('info auf dem server...');
+            msgbox.open({title: 'Server feedback', message: 'Modifcations sucessfully saved!', hideCancelBtn: true});
         });
     };
 }
