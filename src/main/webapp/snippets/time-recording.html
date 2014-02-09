@@ -2,8 +2,30 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Time recording</h3>
+
+        <div class="row">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="showTimeRecordFromUntil" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" data-ng-click="showRange()">change range</button>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-3 col-md-offset-4">
+                <div class="input-group">
+                    <span class="input-group-addon">Weeks</span>
+                    <input type="text" class="form-control" id="showWeeks" data-ng-model="weeks"  />
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" data-ng-click="showWeeks(weeks)">change weeks</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+
     <div class="panel-body" style="overflow-x: auto">
 
         <table class="table table-bordered">
@@ -40,7 +62,7 @@
                     <td colspan="3">                                        
                     </td>
                     <td class="tr-workingDay" data-ng-repeat="(day, sum) in workingDaySum track by $index">
-                        {{sum}}min (or {{sum / 60 | number: 2}}h)
+                        {{sum}}min (or {{sum / 60| number: 2}}h)
                     </td>
                 </tr>
 

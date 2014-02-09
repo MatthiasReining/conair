@@ -11,39 +11,55 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
     if (angular.isUndefined(weeks))
         weeks = '2';
 
+    $('#showTimeRecordFromUntil').daterangepicker({
+        showWeekNumbers: true,
+        format: 'dd, L',
+        separator: '    -    ',
+        locale: {firstDay: 1}
+    }, function(start, end) {
+        $scope.displayRangeFrom = start.format('YYYY-MM-DD');
+        $scope.displayRangeUntil = end.format('YYYY-MM-DD');
+    });
 
     $http.get(serviceBaseUrl + 'projects').success(function(data) {
         console.log(data);
         $scope.projects = data;
     });
 
+
+    $scope.showWeeks = function(weeks) {
+        $http.get(serviceBaseUrl + 'time-recording/range/' + weeks).success(function(data) {
+            showData(data);
+        });
+    };
+    $scope.showRange = function() {
+        $http.get(serviceBaseUrl + 'time-recording/range?qStart=' + $scope.displayRangeFrom + '&qEnd=' + $scope.displayRangeUntil).success(function(data) {
+            showData(data);
+        });
+    };
+
+    function showData(data) {
+        console.log(data);
+        $scope.timeRecording = data;
+        console.log($scope.timeRecording.workingDayRange);
+
+        $scope.workingDaySum = {};
+        angular.copy($scope.timeRecording.workingDayRange, $scope.workingDaySum);
+        console.log($scope.workingDaySum);
+        $scope.calculateWorkingDaySum();
+    }
+
     if (angular.isUndefined(qStart)) {
         console.log("do a week query");
-        //use week query
-        $http.get(serviceBaseUrl + 'time-recording/range/' + weeks).success(function(data) {
-            console.log(data);
-            $scope.timeRecording = data;
-            console.log($scope.timeRecording.workingDayRange);
-
-            $scope.workingDaySum = {};
-            angular.copy($scope.timeRecording.workingDayRange, $scope.workingDaySum);
-            console.log($scope.workingDaySum);
-            $scope.calculateWorkingDaySum();
-        });
+        $scope.showWeeks(weeks);        
     } else {
         //use range query
-        console.log("do a range query")
-        $http.get(serviceBaseUrl + 'time-recording/range?qStart=' + qStart + '&qEnd=' + qEnd).success(function(data) {
-            console.log(data);
-            $scope.timeRecording = data;
-            console.log($scope.timeRecording.workingDayRange);
-
-            $scope.workingDaySum = {};
-            angular.copy($scope.timeRecording.workingDayRange, $scope.workingDaySum);
-            console.log($scope.workingDaySum);
-            $scope.calculateWorkingDaySum();
-        });
+        console.log("do a range query");
+        $scope.displayRangeFrom = qStart;
+        $scope.displayRangeUntil = qEnd;
+        $scope.showRange();
     }
+    
     $scope.addRow = function() {
         console.log('->addRow');
         var days = {};
@@ -87,8 +103,7 @@ function TimeRecordingCtrl($scope, $http, $routeParams) {
     $scope.sendToServer = function() {
         console.log('->sendToServer');
         console.log($scope.timeRecording);
-        $http.put(serviceBaseUrl + "time-recording", $scope.timeRecording).success(function(data) {
-            console.log('<--fromServer');
+        $http.put(serviceBaseUrl + "time-recording", $scope.timeRecording).success(function(data) {            
             console.log(data);
             //$scope.project = data;
         });
