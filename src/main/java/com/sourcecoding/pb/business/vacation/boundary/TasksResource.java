@@ -6,10 +6,13 @@ package com.sourcecoding.pb.business.vacation.boundary;
 
 import com.sourcecoding.pb.business.authentication.boundary.CurrentUser;
 import com.sourcecoding.pb.business.authentication.entity.User;
+import com.sourcecoding.pb.business.configuration.boundary.Configurator;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
+import com.sourcecoding.pb.business.mail.boundary.MailService;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
 import com.sourcecoding.pb.business.vacation.control.VacationCalculator;
 import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,12 @@ public class TasksResource {
     @Inject
     VacationCalculator vacationCalculator;
 
+    @Inject
+    MailService mailService;
+
+    @Inject
+    Configurator configurator;
+
     /**
      * Get vacation tasks for approval.
      *
@@ -66,7 +75,6 @@ public class TasksResource {
             System.out.println("worked off " + vr.getId());
         }
 
-
         return result;
     }
 
@@ -76,11 +84,18 @@ public class TasksResource {
         VacationRecord vr = em.find(VacationRecord.class, vacationRecordId);
 
         vr.setApprovalState(VacationRecord.APPROVAL_STATE_APPROVED);
-        vr.setNumberOfDays((Integer) payload.get("numberOfDays"));        
+        vr.setNumberOfDays((Integer) payload.get("numberOfDays"));
         vr.setVacationComment((String) payload.get("comment"));
-        
+
         vacationCalculator.calculateAllVacationDays(vr.getVacationYear());
 
+        //if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
+        String subject = configurator.getValue("mail-template-vacation-approved-subject");
+        String body = MessageFormat.format(configurator.getValue("mail-template-vacation-approved-body"),
+                vr.getIndividual().getNickname(),
+                vr.getVacationFrom(), vr.getVacationUntil());
+        mailService.asyncSend(vr.getIndividual().getEmailAddress(), subject, body);
+        //}
         return null;
     }
 
@@ -91,6 +106,14 @@ public class TasksResource {
 
         vr.setApprovalState(VacationRecord.APPROVAL_STATE_REJECTED);
         vr.setVacationComment((String) payload.get("comment"));
+
+        //if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
+        String subject = configurator.getValue("mail-template-vacation-rejected-subject");
+        String body = MessageFormat.format(configurator.getValue("mail-template-vacation-rejected-body"),
+                vr.getIndividual().getNickname(),
+                vr.getVacationFrom(), vr.getVacationUntil());
+        mailService.asyncSend(vr.getIndividual().getEmailAddress(), subject, body);
+        //}
 
         return null;
     }

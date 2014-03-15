@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.sourcecoding.pb.business.mail.boundary;
 
 import java.util.Properties;
@@ -23,16 +22,16 @@ import javax.mail.internet.MimeMessage;
  */
 @Stateless
 public class MailService {
-    
+
     public void send(String mailTo, String subject, String body) {
         sendMail(mailTo, subject, body);
     }
-    
+
     @Asynchronous
     public void asyncSend(String mailTo, String subject, String body) {
         sendMail(mailTo, subject, body);
     }
-    
+
     private void sendMail(String mailTo, String subject, String body) {
 
         final String username = "rgideutschland@gmail.com";
@@ -42,10 +41,9 @@ public class MailService {
 
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");
-        props.put("mail.smtp.socketFactory.class","javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "465");
-
 
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
@@ -63,8 +61,7 @@ public class MailService {
                     InternetAddress.parse(mailTo));
             message.setSubject(subject);
             message.setText(body);
-            //FIXME mail is not send
-            //Transport.send(message);
+            Transport.send(message);
 
             System.out.println("Mail send done...");
 
@@ -73,5 +70,5 @@ public class MailService {
         }
 
     }
-    
+
 }

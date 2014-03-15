@@ -16,6 +16,7 @@ import com.sourcecoding.pb.business.vacation.entity.VacationRecord;
 import com.sourcecoding.pb.business.vacation.entity.VacationYear;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -200,9 +201,18 @@ public class IndividualVacationResource {
         vacationCalculator.calculateAllVacationDays(vy);
 
         if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
-            String body = individual.getNickname() + " hat einen Urlaubsantrag eingereicht.\n\n";
+            String mailTemplateVacationRequestSubject = configurator.getValue("mail-template-vacation-request-subject");
+            String mailTemplateVacationRequestBody = configurator.getValue("mail-template-vacation-request-body");
+
+            String url = configurator.getValue("app-url") + "#/tasks-vacation-approval/" + vr.getId();
+            String subject = MessageFormat.format(mailTemplateVacationRequestSubject, individual.getNickname());
+            String body = MessageFormat.format(mailTemplateVacationRequestBody,
+                    individual.getVacationManager().getNickname(),
+                    individual.getNickname(),
+                    numberOfDays, vacationFrom, vacationUntil, url);
+
             System.out.println("vor send EMail");
-            mailService.asyncSend(individual.getVacationManager().getEmailAddress(), "Urlaubsantrag", body);
+            mailService.asyncSend(individual.getVacationManager().getEmailAddress(), subject, body);
             System.out.println("nach send EMail");
         }
         return Response.ok().build();
@@ -242,7 +252,6 @@ public class IndividualVacationResource {
                 .setParameter(VacationYear.queryParam_year, year)
                 .getResultList();
         VacationYear vy;
-        System.out.println("vyList: " + vyList);
         if (vyList.isEmpty()) {
             vy = createNewVacationYear(individual, year);
             vy = em.merge(vy);
