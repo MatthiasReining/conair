@@ -89,13 +89,13 @@ public class TasksResource {
 
         vacationCalculator.calculateAllVacationDays(vr.getVacationYear());
 
-        //if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
-        String subject = configurator.getValue("mail-template-vacation-approved-subject");
-        String body = MessageFormat.format(configurator.getValue("mail-template-vacation-approved-body"),
-                vr.getIndividual().getNickname(),
-                vr.getVacationFrom(), vr.getVacationUntil());
-        mailService.asyncSend(vr.getIndividual().getEmailAddress(), subject, body);
-        //}
+        if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
+            String subject = configurator.getValue("mail-template-vacation-approved-subject");
+            String body = MessageFormat.format(configurator.getValue("mail-template-vacation-approved-body"),
+                    vr.getIndividual().getNickname(),
+                    vr.getVacationFrom(), vr.getVacationUntil());
+            mailService.asyncSend(vr.getIndividual().getEmailAddress(), subject, body);
+        }
         return null;
     }
 
@@ -107,13 +107,13 @@ public class TasksResource {
         vr.setApprovalState(VacationRecord.APPROVAL_STATE_REJECTED);
         vr.setVacationComment((String) payload.get("comment"));
 
-        //if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
-        String subject = configurator.getValue("mail-template-vacation-rejected-subject");
-        String body = MessageFormat.format(configurator.getValue("mail-template-vacation-rejected-body"),
-                vr.getIndividual().getNickname(),
-                vr.getVacationFrom(), vr.getVacationUntil());
-        mailService.asyncSend(vr.getIndividual().getEmailAddress(), subject, body);
-        //}
+        if (configurator.getBoolean(Configurator.VACATION_NEW_REQUEST_SEND_EMAIL)) {
+            String subject = configurator.getValue("mail-template-vacation-rejected-subject");
+            String body = MessageFormat.format(configurator.getValue("mail-template-vacation-rejected-body"),
+                    vr.getIndividual().getNickname(),
+                    vr.getVacationFrom(), vr.getVacationUntil());
+            mailService.asyncSend(vr.getIndividual().getEmailAddress(), subject, body);
+        }
 
         return null;
     }
