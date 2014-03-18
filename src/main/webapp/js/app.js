@@ -36,7 +36,7 @@ function datepicker2model(e, $scope) {
 ;
 
 
-var app = angular.module('conair', ['ui.bootstrap']);
+var app = angular.module('conair', ['ngRoute', 'ui.bootstrap']);
 
 app.service('msgbox', ['$modal', MsgBoxService]);
   
@@ -76,8 +76,6 @@ app.run(['$http', '$rootScope', function($http, $rootScope) {
  */
 // Handler for .ready() called.
 angular.element(document).ready(function() {
-
-
     console.log("start..");
     $.get(serviceBaseUrl + 'auth', {
         'cache': false
@@ -85,6 +83,7 @@ angular.element(document).ready(function() {
         console.log("auth done..");
         user = data.user;
         version = data.version;
+        
         angular.bootstrap(document, ['conair']);
     }).error(function(data, status) {
 
@@ -93,9 +92,6 @@ angular.element(document).ready(function() {
 
         window.location = "login.html";
     });
-
-
 });
-
 
 moment.lang('de');

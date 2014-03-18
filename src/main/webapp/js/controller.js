@@ -22,7 +22,7 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         });
         console.log($scope.travelExpensesRatesById);
     });
-    $http.get(serviceBaseUrl + 'projects/list').success(function(data) {
+    $http.get(serviceBaseUrl + 'projects').success(function(data) {
         console.log(data);
         $scope.projects = data;
     });

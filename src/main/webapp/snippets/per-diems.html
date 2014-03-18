@@ -73,7 +73,9 @@
                                             <i class="icon-remove" data-ng-click="removePerDiem(perDiem)"></i>
                                         </span>
                                     </td>
-                                    <td><select data-ng-model="perDiem.projectId" data-ng-options="project.id as project.name for project in projects"></select></td>
+                                    <td>
+                                        {{projects}}
+                                        <select data-ng-model="perDiem.projectId" data-ng-options="project.id as project.name for project in projects"></select></td>
                                     <td>
                                         <select data-ng-model="perDiem.travelExpensesRateId" data-ng-change="calcPerDiem(perDiem);" data-ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
                                     </td>   
