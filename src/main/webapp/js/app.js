@@ -1,5 +1,10 @@
 'use strict';
 
+
+var serviceBaseUrl = 'rest/';
+
+
+
 var user;
 var version;
 

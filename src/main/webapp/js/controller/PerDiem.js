@@ -1,5 +1,4 @@
 'use strict';
-var serviceBaseUrl = 'rest/';
 
 function PerDiemsSelectorCtrl($scope, $http) {
 
@@ -14,8 +13,9 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
     });
     //load destination list
     //FIXME cache
+    //FIXME hard coded travel year
     $scope.travelExpensesRatesById = {};
-    $http.get(serviceBaseUrl + 'per-diem/travel-expenses-rates').success(function(data) {
+    $http.get(serviceBaseUrl + 'per-diem/travel-expenses-rates/2014').success(function(data) {
         $scope.travelExpensesRates = data;
         $.map(data, function(entry) { //use also as map object;
             $scope.travelExpensesRatesById[entry.id] = entry;
@@ -90,5 +90,4 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         });
     };
 }
-
 

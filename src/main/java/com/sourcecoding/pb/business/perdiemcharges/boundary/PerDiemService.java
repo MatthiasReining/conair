@@ -133,9 +133,11 @@ public class PerDiemService {
     }
 
     @GET
-    @Path("travel-expenses-rates")
-    public List<TravelExpensesRate> getTravelExpensesRate() {
-        return em.createNamedQuery(TravelExpensesRate.findByDate, TravelExpensesRate.class).getResultList();
+    @Path("travel-expenses-rates/{travelYear}")
+    public List<TravelExpensesRate> getTravelExpensesRate(@PathParam("travelYear") Integer travelYear) {
+        return em.createNamedQuery(TravelExpensesRate.findByDate, TravelExpensesRate.class)
+                .setParameter(TravelExpensesRate.queryParam_travelYear, travelYear)
+                .getResultList();
     }
 
     private Map<String, Object> buildDTMap(Long individualId, String byMonth, ChargesMonth cm) {

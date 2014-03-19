@@ -19,21 +19,29 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQueries({
-    @NamedQuery(name = TravelExpensesRate.findByDate, query = "SELECT o FROM TravelExpensesRate o ORDER BY o.country")
+    @NamedQuery(name = TravelExpensesRate.findByDate, query = "SELECT o FROM TravelExpensesRate o WHERE o.travelYear = :" + TravelExpensesRate.queryParam_travelYear + " ORDER BY o.country")
 })
 public class TravelExpensesRate implements Serializable {
     
     public static final String findByDate = "TravelExpensesRate#findByDate";
+    
+     
+    public static final String queryParam_travelYear = "travelYear";
+  
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    
+    private Integer travelYear;
     private String country;
     private BigDecimal rate24h;
-    private BigDecimal rateFrom14To24;
-    private BigDecimal rateFrom8To14;
+    private BigDecimal rateFrom8To24;
     private BigDecimal accommodationExpenses;
+    private BigDecimal breakfast;
+    private BigDecimal lunch;
+    private BigDecimal dinner;
 
     public Long getId() {
         return id;
@@ -41,6 +49,14 @@ public class TravelExpensesRate implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getTravelYear() {
+        return travelYear;
+    }
+
+    public void setTravelYear(Integer travelYear) {
+        this.travelYear = travelYear;
     }
 
     public String getCountry() {
@@ -59,20 +75,12 @@ public class TravelExpensesRate implements Serializable {
         this.rate24h = rate24h;
     }
 
-    public BigDecimal getRateFrom14To24() {
-        return rateFrom14To24;
+    public BigDecimal getRateFrom8To24() {
+        return rateFrom8To24;
     }
 
-    public void setRateFrom14To24(BigDecimal rateFrom14To24) {
-        this.rateFrom14To24 = rateFrom14To24;
-    }
-
-    public BigDecimal getRateFrom8To14() {
-        return rateFrom8To14;
-    }
-
-    public void setRateFrom8To14(BigDecimal rateFrom8To14) {
-        this.rateFrom8To14 = rateFrom8To14;
+    public void setRateFrom8To24(BigDecimal rateFrom8To24) {
+        this.rateFrom8To24 = rateFrom8To24;
     }
 
     public BigDecimal getAccommodationExpenses() {
@@ -82,4 +90,30 @@ public class TravelExpensesRate implements Serializable {
     public void setAccommodationExpenses(BigDecimal accommodationExpenses) {
         this.accommodationExpenses = accommodationExpenses;
     }
+
+    public BigDecimal getBreakfast() {
+        return breakfast;
+    }
+
+    public void setBreakfast(BigDecimal breakfast) {
+        this.breakfast = breakfast;
+    }
+
+    public BigDecimal getLunch() {
+        return lunch;
+    }
+
+    public void setLunch(BigDecimal lunch) {
+        this.lunch = lunch;
+    }
+
+    public BigDecimal getDinner() {
+        return dinner;
+    }
+
+    public void setDinner(BigDecimal dinner) {
+        this.dinner = dinner;
+    }
+
+    
 }
