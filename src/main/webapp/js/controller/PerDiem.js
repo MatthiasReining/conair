@@ -43,7 +43,7 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         targetPerDiem.inServiceTo = sourcePerDiem.inServiceTo;
         targetPerDiem.charges = sourcePerDiem.charges;
         calcSum();
-    }
+    };
 
     $scope.calcPerDiem = function(perDiem) {
         perDiem.charges = '';
@@ -55,15 +55,13 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
             perDiem.inServiceTo = '';
         } else {
             if (perDiem.inServiceFrom !== null && perDiem.inServiceTo !== null) {
-                var from = perDiem.inServiceFrom.split(':');
-                var to = perDiem.inServiceTo.split(':');
-                var fromMinutes = (parseInt(from[0]) * 60) + (parseInt(from[1]));
-                var toMinutes = (parseInt(to[0]) * 60) + (parseInt(to[1]));
-                var length = (toMinutes - fromMinutes) / 60;
-                if (length >= 14)
-                    perDiem.charges = $scope.travelExpensesRatesById[terId].rateFrom14To24;
-                else if (length > 8 && length <= 14) //TODO >8 or >=8?
-                    perDiem.charges = $scope.travelExpensesRatesById[terId].rateFrom8To14;
+                console.log( perDiem.inServiceFrom );
+                console.log( perDiem.inServiceTo );
+                console.log( (perDiem.inServiceTo - perDiem.inServiceFrom) / 1000 / 60 / 60 );
+                var hour = (perDiem.inServiceTo - perDiem.inServiceFrom) / 1000 / 60 / 60;
+                
+                if (hour >= 8)
+                    perDiem.charges = $scope.travelExpensesRatesById[terId].rateFrom8To24;
                 else
                     perDiem.charges = '';
             }

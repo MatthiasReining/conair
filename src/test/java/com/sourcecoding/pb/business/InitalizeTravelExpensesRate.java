@@ -75,8 +75,8 @@ public class InitalizeTravelExpensesRate {
 
             ter.setCountry(values[0]);
             ter.setRate24h(new BigDecimal(values[1])); //only without decimal places
-            ter.setRateFrom14To24(new BigDecimal(values[2]));
-            ter.setRateFrom8To14(new BigDecimal(values[3]));
+            //ter.setRateFrom14To24(new BigDecimal(values[2]));
+            //ter.setRateFrom8To14(new BigDecimal(values[3]));
             ter.setAccommodationExpenses(new BigDecimal(values[4]));
         }
 
