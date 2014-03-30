@@ -48,6 +48,10 @@
                     <div class="widget-content" >
 
 
+                        <div style="float: right; text-align: right; width: 200px;">
+                            <hr>
+                            <h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3>
+                        </div>
 
                         <table class="table table-bordered">
                             <thead>
@@ -67,10 +71,10 @@
                                     <td class="pd-date-column">{{perDiem.day| date:'EEE, dd. MMM yyyy'}}</td>
                                     <td>
                                         <span style="width:25px; display:inline-block; text-align: center;">
-                                            <i class="icon-arrow-down" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index - 1])" data-ng-hide="$first"></i>
+                                            <i class="icon-arrow-down" tooltip="copy data from day before" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index - 1])" data-ng-hide="$first"></i>
                                         </span>|
                                         <span style="width:25px; display:inline-block; text-align: center;">
-                                            <i class="icon-remove" data-ng-click="removePerDiem(perDiem)"></i>
+                                            <i class="icon-remove" tooltip="remove data" data-ng-click="removePerDiem(perDiem)"></i>
                                         </span>
                                     </td>
                                     <td>
@@ -79,7 +83,7 @@
                                         <select class="form-control" ng-model="perDiem.travelExpensesRateId" ng-change="calcPerDiem(perDiem);" ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
                                     </td>   
                                     <td>
-                                        <button type="button" class="btn btn-default btn-xs" ng-click="fullTime(perDiem)">full</button>
+                                        <button type="button" tooltip="set time to full-time"  class="btn btn-default btn-xs" ng-click="fullTime(perDiem)"><span class="glyphicon glyphicon-time"></span></button>
                                     </td>
                                     <td>
                                         <select class="form-control" data-ng-model="perDiem.inServiceFrom" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
