@@ -127,10 +127,6 @@ body {
 
 /* PER DIEMS */
 /* ========= */
-.per-diems input[type="time"] {
-    width: 73px;
-}
-
 .per-diems .table td {
     padding-top: 1px;
     padding-bottom: 1px;
@@ -140,38 +136,33 @@ body {
 .per-diems select, .per-diems input {
     margin-bottom: 0px;
 }
-
-.per-diems .pd-action-column {
-    width: 57px;
+.per-diems .pd-date-column {
+    width: 135px;
+    text-align: right;
 }
 
-.per-diems .pd-project-column, .per-diems .pd-destination-column {
+.per-diems .pd-action-column {
+    width: 75px;
+}
+
+.per-diems .pd-project-column {
+    //flexible width
+}
+
+.per-diems .pd-destination-column {
     width: 230px;
 }
 
 .per-diems .pd-fulltime-column {
-    width: 15px;
+    //width: 15px;
 }
 
-.per-diems .pd-from-column, .per-diems .pd-to-column {
-    width: 85px;
+.per-diems .pd-time-column {
+    width: 102px;
 }
-
-.per-diems .pd-date-column {
-    width: 120px;
-}
-
-.per-diems td.pd-date-column {
-    text-align: right;
-}
-
-
 .per-diems td.pd-charges-column {
+    width: 80px;
     text-align: right;
-}
-
-.per-diems-selector .row-fluid .show-grid a div {
-    margin: 5px;
 }
 
 /* TIME RECODRING */

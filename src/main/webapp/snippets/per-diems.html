@@ -57,35 +57,37 @@
                                     <th class="pd-project-column">Project</th>
                                     <th class="pd-destination-column">Destination</th>
                                     <th class="pd-fulltime-column" title="full-time">Ft</th>
-                                    <th class="pd-from-column">From</th>
-                                    <th class="pd-to-column">To</th>
+                                    <th class="pd-time-column">From</th>
+                                    <th class="pd-time-column">To</th>
                                     <th class="pd-charges-column">Per Diem</th>
                                 </tr> 
                             </thead>
                             <tbody data-ng-repeat="perDiem in perDiemsData.perDiems">
                                 <tr>
-                                    <td class="pd-date-column">{{perDiem.day | date:'EEE, dd. MMM yyyy'}}</td>
+                                    <td class="pd-date-column">{{perDiem.day| date:'EEE, dd. MMM yyyy'}}</td>
                                     <td>
                                         <span style="width:25px; display:inline-block; text-align: center;">
-                                            <i class="icon-arrow-down" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index-1])" data-ng-hide="$first"></i>
+                                            <i class="icon-arrow-down" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index - 1])" data-ng-hide="$first"></i>
                                         </span>|
                                         <span style="width:25px; display:inline-block; text-align: center;">
                                             <i class="icon-remove" data-ng-click="removePerDiem(perDiem)"></i>
                                         </span>
                                     </td>
                                     <td>
-                                        <select style="width:130px" class="form-control" ng-model="perDiem.projectId" ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
+                                        <select class="form-control" ng-model="perDiem.projectId" ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
                                     <td>
-                                        <select data-ng-model="perDiem.travelExpensesRateId" data-ng-change="calcPerDiem(perDiem);" data-ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
+                                        <select class="form-control" ng-model="perDiem.travelExpensesRateId" ng-change="calcPerDiem(perDiem);" ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
                                     </td>   
                                     <td>
-                                        <input type="checkbox" data-ng-model="perDiem.fullTime" data-ng-change="calcPerDiem(perDiem);">
+                                        <button type="button" class="btn btn-default btn-xs" ng-click="fullTime(perDiem)">full</button>
                                     </td>
                                     <td>
-                                        <input data-ng-model="perDiem.inServiceFrom" data-ng-hide="perDiem.fullTime" data-ng-change="calcPerDiem(perDiem);" type="time">
+                                        <select class="form-control" data-ng-model="perDiem.inServiceFrom" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
                                     </td>
-                                    <td><input data-ng-model="perDiem.inServiceTo" data-ng-hide="perDiem.fullTime" data-ng-change="calcPerDiem(perDiem);" type="time"></td>
-                                    <td class="pd-charges-column"><span data-ng-hide="perDiem.charges==''">{{perDiem.charges | currency:'€'}}</span></td>
+                                    <td>
+                                        <select class="form-control" data-ng-model="perDiem.inServiceTo" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
+                                    </td>
+                                    <td class="pd-charges-column"><span data-ng-hide="perDiem.charges == ''">{{perDiem.charges| currency:'€'}}</span></td>
                                 </tr>
                             </tbody>                            
                         </table>
@@ -93,7 +95,7 @@
                         <div>
                             <div style="float: right; text-align: right; width: 200px;">
                                 <hr>
-                                <h3>Summe: {{perDiemsData.sum  | currency:'€'}}</h3>
+                                <h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3>
                             </div>
 
                             <div class="form-actions">
