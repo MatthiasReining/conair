@@ -1,128 +1,62 @@
-<!-- Page heading -->
-<div class="page-head">
-    <!-- Page heading -->
-    <h2 class="pull-left">Per Diems {{perDiemsData.chargesMonth}}
-        <!-- page meta -->
-        <span class="page-meta">per diem</span>
-    </h2>
+<h3>Per Diems {{perDiemsData.chargesMonth}}</h3>
+<h6></h6>
 
 
-    <!-- Breadcrumb -->
-    <div class="bread-crumb pull-right">
-        <a href="#/"><i class="icon-home"></i> Home</a> 
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/travel-costs" class="bread-current">Travel Costs</a>
-        <!-- Divider -->
-        <span class="divider">/</span> 
-        <a href="#/per-diem-selector" class="bread-current">Per Diem</a>
+<div class="panel panel-default">
+    <div class="panel-heading" style="float: right; text-align: right;" >
+        <h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3>
     </div>
-
-    <div class="clearfix"></div>
-
-</div>
-<!-- Page heading ends -->
+    <div class="panel-body">
 
 
-
-<!-- Matter -->
-
-<div class="matter per-diems">
-    <div class="container-fluid">
-
-        <div class="row-fluid">
-
-            <div class="span12">
-
-
-                <div class="widget wgreen">
-
-                    <div class="widget-head">
-                        <div class="pull-left">Per Diems {{perDiemsData.chargesMonth}}</div>
-                        <div class="widget-icons pull-right">
-                            <a href="#" class="wminimize"><i class="icon-chevron-up"></i></a> 
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="widget-content" >
-
-
-                        <div style="float: right; text-align: right; width: 200px;">
-                            <hr>
-                            <h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3>
-                        </div>
-
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th class="pd-date-column">Date</th>
-                                    <th class="pd-action-column"></th>
-                                    <th class="pd-project-column">Project</th>
-                                    <th class="pd-destination-column">Destination</th>
-                                    <th class="pd-fulltime-column" title="full-time">Ft</th>
-                                    <th class="pd-time-column">From</th>
-                                    <th class="pd-time-column">To</th>
-                                    <th class="pd-charges-column">Per Diem</th>
-                                </tr> 
-                            </thead>
-                            <tbody data-ng-repeat="perDiem in perDiemsData.perDiems">
-                                <tr>
-                                    <td class="pd-date-column">{{perDiem.day| date:'EEE, dd. MMM yyyy'}}</td>
-                                    <td>
-                                        <span style="width:25px; display:inline-block; text-align: center;">
-                                            <i class="icon-arrow-down" tooltip="copy data from day before" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index - 1])" data-ng-hide="$first"></i>
-                                        </span>|
-                                        <span style="width:25px; display:inline-block; text-align: center;">
-                                            <i class="icon-remove" tooltip="remove data" data-ng-click="removePerDiem(perDiem)"></i>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <select class="form-control" ng-model="perDiem.projectId" ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
-                                    <td>
-                                        <select class="form-control" ng-model="perDiem.travelExpensesRateId" ng-change="calcPerDiem(perDiem);" ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
-                                    </td>   
-                                    <td>
-                                        <button type="button" tooltip="set time to full-time"  class="btn btn-default btn-xs" ng-click="fullTime(perDiem)"><span class="glyphicon glyphicon-time"></span></button>
-                                    </td>
-                                    <td>
-                                        <select class="form-control" data-ng-model="perDiem.inServiceFrom" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
-                                    </td>
-                                    <td>
-                                        <select class="form-control" data-ng-model="perDiem.inServiceTo" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
-                                    </td>
-                                    <td class="pd-charges-column"><span data-ng-hide="perDiem.charges == ''">{{perDiem.charges| currency:'€'}}</span></td>
-                                </tr>
-                            </tbody>                            
-                        </table>
-
-                        <div>
-                            <div style="float: right; text-align: right; width: 200px;">
-                                <hr>
-                                <h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3>
-                            </div>
-
-                            <div class="form-actions">
-                                <!-- Buttons -->
-                                <button class="btn btn-success" data-ng-click="sendToServer()">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div> 
-
-                </div>
-
-            </div>
+        <table class="table per-diems">
+            <thead>
+                <tr>
+                    <th class="pd-date-column">Date</th>
+                    <th class="pd-action-column"></th>
+                    <th class="pd-project-column">Project</th>
+                    <th class="pd-destination-column">Destination</th>
+                    <th class="pd-fulltime-column" title="full-time">Ft</th>
+                    <th class="pd-time-column">From</th>
+                    <th class="pd-time-column">To</th>
+                    <th class="pd-charges-column">Per Diem</th>
+                </tr> 
+            </thead>
+            <tbody data-ng-repeat="perDiem in perDiemsData.perDiems">
+                <tr>
+                    <td class="pd-date-column">{{perDiem.day| date:'EEE, dd. MMM yyyy'}}</td>
+                    <td class="pd-action-column">
+                        <span style="width:25px; display:inline-block; text-align: center;">
+                            <i class="icon-arrow-down" tooltip="copy data from day before" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index - 1])" data-ng-hide="$first"></i>
+                        </span>|
+                        <span style="width:25px; display:inline-block; text-align: center;">
+                            <i class="icon-remove" tooltip="remove data" data-ng-click="removePerDiem(perDiem)"></i>
+                        </span>
+                    </td>
+                    <td class="pd-project-column">
+                        <select class="form-control" ng-model="perDiem.projectId" ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
+                    <td class="pd-destination-column">
+                        <select class="form-control" ng-model="perDiem.travelExpensesRateId" ng-change="calcPerDiem(perDiem);" ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
+                    </td>   
+                    <td class="pd-fulltime-column">
+                        <button type="button" tooltip="set time to full-time"  class="btn btn-default btn-xs" ng-click="fullTime(perDiem)"><span class="glyphicon glyphicon-time"></span></button>
+                    </td>
+                    <td class="pd-time-column">
+                        <select class="form-control" data-ng-model="perDiem.inServiceFrom" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
+                    </td>
+                    <td class="pd-time-column">
+                        <select class="form-control" data-ng-model="perDiem.inServiceTo" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
+                    </td>
+                    <td class="pd-charges-column"><span data-ng-hide="perDiem.charges === ''">{{perDiem.charges| currency:'€'}}</span></td>
+                </tr>
+            </tbody>                            
+        </table>
+    </div>
+    <div class="panel-footer" style="float: right; text-align: right;" >
+        <h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3>
 
 
-            <div class="widget-foot">
-                <!-- Footer goes here -->
-
-            </div>
-        </div>
+        <button class="btn btn-success" data-ng-click="sendToServer()">Save</button>
 
     </div>
-
 </div>
-<!-- Matter ends -->
-

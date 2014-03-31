@@ -127,11 +127,13 @@ body {
 
 /* PER DIEMS */
 /* ========= */
-.per-diems .table td {
+
+/*.per-diems .table td {
     padding-top: 1px;
     padding-bottom: 1px;
     vertical-align: middle;
 }
+*/
 
 .per-diems select, .per-diems input {
     margin-bottom: 0px;
@@ -139,14 +141,17 @@ body {
 .per-diems .pd-date-column {
     width: 135px;
     text-align: right;
+    padding-top: 15px;
 }
 
 .per-diems .pd-action-column {
     width: 75px;
+    padding-top: 14px;
 }
 
 .per-diems .pd-project-column {
     //flexible width
+    width: 60px;
 }
 
 .per-diems .pd-destination-column {
@@ -155,6 +160,7 @@ body {
 
 .per-diems .pd-fulltime-column {
     //width: 15px;
+    padding-top: 14px;
 }
 
 .per-diems .pd-time-column {
@@ -163,6 +169,7 @@ body {
 .per-diems td.pd-charges-column {
     width: 80px;
     text-align: right;
+    padding-top: 15px;
 }
 
 /* TIME RECODRING */
