@@ -16,6 +16,7 @@ public class PerDiemGroupDTO {
     public Long indiviudalId;
     public String yearMonth;
     public String perDiemGroupState;
+    public Double sum;
     public List<PerDiemDTO> perDiemList;
 
     

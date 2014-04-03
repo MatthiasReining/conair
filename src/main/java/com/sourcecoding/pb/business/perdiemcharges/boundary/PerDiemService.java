@@ -55,12 +55,6 @@ public class PerDiemService {
         int month = Integer.parseInt(yearAndMonth.split("-")[1]);
         PerDiemGroup pdg = getChargesMonth(individualId, yearAndMonth);
 
-        if (pdg == null) {
-            pdg = new PerDiemGroup(); //will not be persisted
-            pdg.setPerDiemGroupState("");
-            pdg.setPerDiemList(new ArrayList<PerDiem>());
-        }
-
         PerDiemGroupDTO pdGroupDTO = new PerDiemGroupDTO();
         pdGroupDTO.indiviudalId = individualId;
         pdGroupDTO.perDiemGroupState = pdg.getPerDiemGroupState();
@@ -83,8 +77,8 @@ public class PerDiemService {
             if (pd != null) {
                 pdDTO.charges = pd.getCharges();
                 pdDTO.projectId = pd.getProject().getId();
-                pdDTO.timeFrom = pd.getTimeFrom();
-                pdDTO.timeTo = pd.getTimeTo();
+                pdDTO.timeFrom = (pd.getTimeFrom() == null ? "" : pd.getTimeFrom().toString());
+                pdDTO.timeTo = (pd.getTimeTo() == null ? "" : pd.getTimeTo().toString());
                 pdDTO.travelExpenseRateId = pd.getTravelExpensesRate().getId();
             }
             pdGroupDTO.perDiemList.add(pdDTO);
@@ -100,13 +94,13 @@ public class PerDiemService {
         return null;
     }
 
-    @POST
+    @PUT
     @Path("{individualId}")
-    public PerDiemGroupDTO updateChargesByMonth(PerDiemGroupDTO perDiemGroupDTO) {
+    public PerDiemGroupDTO updateChargesByMonth(PerDiemGroupDTO perDiemGroupDTO,
+            @PathParam("individualId") Long individualId) {
         String yearAndMonth = perDiemGroupDTO.yearMonth;
         int year = Integer.parseInt(yearAndMonth.split("-")[0]);
         int month = Integer.parseInt(yearAndMonth.split("-")[1]);
-        Long individualId = perDiemGroupDTO.indiviudalId;
 
         PerDiemGroup pdg = getChargesMonth(individualId, yearAndMonth);
 
@@ -116,6 +110,13 @@ public class PerDiemService {
         Calendar untilDay = Calendar.getInstance();
         untilDay.setTime(day.getTime());
         untilDay.add(Calendar.MONTH, 1);
+
+        Calendar fromDate = Calendar.getInstance();
+        fromDate.setTime(day.getTime());
+        fromDate.add(Calendar.DATE, 1);
+        pdg.setPerDiemFrom(fromDate.getTime());
+        pdg.setPerDiemTo(untilDay.getTime());
+
         while (day.before(untilDay)) {
             day.add(Calendar.DATE, 1);
 
@@ -134,17 +135,17 @@ public class PerDiemService {
                 }
             }
             if (pdIn != null
-                    && (pdIn.projectId == 0 || pdIn.timeFrom == null
-                    || pdIn.timeTo == null || pdIn.travelExpenseRateId == 0))
+                    && (pdIn.projectId == null || pdIn.timeFrom == null
+                    || pdIn.timeTo == null || pdIn.travelExpenseRateId == null))
                 pdIn = null; //set to null
 
             if (pdIn == null && pd == null)
-                break; //nothing todo
+                continue; //nothing todo
 
             if (pdIn == null && pd != null) {
                 pdg.getPerDiemList().remove(pd); //remove
-                em.remove(pd);
-                break;
+                //em.remove(pd);
+                continue;
             }
 
             if (pdIn == null)
@@ -159,8 +160,8 @@ public class PerDiemService {
                 pdg.getPerDiemList().add(pd);
             }
             pd.setCharges(pdIn.charges);
-            pd.setTimeFrom(pdIn.timeFrom);
-            pd.setTimeTo(pdIn.timeTo);
+            pd.setTimeFrom( Double.parseDouble(pdIn.timeFrom));
+            pd.setTimeTo( Double.parseDouble(pdIn.timeTo));
             pd.setProject(em.find(ProjectInformation.class, pdIn.projectId));
             pd.setTravelExpensesRate(em.find(TravelExpensesRate.class, pdIn.travelExpenseRateId));
 
@@ -198,7 +199,16 @@ public class PerDiemService {
         if (chList.size() > 1) {
             throw new RuntimeException("Only one entity for ChargesMonth is allowed for individualId and year-month!");
         }
-        PerDiemGroup cm = (chList.isEmpty()) ? null : chList.get(0);
-        return cm;
+        PerDiemGroup pdg = (chList.isEmpty()) ? null : chList.get(0);
+
+        if (pdg == null) {
+            pdg = new PerDiemGroup();
+            pdg.setGroupKey(yearAndMonth);
+            pdg.setIndividual(em.find(Individual.class, individualId));
+        }
+        if (pdg.getPerDiemList() == null)
+            pdg.setPerDiemList(new ArrayList<PerDiem>());
+
+        return pdg;
     }
 }

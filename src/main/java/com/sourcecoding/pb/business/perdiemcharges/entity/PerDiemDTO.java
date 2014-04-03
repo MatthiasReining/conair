@@ -5,7 +5,6 @@
  */
 package com.sourcecoding.pb.business.perdiemcharges.entity;
 
-import com.sourcecoding.pb.business.restconfig.JsonDateAdapter;
 import com.sourcecoding.pb.business.restconfig.JsonDateTimeAdapter;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -20,7 +19,7 @@ public class PerDiemDTO {
     public PerDiemDTO() {
     }
 
-    public PerDiemDTO(Date perDiemDate, Double timeFrom, Double timeTo, long projectId, long travelExpenseRateId, BigDecimal charges) {
+    public PerDiemDTO(Date perDiemDate, String timeFrom, String timeTo, long projectId, long travelExpenseRateId, BigDecimal charges) {
         this.perDiemDate = perDiemDate;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
@@ -31,9 +30,9 @@ public class PerDiemDTO {
 
     @XmlJavaTypeAdapter(JsonDateTimeAdapter.class)
     public Date perDiemDate;
-    public Double timeFrom;
-    public Double timeTo;
-    public long projectId;
-    public long travelExpenseRateId;
+    public String timeFrom;
+    public String timeTo;
+    public Long projectId;
+    public Long travelExpenseRateId;
     public BigDecimal charges;
 }

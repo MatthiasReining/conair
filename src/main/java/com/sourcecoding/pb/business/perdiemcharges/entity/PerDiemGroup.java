@@ -50,7 +50,7 @@ public class PerDiemGroup implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date perDiemTo;
 
-    @OneToMany(mappedBy = "perDiemGroup", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "perDiemGroup", cascade = CascadeType.ALL, orphanRemoval = true)
     List<PerDiem> perDiemList;
 
     private String perDiemGroupState;

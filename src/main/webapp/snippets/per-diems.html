@@ -24,7 +24,7 @@
             </thead>
             <tbody data-ng-repeat="perDiem in perDiemsData.perDiemList">
                 <tr>
-                    <td class="pd-date-column">{{perDiem.perDiemDate | date:'EEE, dd. MMM yyyy'}}</td>
+                    <td class="pd-date-column">{{perDiem.perDiemDate| date:'EEE, dd. MMM yyyy'}}</td>
                     <td class="pd-action-column">
                         <span style="width:25px; display:inline-block; text-align: center;">
                             <i class="icon-arrow-down" tooltip="copy data from day before" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index - 1])" data-ng-hide="$first"></i>
@@ -36,7 +36,7 @@
                     <td class="pd-project-column">
                         <select class="form-control" ng-model="perDiem.projectId" ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
                     <td class="pd-destination-column">
-                        <select class="form-control" ng-model="perDiem.travelExpensesRateId" ng-change="calcPerDiem(perDiem);" ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
+                        <select class="form-control" ng-model="perDiem.travelExpenseRateId" ng-change="calcPerDiem(perDiem);" ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
                     </td>   
                     <td class="pd-fulltime-column">
                         <button type="button" tooltip="set time to full-time"  class="btn btn-default btn-xs" ng-click="fullTime(perDiem)"><span class="glyphicon glyphicon-time"></span></button>
@@ -52,11 +52,11 @@
             </tbody>                            
         </table>
     </div>
-    <div class="panel-footer" style="float: right; text-align: right;" >
-        <h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3>
-
-
-        <button class="btn btn-success" data-ng-click="sendToServer()">Save</button>
-
+    <div class="panel-footer" >
+        <div class="row">
+            <div class="col-md-6"><button class="btn btn-success" data-ng-click="sendToServer()">Save</button></div>
+            <div class="col-md-6" style="text-align: right; "><h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3></div>
+        </div>
+        
     </div>
 </div>
