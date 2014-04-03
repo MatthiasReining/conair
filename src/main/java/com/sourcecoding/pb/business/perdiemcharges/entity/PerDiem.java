@@ -32,14 +32,11 @@ public class PerDiem implements Serializable {
     @ManyToOne
     private Individual individual;
     @ManyToOne
-    private ChargesMonth chargesMonth;
+    private PerDiemGroup perDiemGroup;
     @Temporal(TemporalType.DATE)
     private Date perDiemDate;
-    @Temporal(TemporalType.TIME)
-    private Date inServiceFrom;
-    @Temporal(TemporalType.TIME)
-    private Date inServiceTo;
-    private Boolean fulltime;
+    private Double timeFrom;
+    private Double timeTo;
     @ManyToOne
     private ProjectInformation project;
     @ManyToOne
@@ -63,28 +60,20 @@ public class PerDiem implements Serializable {
         this.individual = individual;
     }
 
-    public Date getInServiceFrom() {
-        return inServiceFrom;
+    public Double getTimeFrom() {
+        return timeFrom;
     }
 
-    public void setInServiceFrom(Date inServiceFrom) {
-        this.inServiceFrom = inServiceFrom;
+    public void setTimeFrom(Double timeFrom) {
+        this.timeFrom = timeFrom;
     }
 
-    public Date getInServiceTo() {
-        return inServiceTo;
+    public Double getTimeTo() {
+        return timeTo;
     }
 
-    public void setInServiceTo(Date inServiceTo) {
-        this.inServiceTo = inServiceTo;
-    }
-
-    public Boolean getFulltime() {
-        return fulltime;
-    }
-
-    public void setFulltime(Boolean fulltime) {
-        this.fulltime = fulltime;
+    public void setTimeTo(Double timeTo) {
+        this.timeTo = timeTo;
     }
 
     public ProjectInformation getProject() {
@@ -119,11 +108,12 @@ public class PerDiem implements Serializable {
         this.perDiemDate = perDiemDate;
     }
 
-    public ChargesMonth getChargesMonth() {
-        return chargesMonth;
+    public PerDiemGroup getPerDiemGroup() {
+        return perDiemGroup;
     }
 
-    public void setChargesMonth(ChargesMonth chargesMonth) {
-        this.chargesMonth = chargesMonth;
+    public void setPerDiemGroup(PerDiemGroup perDiemGroup) {
+        this.perDiemGroup = perDiemGroup;
     }
+
 }

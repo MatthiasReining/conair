@@ -1,4 +1,4 @@
-<h3>Per Diems {{perDiemsData.chargesMonth}}</h3>
+<h3>Per Diems {{perDiemsData.yearMonth}}</h3>
 <h6></h6>
 
 
@@ -22,9 +22,9 @@
                     <th class="pd-charges-column">Per Diem</th>
                 </tr> 
             </thead>
-            <tbody data-ng-repeat="perDiem in perDiemsData.perDiems">
+            <tbody data-ng-repeat="perDiem in perDiemsData.perDiemList">
                 <tr>
-                    <td class="pd-date-column">{{perDiem.day| date:'EEE, dd. MMM yyyy'}}</td>
+                    <td class="pd-date-column">{{perDiem.perDiemDate | date:'EEE, dd. MMM yyyy'}}</td>
                     <td class="pd-action-column">
                         <span style="width:25px; display:inline-block; text-align: center;">
                             <i class="icon-arrow-down" tooltip="copy data from day before" data-ng-click="copyPerDiem(perDiem, perDiemsData.perDiems[$index - 1])" data-ng-hide="$first"></i>
@@ -42,10 +42,10 @@
                         <button type="button" tooltip="set time to full-time"  class="btn btn-default btn-xs" ng-click="fullTime(perDiem)"><span class="glyphicon glyphicon-time"></span></button>
                     </td>
                     <td class="pd-time-column">
-                        <select class="form-control" data-ng-model="perDiem.inServiceFrom" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
+                        <select class="form-control" data-ng-model="perDiem.timeFrom" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
                     </td>
                     <td class="pd-time-column">
-                        <select class="form-control" data-ng-model="perDiem.inServiceTo" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
+                        <select class="form-control" data-ng-model="perDiem.timeTo" data-ng-change="calcPerDiem(perDiem);" ng-options="o.key as o.value for o in timeSelection"></select>
                     </td>
                     <td class="pd-charges-column"><span data-ng-hide="perDiem.charges === ''">{{perDiem.charges| currency:'€'}}</span></td>
                 </tr>

@@ -6,7 +6,6 @@ package com.sourcecoding.pb.business.restconfig;
 
 import static com.sourcecoding.pb.business.restconfig.DateParameter.valueOf;
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;

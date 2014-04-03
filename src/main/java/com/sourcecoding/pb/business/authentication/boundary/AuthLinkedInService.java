@@ -53,7 +53,6 @@ public class AuthLinkedInService {
 
         System.out.println("callback-URL: " + callBackURL);
 
-
         OAuthService service = new ServiceBuilder()
                 .provider(LinkedInApi.class)
                 .callback(callBackURL)
@@ -82,8 +81,9 @@ public class AuthLinkedInService {
     @Path("login")
     @Produces(MediaType.TEXT_HTML)
     public void callback(@Context HttpServletRequest request, @Context HttpServletResponse response) throws IOException {
+
         System.out.println("request: " + request);
-      
+
         System.out.println("login/session-id:" + request.getSession(true).getId());
         System.out.println("login-userFactory:" + userFactory);
         //String oauth_token = request.getParameter("oauth_token");
@@ -112,8 +112,8 @@ public class AuthLinkedInService {
             org.scribe.model.Response scribeResponse = oAuthRequest.send(); //Do something with response.getBody()
             System.out.println(scribeResponse.getBody());
 
-            JsonObject userLIData = Json.createReader( new StringReader(scribeResponse.getBody())).readObject();
-            
+            JsonObject userLIData = Json.createReader(new StringReader(scribeResponse.getBody())).readObject();
+
             User u = new User();
             u.setFirstName(userLIData.getString("firstName"));
             u.setLastName(userLIData.getString("lastName"));
@@ -126,7 +126,7 @@ public class AuthLinkedInService {
             userFactory.loginUser(u);
 
             try {
-                System.out.println("contextPath: "+ request.getContextPath());
+                System.out.println("contextPath: " + request.getContextPath());
                 response.sendRedirect(request.getContextPath());
             } catch (Exception e) {
                 e.printStackTrace();

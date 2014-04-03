@@ -85,8 +85,8 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
     ];
     
     $scope.fullTime = function(perDiem) {
-        perDiem.inServiceFrom = '0';
-        perDiem.inServiceTo = '24';
+        perDiem.timeFrom = '0';
+        perDiem.timeTo = '24';
         
         $scope.calcPerDiem(perDiem);
     };
@@ -94,16 +94,16 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
     $scope.removePerDiem = function(perDiem) {
         perDiem.projectId = '';
         perDiem.travelExpensesRateId = '';
-        perDiem.inServiceFrom = '';
-        perDiem.inServiceTo = '';
+        perDiem.timeFrom = '';
+        perDiem.timeTo = '';
         perDiem.charges = '';
         calcSum();
     };
     $scope.copyPerDiem = function(targetPerDiem, sourcePerDiem) {
         targetPerDiem.projectId = sourcePerDiem.projectId;
         targetPerDiem.travelExpensesRateId = sourcePerDiem.travelExpensesRateId;
-        targetPerDiem.inServiceFrom = sourcePerDiem.inServiceFrom;
-        targetPerDiem.inServiceTo = sourcePerDiem.inServiceTo;
+        targetPerDiem.timeFrom = sourcePerDiem.timeFrom;
+        targetPerDiem.timeTo = sourcePerDiem.timeTo;
         targetPerDiem.charges = sourcePerDiem.charges;
         calcSum();
     };
@@ -112,10 +112,10 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         perDiem.charges = '';
         var terId = perDiem.travelExpensesRateId;
         
-        if (perDiem.inServiceFrom === '' || perDiem.inServiceTo === '' || perDiem.travelExpensesRateId === '') 
+        if (perDiem.timeFrom === '' || perDiem.timeTo === '' || perDiem.travelExpensesRateId === '') 
             return;
         
-        var duration = parseFloat( perDiem.inServiceTo ) - parseFloat( perDiem.inServiceFrom );
+        var duration = parseFloat( perDiem.timeTo ) - parseFloat( perDiem.timeFrom );
         
         if (duration === 24) 
             perDiem.charges = $scope.travelExpensesRatesById[terId].rate24h;
@@ -128,7 +128,7 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
     };
     var calcSum = function() {
         var sum = 0;
-        angular.forEach($scope.perDiemsData.perDiems, function(value, key) {
+        angular.forEach($scope.perDiemsData.perDiemList, function(value, key) {
             if (angular.isNumber(value.charges))
                 sum += value.charges;
         });
