@@ -76,6 +76,10 @@ public class PerDiemService {
             pdDTO.perDiemDate = day.getTime();
             if (pd != null) {
                 pdDTO.charges = pd.getCharges();
+                pdDTO.breakfast = pd.isBreakfast();
+                pdDTO.lunch = pd.isLunch();
+                pdDTO.dinner = pd.isDinner();
+                pdDTO.taxable = pd.isTaxable();
                 pdDTO.projectId = pd.getProject().getId();
                 pdDTO.timeFrom = (pd.getTimeFrom() == null ? "" : pd.getTimeFrom().toString());
                 pdDTO.timeTo = (pd.getTimeTo() == null ? "" : pd.getTimeTo().toString());
@@ -160,6 +164,10 @@ public class PerDiemService {
                 pdg.getPerDiemList().add(pd);
             }
             pd.setCharges(pdIn.charges);
+            pd.setBreakfast(pdIn.breakfast);
+            pd.setLunch(pdIn.lunch);
+            pd.setDinner(pdIn.dinner);
+            pd.setTaxable(pdIn.taxable);
             pd.setTimeFrom( Double.parseDouble(pdIn.timeFrom));
             pd.setTimeTo( Double.parseDouble(pdIn.timeTo));
             pd.setProject(em.find(ProjectInformation.class, pdIn.projectId));

@@ -166,6 +166,15 @@ body {
 .per-diems .pd-time-column {
     width: 102px;
 }
+.per-diems .pd-food-column {
+    padding-top: 14px;
+    width: 70px;
+}
+.per-diems .pd-taxable-column {
+    padding-top: 14px;
+    width: 30px;
+}
+
 .per-diems td.pd-charges-column {
     width: 80px;
     text-align: right;

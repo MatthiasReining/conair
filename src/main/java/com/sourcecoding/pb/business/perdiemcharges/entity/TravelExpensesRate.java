@@ -6,6 +6,7 @@ package com.sourcecoding.pb.business.perdiemcharges.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,11 +37,17 @@ public class TravelExpensesRate implements Serializable {
     
     private Integer travelYear;
     private String country;
+    @Column(precision = 6, scale = 2)
     private BigDecimal rate24h;
+    @Column(precision = 6, scale = 2)
     private BigDecimal rateFrom8To24;
+    @Column(precision = 6, scale = 2)
     private BigDecimal accommodationExpenses;
+    @Column(precision = 6, scale = 2)
     private BigDecimal breakfast;
+    @Column(precision = 6, scale = 2)
     private BigDecimal lunch;
+    @Column(precision = 6, scale = 2)
     private BigDecimal dinner;
 
     public Long getId() {

@@ -9,7 +9,6 @@ import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,6 +41,13 @@ public class PerDiem implements Serializable {
     private ProjectInformation project;
     @ManyToOne
     private TravelExpensesRate travelExpensesRate;
+
+    private boolean breakfast;
+    private boolean lunch;
+    private boolean dinner;
+
+    private boolean taxable;
+
     @Column(precision = 6, scale = 2)
     private BigDecimal charges; //FIXME decimal places!
 
@@ -107,6 +113,38 @@ public class PerDiem implements Serializable {
 
     public void setPerDiemDate(Date perDiemDate) {
         this.perDiemDate = perDiemDate;
+    }
+
+    public boolean isBreakfast() {
+        return breakfast;
+    }
+
+    public void setBreakfast(boolean breakfast) {
+        this.breakfast = breakfast;
+    }
+
+    public boolean isLunch() {
+        return lunch;
+    }
+
+    public void setLunch(boolean lunch) {
+        this.lunch = lunch;
+    }
+
+    public boolean isDinner() {
+        return dinner;
+    }
+
+    public void setDinner(boolean dinner) {
+        this.dinner = dinner;
+    }
+
+    public boolean isTaxable() {
+        return taxable;
+    }
+
+    public void setTaxable(boolean taxable) {
+        this.taxable = taxable;
     }
 
     public PerDiemGroup getPerDiemGroup() {

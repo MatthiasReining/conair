@@ -19,12 +19,16 @@ public class PerDiemDTO {
     public PerDiemDTO() {
     }
 
-    public PerDiemDTO(Date perDiemDate, String timeFrom, String timeTo, long projectId, long travelExpenseRateId, BigDecimal charges) {
+    public PerDiemDTO(Date perDiemDate, String timeFrom, String timeTo, long projectId, long travelExpenseRateId, boolean breakfast, boolean lunch, boolean dinner, boolean taxable, BigDecimal charges) {
         this.perDiemDate = perDiemDate;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
         this.projectId = projectId;
         this.travelExpenseRateId = travelExpenseRateId;
+        this.breakfast = breakfast;
+        this.lunch = lunch;
+        this.dinner = dinner;
+        this.taxable = taxable;
         this.charges = charges;
     }
 
@@ -35,4 +39,8 @@ public class PerDiemDTO {
     public Long projectId;
     public Long travelExpenseRateId;
     public BigDecimal charges;
+    public boolean breakfast;
+    public boolean lunch;
+    public boolean dinner;
+    public boolean taxable;
 }
