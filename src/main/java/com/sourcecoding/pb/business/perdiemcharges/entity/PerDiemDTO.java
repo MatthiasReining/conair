@@ -43,4 +43,5 @@ public class PerDiemDTO {
     public boolean lunch;
     public boolean dinner;
     public boolean taxable;
+    
 }

@@ -6,6 +6,7 @@ package com.sourcecoding.pb.business.perdiemcharges.entity;
 
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -54,6 +55,8 @@ public class PerDiemGroup implements Serializable {
     List<PerDiem> perDiemList;
 
     private String perDiemGroupState;
+
+    private BigDecimal perDiemGroupSum;
 
     public Long getId() {
         return id;
@@ -109,6 +112,14 @@ public class PerDiemGroup implements Serializable {
 
     public void setPerDiemGroupState(String perDiemGroupState) {
         this.perDiemGroupState = perDiemGroupState;
+    }
+
+    public BigDecimal getPerDiemGroupSum() {
+        return perDiemGroupSum;
+    }
+
+    public void setPerDiemGroupSum(BigDecimal perDiemGroupSum) {
+        this.perDiemGroupSum = perDiemGroupSum;
     }
 
 }

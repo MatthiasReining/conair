@@ -16,6 +16,7 @@ import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiemDTO;
 import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiemGroupDTO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -66,6 +67,7 @@ public class PerDiemService {
         pdGroupDTO.indiviudalId = individualId;
         pdGroupDTO.perDiemGroupState = pdg.getPerDiemGroupState();
         pdGroupDTO.yearMonth = yearAndMonth;
+        pdGroupDTO.sum = pdg.getPerDiemGroupSum().doubleValue();
 
         pdGroupDTO.perDiemList = new ArrayList<>();
 
@@ -127,6 +129,7 @@ public class PerDiemService {
         fromDate.add(Calendar.DATE, 1);
         pdg.setPerDiemFrom(fromDate.getTime());
         pdg.setPerDiemTo(untilDay.getTime());
+        pdg.setPerDiemGroupSum( BigDecimal.valueOf( perDiemGroupDTO.sum));
 
         while (day.before(untilDay)) {
             day.add(Calendar.DATE, 1);
@@ -219,6 +222,7 @@ public class PerDiemService {
         if (pdg == null) {
             pdg = new PerDiemGroup();
             pdg.setGroupKey(yearAndMonth);
+            pdg.setPerDiemGroupSum(BigDecimal.ZERO);
             pdg.setIndividual(em.find(Individual.class, individualId));
         }
         if (pdg.getPerDiemList() == null)
@@ -233,8 +237,8 @@ public class PerDiemService {
     public Response getVacationsXls(@PathParam("individualId") Long individualId,
             @PathParam("yearAndMonth") String yearAndMonth) throws IOException {
 
-        //String templateUrl = configurator.getValue(Configurator.XLS_TEMPLATE_PATH_FOR_VACATION_OVERVIEW);
-        String templateUrl = "file:///d:/per-diem.xls";
+        String templateUrl = configurator.getValue(Configurator.XLS_TEMPLATE_PATH_FOR_TRAVEL_COSTS);
+        
         System.out.println(templateUrl);
         PerDiemGroupDTO pdg = getPerDiemListByMonth(individualId, yearAndMonth);
 
@@ -242,6 +246,12 @@ public class PerDiemService {
         for (PerDiemDTO pd : pdg.perDiemList) {
             if (pd.travelExpenseRateId == null)
                 removePD.add(pd);
+            else {
+                pd.timeFrom = pd.timeFrom.replace(".0", ":00");
+                pd.timeFrom = pd.timeFrom.replace(".5", ":30");
+                pd.timeTo = pd.timeTo.replace(".0", ":00");
+                pd.timeTo = pd.timeTo.replace(".5", ":30");
+            }
         }
         pdg.perDiemList.removeAll(removePD);
 
@@ -249,12 +259,18 @@ public class PerDiemService {
         payloadMap.put("perDiemGroup", pdg);
 
         Map<Long, Object> travelExpensesRateMap = new HashMap<>();
-        int year = 2014;//FIXME hard coded year - Integer.parseInt(yearAndMonth.split("-")[0]);        
+        int year = Integer.parseInt(yearAndMonth.split("-")[0]);        
         for (TravelExpensesRate ter : getTravelExpensesRate(year)) {
             travelExpensesRateMap.put(ter.getId(), ter);
         }
         payloadMap.put("travelExpensesRates", travelExpensesRateMap);
-        //{{travelExpensesRates[pd.travelExpenseRateId]}}
+
+        Map<Long, ProjectInformation> projectMap = new HashMap<>();
+        for (ProjectInformation pi : em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class).getResultList()) {
+            projectMap.put(pi.getId(), pi);
+        }
+        payloadMap.put("projects", projectMap);
+        payloadMap.put("individual", em.find(Individual.class, individualId));
         
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         exportService.generate(templateUrl, payloadMap, os);

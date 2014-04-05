@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,24 +168,29 @@ public class XlsExport {
                         currentRowNumber--;
 
                     } else {
-                        String value = getValue(formula);
+                        Object objValue = getValue(formula);
+
+                        String value = objValue.toString();
 
                         WritableCell modifyCell = sheet.getWritableCell(cell.getColumn(), cell.getRow());
 
+                        System.out.println(objValue + " + " + objValue.getClass() + " - cellType: "
+                                + modifyCell.getType() + " / format : "
+                                + modifyCell.getCellFormat().getFormat().getFormatString());
                         if (modifyCell.getType() == CellType.LABEL) {
                             Label l = (Label) cell;
                             l.setString(value);
                             cell.getCellFormat();
 
-                            try {
-                                double d = Double.parseDouble(value);
-                                System.out.println("Number value: " + value);
-                                System.out.println(cell.getCellFormat() + " - " + cell.getCellFormat().getFormat());
-                                WritableCellFormat integerFormat = new WritableCellFormat(cell.getCellFormat());
-                                jxl.write.Number number2 = new jxl.write.Number(cell.getColumn(), cell.getRow(), d, integerFormat);
-                                sheet.addCell(number2);
-                            } catch (NumberFormatException nfe) {
-                                //no number
+                            WritableCellFormat format = new WritableCellFormat(cell.getCellFormat());
+                            if (objValue.getClass().equals(java.util.Date.class)) {
+                                Date dateValue = (Date)objValue;                                
+                                jxl.write.DateTime xlsCell = new jxl.write.DateTime(cell.getColumn(), cell.getRow(), dateValue, format);                                
+                                sheet.addCell(xlsCell);
+                            } else if (objValue instanceof Number) {
+                                Double numberValue = Double.valueOf(value);
+                                jxl.write.Number xlsCell = new jxl.write.Number(cell.getColumn(), cell.getRow(), numberValue, format);                                
+                                sheet.addCell(xlsCell);
                             }
 
                         }
@@ -195,30 +201,35 @@ public class XlsExport {
         return additionalLines;
     }
 
-    protected String getValue(String formula) {
+    protected Object getValue(String formula) {
         //replace
         //loop for more than one replacements
-        String value = formula;
+        Object value = formula;
         List<String> fields = getFields(formula);
         for (String field : fields) {
             String fieldPath = field.replace("{{", "").replace("}}", "");
 
-            String innerValue = DataExtractor.getStringValue(scopedCollections.get(ROOT_KEY), fieldPath);
+            Object innerValue = DataExtractor.getDataValue(scopedCollections.get(ROOT_KEY), fieldPath);
             if (innerValue == null) {
                 Map<String, Object> innerCollection = new HashMap<>();
                 innerCollection.putAll(scopedCollections);
-                innerCollection.putAll((Map<String, Object>)scopedCollections.get(ROOT_KEY));
+                innerCollection.putAll((Map<String, Object>) scopedCollections.get(ROOT_KEY));
 
                 System.out.println("lookup for " + fieldPath + " in " + innerCollection);
-                innerValue = DataExtractor.getStringValue(innerCollection, fieldPath);
+                innerValue = DataExtractor.getDataValue(innerCollection, fieldPath);
             }
             if (innerValue == null) {
                 //skip
                 System.out.println("  no value found for field {{" + fieldPath + "}}");
                 //continue;
             }
-            if (innerValue != null)
-                value = value.replace(field, innerValue);
+            if (innerValue != null) {
+                if (fields.size() > 1 || innerValue instanceof String) {
+                    value = value.toString().replace(field, innerValue.toString());
+                } else {             
+                    value = innerValue;
+                }
+            }
         }
         System.out.println("  field '" + formula + "' is replaced with value: " + value);
         return value;

@@ -52,6 +52,8 @@ public class Configurator {
     
     public static String XLS_TEMPLATE_PATH_FOR_VACATION = "xls-template-path-for-vacation";
     public static String XLS_TEMPLATE_PATH_FOR_VACATION_OVERVIEW = "xls-template-path-for-vacation-overview";
+    
+    public static String XLS_TEMPLATE_PATH_FOR_TRAVEL_COSTS = "xls-template-path-for-travel-costs";
         
     
     
