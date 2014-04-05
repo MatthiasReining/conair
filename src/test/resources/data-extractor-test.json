@@ -1,0 +1,35 @@
+{"vacation": {
+        "vacationYear": 2013,
+        "vacationYearBefore": 2012,
+        "individualNickName": "Matthias",
+        "residualLeave": 17,
+        "residualLeaveYearBefore": 0,
+        "numberOfVacationDaysTotal": 17,
+        "vacationRecords": [{
+                "id": 403,
+                "vacationFrom": "2013-08-12",
+                "approvalState": 1,
+                "vacationUntil": "2013-08-18",
+                "numberOfDays": 3
+            }, {
+                "id": 552,
+                "vacationFrom": "2013-09-04",
+                "approvalState": 1,
+                "vacationUntil": "2013-09-04",
+                "numberOfDays": 1
+            }, {
+                "id": 601,
+                "vacationFrom": "2013-09-16",
+                "approvalState": 1,
+                "vacationUntil": "2013-09-20",
+                "numberOfDays": 4
+            }],
+        "approvedVacationDays": 0,
+        "vacationManager": "Pierre",
+        "individualId": 2,
+        "vacationDaysThisYear": 0,
+        "vacationDays": ["2013-08-12", "2013-08-13", "2013-08-14", "2013-08-16", "2013-09-04", "2013-09-16", "2013-09-17", "2013-09-18", "2013-09-19", "2013-09-20"],
+        "workDaysPerWeek": 4,
+        "numberOfVacationDays": 17
+    }
+}

@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -168,28 +167,7 @@ public class XlsExport {
                         currentRowNumber--;
 
                     } else {
-                        //replace
-
-                        //loop for more than one replacements 
-                        String value = formula;
-                        List<String> fields = getFields(formula);
-                        for (String field : fields) {
-                            String fieldPath = field.replace("{{", "").replace("}}", "");
-
-                            String innerValue = DataExtractor.getStringValue(scopedCollections.get(ROOT_KEY), fieldPath);
-                            if (innerValue == null) {
-                                System.out.println("lookup for " + fieldPath + " in " + scopedCollections);
-                                innerValue = DataExtractor.getStringValue(scopedCollections, fieldPath);
-                            }
-                            if (innerValue == null) {
-                                //skip
-                                System.out.println("  no value found for field {{" + fieldPath + "}}");
-                                //continue;
-                            }
-                            if (innerValue != null)
-                                value = value.replace(field, innerValue);
-                        }
-                        System.out.println("  field '" + formula + "' is replaced with value: " + value);
+                        String value = getValue(formula);
 
                         WritableCell modifyCell = sheet.getWritableCell(cell.getColumn(), cell.getRow());
 
@@ -215,6 +193,35 @@ public class XlsExport {
             }
         }
         return additionalLines;
+    }
+
+    protected String getValue(String formula) {
+        //replace
+        //loop for more than one replacements
+        String value = formula;
+        List<String> fields = getFields(formula);
+        for (String field : fields) {
+            String fieldPath = field.replace("{{", "").replace("}}", "");
+
+            String innerValue = DataExtractor.getStringValue(scopedCollections.get(ROOT_KEY), fieldPath);
+            if (innerValue == null) {
+                Map<String, Object> innerCollection = new HashMap<>();
+                innerCollection.putAll(scopedCollections);
+                innerCollection.putAll((Map<String, Object>)scopedCollections.get(ROOT_KEY));
+
+                System.out.println("lookup for " + fieldPath + " in " + innerCollection);
+                innerValue = DataExtractor.getStringValue(innerCollection, fieldPath);
+            }
+            if (innerValue == null) {
+                //skip
+                System.out.println("  no value found for field {{" + fieldPath + "}}");
+                //continue;
+            }
+            if (innerValue != null)
+                value = value.replace(field, innerValue);
+        }
+        System.out.println("  field '" + formula + "' is replaced with value: " + value);
+        return value;
     }
 
     private String convertToString(Cell[] cells) {

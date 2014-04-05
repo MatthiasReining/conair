@@ -4,29 +4,30 @@
  */
 package com.sourcecoding.pb.business.perdiemcharges.boundary;
 
+import com.sourcecoding.pb.business.configuration.boundary.Configurator;
+import com.sourcecoding.pb.business.export.boundary.XlsExportService;
+import com.sourcecoding.pb.business.export.control.DataExtractor;
 import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiemGroup;
 import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiem;
 import com.sourcecoding.pb.business.perdiemcharges.entity.TravelExpensesRate;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
-import com.sourcecoding.pb.business.restconfig.DateParameter;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiemDTO;
 import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiemGroupDTO;
-import java.math.BigDecimal;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -46,6 +47,12 @@ public class PerDiemService {
 
     @PersistenceContext
     EntityManager em;
+
+    @Inject
+    XlsExportService exportService;
+
+    @Inject
+    Configurator configurator;
 
     @GET
     @Path("{individualId}/{yearAndMonth}")
@@ -168,8 +175,8 @@ public class PerDiemService {
             pd.setLunch(pdIn.lunch);
             pd.setDinner(pdIn.dinner);
             pd.setTaxable(pdIn.taxable);
-            pd.setTimeFrom( Double.parseDouble(pdIn.timeFrom));
-            pd.setTimeTo( Double.parseDouble(pdIn.timeTo));
+            pd.setTimeFrom(Double.parseDouble(pdIn.timeFrom));
+            pd.setTimeTo(Double.parseDouble(pdIn.timeTo));
             pd.setProject(em.find(ProjectInformation.class, pdIn.projectId));
             pd.setTravelExpensesRate(em.find(TravelExpensesRate.class, pdIn.travelExpenseRateId));
 
@@ -218,5 +225,42 @@ public class PerDiemService {
             pdg.setPerDiemList(new ArrayList<PerDiem>());
 
         return pdg;
+    }
+
+    @GET
+    @Path("{individualId}/{yearAndMonth}/xls")
+    @Produces(MediaType.APPLICATION_OCTET_STREAM)
+    public Response getVacationsXls(@PathParam("individualId") Long individualId,
+            @PathParam("yearAndMonth") String yearAndMonth) throws IOException {
+
+        //String templateUrl = configurator.getValue(Configurator.XLS_TEMPLATE_PATH_FOR_VACATION_OVERVIEW);
+        String templateUrl = "file:///d:/per-diem.xls";
+        System.out.println(templateUrl);
+        PerDiemGroupDTO pdg = getPerDiemListByMonth(individualId, yearAndMonth);
+
+        List<PerDiemDTO> removePD = new ArrayList<>();
+        for (PerDiemDTO pd : pdg.perDiemList) {
+            if (pd.travelExpenseRateId == null)
+                removePD.add(pd);
+        }
+        pdg.perDiemList.removeAll(removePD);
+
+        Map<String, Object> payloadMap = new HashMap<>();
+        payloadMap.put("perDiemGroup", pdg);
+
+        Map<Long, Object> travelExpensesRateMap = new HashMap<>();
+        int year = 2014;//FIXME hard coded year - Integer.parseInt(yearAndMonth.split("-")[0]);        
+        for (TravelExpensesRate ter : getTravelExpensesRate(year)) {
+            travelExpensesRateMap.put(ter.getId(), ter);
+        }
+        payloadMap.put("travelExpensesRates", travelExpensesRateMap);
+        //{{travelExpensesRates[pd.travelExpenseRateId]}}
+        
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        exportService.generate(templateUrl, payloadMap, os);
+        String filename = "vacations-" + DataExtractor.getStringValue(payloadMap, "vacationYear") + ".xls";
+        return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
+                .header("content-disposition", "attachment; filename = " + filename)
+                .build();
     }
 }

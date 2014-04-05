@@ -24,12 +24,15 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
  * @author Matthias
  */
+@Deprecated
+@Ignore
 public class InitalizeTravelExpensesRate {
 
     private static final String REST_ROOT = "http://localhost:8080/conair/rest";
