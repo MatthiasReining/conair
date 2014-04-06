@@ -1,41 +1,82 @@
 <h3>Travel Costs</h3>
-<h6>All travel costs | May 2014</h6>
+<h6></h6>
 
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">Projects</h3>
+        <h3 class="panel-title">Travel Costs {{travelCostsData.yearMonth}}</h3>
     </div>
+    
     <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12" style="text-align: right; "><h3>Summe: {{travelCostsData.sum| currency:'€'}}</h3></div>
+        </div>
 
-        <table class="table">
+        <table class="table travel-costs">
             <thead>
                 <tr>
-                    <th>action</th>
-                    <th>from</th>
-                    <th>to</th>
-                    <th>country</th>
-                    <th>details</th>
-                    <th>sum</th>
+                    <th class="pd-date-column">Date</th>
+                    <th class="pd-action-column"></th>
+                    <th class="pd-project-column">Project</th>
+                    <th class="pd-destination-column">Destination</th>
+                    <th class="pd-fulltime-column" title="full-time">Ft</th>
+                    <th class="pd-time-column">From</th>
+                    <th class="pd-time-column">To</th>
+                    <th class="pd-food-column">Food</th>
+                    <th class="pd-taxable-column">Tax</th>
+                    <th class="pd-charges-column">Per Diem</th>
                 </tr> 
             </thead>
-            <tbody data-ng-repeat="project in projects">
+            <tbody ng-repeat="travelCosts in travelCostsData.travelCostsList">
                 <tr>
-                    <td>X</td>
-                    <td><a href="#/projects/{{project.key}}">{{project.key}}</a></td>
-                    <td>{{project.name}}</td>
-                    <td><a href="#/accounting/{{project.key}}">[Accounting]</a></td>
-                    <td></td>
-                    <td></td>
+                    <td class="pd-date-column">{{travelCosts.travelCostsDate| date:'EEE, dd. MMM yyyy'}}</td>
+                    <td class="pd-action-column">
+                        <span style="width:25px; display:inline-block; text-align: center;">
+                            <i class="icon-arrow-down" tooltip="copy data from day before" ng-click="copyTravelCosts(travelCosts, travelCostsData.travelCostsList[$index - 1])" ng-hide="$first"></i>
+                        </span>|
+                        <span style="width:25px; display:inline-block; text-align: center;">
+                            <i class="icon-remove" tooltip="remove data" ng-click="removeTravelCosts(travelCosts)"></i>
+                        </span>
+                    </td>
+                    <td class="pd-project-column">
+                        <select class="form-control" ng-model="travelCosts.projectId" ng-options="project.id as project.key+' - '+project.name for (projectId, project) in projects"></select>
+                    <td class="pd-destination-column">
+                        <select class="form-control" ng-model="travelCosts.travelExpenseRateId" ng-change="calcTravelCosts(travelCosts);" ng-options="ter.id as ter.country for ter in travelExpensesRates"></select>
+                    </td>   
+                    <td class="pd-fulltime-column">
+                        <button type="button" tooltip="set time to full-time"  class="btn btn-default btn-xs" ng-click="fullTime(travelCosts)"><span class="glyphicon glyphicon-time"></span></button>
+                    </td>
+                    <td class="pd-time-column">
+                        <select class="form-control" ng-model="travelCosts.timeFrom" ng-change="calcTravelCosts(travelCosts);" ng-options="o.key as o.value for o in timeSelection"></select>
+                    </td>
+                    <td class="pd-time-column">
+                        <select class="form-control" ng-model="travelCosts.timeTo" ng-change="calcTravelCosts(travelCosts);" ng-options="o.key as o.value for o in timeSelection"></select>
+                    </td>
+                    <td class="pd-food-column" style="text-align: center">
+                        <input type="checkbox" ng-model="travelCosts.breakfast" ng-change="calcTravelCosts(travelCosts);" tooltip="Did you have breakfast?">
+                        <input type="checkbox" ng-model="travelCosts.lunch" ng-change="calcTravelCosts(travelCosts);" tooltip="Did you have lunch?">
+                        <input type="checkbox" ng-model="travelCosts.dinner" ng-change="calcTravelCosts(travelCosts);" tooltip="Did you have dinner?">                        
+                    </td>
+                    <td class="pd-taxable-column" style="text-align: center">
+                        <input type="checkbox" ng-model="travelCosts.taxable" tooltip="Taxable?">
+                    </td>
+                    <td class="pd-charges-column"><span ng-hide="travelCosts.charges === ''">{{travelCosts.charges| currency:'€'}}</span></td>
                 </tr>
-            </tbody>
+            </tbody>                            
         </table>
     </div>
-    <div class="panel-footer">
-        <a href="#/projects/new">
-            <button class="btn btn-info">
-                <i class="icon-plus-sign"></i> Save
-            </button>
-        </a>
+    <div class="panel-footer" >
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn btn-success" ng-click="sendToServer()">Save</button>
+                 <a href="rest/travel-costs/{{travelCostsData.indiviudalId}}/{{travelCostsData.yearMonth}}/xls">
+                    <button class="btn btn-primary">
+                        <i class="icon-list-alt"></i> Excel Download
+                    </button>
+                </a>
+            </div>
+            <div class="col-md-6" style="text-align: right; "><h3>Summe: {{travelCostsData.sum| currency:'€'}}</h3></div>
+        </div>
+
     </div>
 </div>

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.perdiemcharges.entity;
+package com.sourcecoding.pb.business.travelcosts.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

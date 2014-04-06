@@ -4,9 +4,9 @@
  */
 package com.sourcecoding.pb.business.export.control;
 
-import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiemDTO;
-import com.sourcecoding.pb.business.perdiemcharges.entity.PerDiemGroupDTO;
-import com.sourcecoding.pb.business.perdiemcharges.entity.TravelExpensesRate;
+import com.sourcecoding.pb.business.travelcosts.entity.TravelCostsDTO;
+import com.sourcecoding.pb.business.travelcosts.entity.TravelCostsGroupDTO;
+import com.sourcecoding.pb.business.travelcosts.entity.TravelExpensesRate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,14 +47,14 @@ public class DataExtractorTest {
 
     @Test
     public void shouldExtractMapStructure() {
-        PerDiemGroupDTO pdg = new PerDiemGroupDTO();
+        TravelCostsGroupDTO pdg = new TravelCostsGroupDTO();
         pdg.indiviudalId = 2L;
         pdg.sum = 444D;
-        pdg.perDiemList = new ArrayList<>();
-        PerDiemDTO pd = new PerDiemDTO();
+        pdg.travelCostsList = new ArrayList<>();
+        TravelCostsDTO pd = new TravelCostsDTO();
         pd.travelExpenseRateId=123L;
-        pd.perDiemDate=new Date();
-        pdg.perDiemList.add(pd);
+        pd.travelCostsDate=new Date();
+        pdg.travelCostsList.add(pd);
         
         Map<Object, Object> travelExpensesRateMap = new HashMap<>();
         TravelExpensesRate ter = new TravelExpensesRate();

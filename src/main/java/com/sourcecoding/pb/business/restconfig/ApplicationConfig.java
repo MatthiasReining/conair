@@ -42,10 +42,10 @@ public class ApplicationConfig extends Application {
         resources.add(com.sourcecoding.pb.business.authentication.boundary.AuthService.class);
         resources.add(com.sourcecoding.pb.business.individuals.boundary.IndividualsResource.class);
         resources.add(com.sourcecoding.pb.business.meta.boundary.VersionService.class);
-        resources.add(com.sourcecoding.pb.business.perdiemcharges.boundary.PerDiemService.class);
         resources.add(com.sourcecoding.pb.business.project.boundary.ProjectServices.class);
         resources.add(com.sourcecoding.pb.business.resources.boundary.ResourcesResource.class);
         resources.add(com.sourcecoding.pb.business.timerecording.boundary.TimeRecordingService.class);
+        resources.add(com.sourcecoding.pb.business.travelcosts.boundary.TravelCostsService.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.IndividualVacationResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.LegalHolidayResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.TasksResource.class);

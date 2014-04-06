@@ -8,18 +8,18 @@ function TravelCostsSelectorCtrl($scope) {
 
 };
 
-function PerDiemsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
+function TravelCostsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
     $('.panel-heading').css('background-color', 'green');
     $('.panel-heading').css('color', 'white');
     
     
-    var serviceURL = serviceBaseUrl + 'per-diem/' + $rootScope.user.id + '/' + $routeParams.yearMonth;
+    var serviceURL = serviceBaseUrl + 'travel-costs/' + $rootScope.user.id + '/' + $routeParams.yearMonth;
 
     //load destination list
     //FIXME cache
     //FIXME hard coded travel year
     $scope.travelExpensesRatesById = {};
-    $http.get(serviceBaseUrl + 'per-diem/travel-expenses-rates/2014').success(function(data) {
+    $http.get(serviceBaseUrl + 'travel-costs/travel-expenses-rates/2014').success(function(data) {
         $scope.travelExpensesRates = data;
         $.map(data, function(entry) { //use also as map object;
             $scope.travelExpensesRatesById[entry.id] = entry;
@@ -33,7 +33,7 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
 
             $http.get(serviceURL).success(function(data) {
                 console.log(data);
-                $scope.perDiemsData = data;
+                $scope.travelCostsData = data;
                 calcSum();
             });
         });
@@ -92,78 +92,78 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
         {key: '24.0', value: '24:00'}
     ];
 
-    $scope.fullTime = function(perDiem) {
-        perDiem.timeFrom = '0.0';
-        perDiem.timeTo = '24.0';
+    $scope.fullTime = function(travelCosts) {
+        travelCosts.timeFrom = '0.0';
+        travelCosts.timeTo = '24.0';
 
-        $scope.calcPerDiem(perDiem);
+        $scope.calcTravelCosts(travelCosts);
     };
 
-    $scope.removePerDiem = function(perDiem) {
-        perDiem.projectId = null;
-        perDiem.travelExpenseRateId = null;
-        perDiem.timeFrom = null;
-        perDiem.timeTo = null;
-        perDiem.breakfast = null;
-        perDiem.lunch = null;
-        perDiem.dinner = null;
-        perDiem.charges = '';        
+    $scope.removeTravelCosts = function(travelCosts) {
+        travelCosts.projectId = null;
+        travelCosts.travelExpenseRateId = null;
+        travelCosts.timeFrom = null;
+        travelCosts.timeTo = null;
+        travelCosts.breakfast = null;
+        travelCosts.lunch = null;
+        travelCosts.dinner = null;
+        travelCosts.charges = '';        
         calcSum();
     };
-    $scope.copyPerDiem = function(targetPerDiem, sourcePerDiem) {
-        targetPerDiem.projectId = sourcePerDiem.projectId;
-        targetPerDiem.travelExpenseRateId = sourcePerDiem.travelExpenseRateId;
-        targetPerDiem.timeFrom = sourcePerDiem.timeFrom;
-        targetPerDiem.timeTo = sourcePerDiem.timeTo;
-        targetPerDiem.breakfast = sourcePerDiem.breakfast;
-        targetPerDiem.lunch = sourcePerDiem.lunch;
-        targetPerDiem.dinner = sourcePerDiem.dinner;
-        targetPerDiem.charges = sourcePerDiem.charges;
+    $scope.copyTravelCosts = function(targetTravelCosts, sourceTravelCosts) {
+        targetTravelCosts.projectId = sourceTravelCosts.projectId;
+        targetTravelCosts.travelExpenseRateId = sourceTravelCosts.travelExpenseRateId;
+        targetTravelCosts.timeFrom = sourceTravelCosts.timeFrom;
+        targetTravelCosts.timeTo = sourceTravelCosts.timeTo;
+        targetTravelCosts.breakfast = sourceTravelCosts.breakfast;
+        targetTravelCosts.lunch = sourceTravelCosts.lunch;
+        targetTravelCosts.dinner = sourceTravelCosts.dinner;
+        targetTravelCosts.charges = sourceTravelCosts.charges;
         calcSum();
     };
 
-    $scope.calcPerDiem = function(perDiem) {
-        perDiem.charges = '';
-        var terId = perDiem.travelExpenseRateId;
+    $scope.calcTravelCosts = function(travelCosts) {
+        travelCosts.charges = '';
+        var terId = travelCosts.travelExpenseRateId;
 
-        if (perDiem.timeFrom === null || perDiem.timeTo === null || perDiem.travelExpenseRateId === null)
+        if (travelCosts.timeFrom === null || travelCosts.timeTo === null || travelCosts.travelExpenseRateId === null)
             return;
 
-        var duration = parseFloat(perDiem.timeTo) - parseFloat(perDiem.timeFrom);
+        var duration = parseFloat(travelCosts.timeTo) - parseFloat(travelCosts.timeFrom);
 
-        var food =(perDiem.breakfast ? $scope.travelExpensesRatesById[terId].breakfast : 0);
-        food += (perDiem.lunch ? $scope.travelExpensesRatesById[terId].lunch : 0);
-        food += (perDiem.dinner ? $scope.travelExpensesRatesById[terId].dinner : 0);
+        var food =(travelCosts.breakfast ? $scope.travelExpensesRatesById[terId].breakfast : 0);
+        food += (travelCosts.lunch ? $scope.travelExpensesRatesById[terId].lunch : 0);
+        food += (travelCosts.dinner ? $scope.travelExpensesRatesById[terId].dinner : 0);
 
         if (duration === 24)
-            perDiem.charges = $scope.travelExpensesRatesById[terId].rate24h;
+            travelCosts.charges = $scope.travelExpensesRatesById[terId].rate24h;
         else if (duration > 8)
-            perDiem.charges = $scope.travelExpensesRatesById[terId].rateFrom8To24;
+            travelCosts.charges = $scope.travelExpensesRatesById[terId].rateFrom8To24;
         else
-            perDiem.charges = 0;
+            travelCosts.charges = 0;
 
-        perDiem.charges = perDiem.charges - food;
-        if (perDiem.charges < 0)
-            perDiem.charges = 0;
+        travelCosts.charges = travelCosts.charges - food;
+        if (travelCosts.charges < 0)
+            travelCosts.charges = 0;
 
         calcSum();
     };
     var calcSum = function() {
         var sum = 0;
-        angular.forEach($scope.perDiemsData.perDiemList, function(value, key) {
+        angular.forEach($scope.travelCostsData.travelCostsList, function(value, key) {
             if (angular.isNumber(value.charges))
                 sum += value.charges;
         });
-        $scope.perDiemsData.sum = sum;
+        $scope.travelCostsData.sum = sum;
     };
 
     $scope.sendToServer = function() {
         console.log('->sendToServer');
-        console.log($scope.perDiemsData);
+        console.log($scope.travelCostsData);
 
-        $http.put(serviceBaseUrl + 'per-diem/' + $rootScope.user.id, $scope.perDiemsData).success(function(data) {           
+        $http.put(serviceBaseUrl + 'travel-costs/' + $rootScope.user.id, $scope.travelCostsData).success(function(data) {           
             msgbox.open({title: 'Server feedback', message: 'Travel costs sucessfully saved!', hideCancelBtn: true});        
-            $scope.perDiemsData = data;
+            $scope.travelCostsData = data;
             calcSum();
         });
     };

@@ -58,11 +58,9 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/time-recording/weeks/:weeks', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/time-recording/range', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/vacations/:individualId', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).
-                when('/vacation-manager', {templateUrl: 'snippets/vacation-manager.html', controller: VacationManagerCtrl}).
-                when('/travel-costs-list', {templateUrl: 'snippets/travel-costs-list.html', controller: TravelCostsListCtrl}).
+                when('/vacation-manager', {templateUrl: 'snippets/vacation-manager.html', controller: VacationManagerCtrl}).                
                 when('/travel-costs-selector', {templateUrl: 'snippets/travel-costs-selector.html', controller: TravelCostsSelectorCtrl}).
-                when('/per-diems/:yearMonth', {templateUrl: 'snippets/per-diems.html', controller: PerDiemsCtrl}).
-                when('/travel-costs', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
+                when('/travel-costs/:yearMonth', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).                
                 when('/tasks-vacation-approval-list', {templateUrl: 'snippets/tasks-vacation-approval-list.html', controller: TaskVacationApprovalListCtrl}).
                 when('/tasks-vacation-approval/:vacationRecordId', {templateUrl: 'snippets/tasks-vacation-approval.html', controller: TaskVacationApprovalCtrl}).
                 otherwise({redirectTo: '/projects'});

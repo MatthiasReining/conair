@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.perdiemcharges.entity;
+package com.sourcecoding.pb.business.travelcosts.entity;
 
 import com.sourcecoding.pb.business.restconfig.JsonDateTimeAdapter;
 import java.math.BigDecimal;
@@ -14,13 +14,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *
  * @author Matthias
  */
-public class PerDiemDTO {
+public class TravelCostsDTO {
 
-    public PerDiemDTO() {
+    public TravelCostsDTO() {
     }
 
-    public PerDiemDTO(Date perDiemDate, String timeFrom, String timeTo, long projectId, long travelExpenseRateId, boolean breakfast, boolean lunch, boolean dinner, boolean taxable, BigDecimal charges) {
-        this.perDiemDate = perDiemDate;
+    public TravelCostsDTO(Date traveCostsDate, String timeFrom, String timeTo, long projectId, long travelExpenseRateId, boolean breakfast, boolean lunch, boolean dinner, boolean taxable, BigDecimal charges) {
+        this.travelCostsDate = traveCostsDate;
         this.timeFrom = timeFrom;
         this.timeTo = timeTo;
         this.projectId = projectId;
@@ -33,7 +33,7 @@ public class PerDiemDTO {
     }
 
     @XmlJavaTypeAdapter(JsonDateTimeAdapter.class)
-    public Date perDiemDate;
+    public Date travelCostsDate;
     public String timeFrom;
     public String timeTo;
     public Long projectId;

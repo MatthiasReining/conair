@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sourcecoding.pb.business.perdiemcharges.entity;
+package com.sourcecoding.pb.business.travelcosts.entity;
 
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
@@ -23,7 +23,7 @@ import javax.persistence.TemporalType;
  * @author Matthias
  */
 @Entity
-public class PerDiem implements Serializable {
+public class TravelCosts implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
@@ -32,9 +32,9 @@ public class PerDiem implements Serializable {
     @ManyToOne
     private Individual individual;
     @ManyToOne
-    private PerDiemGroup perDiemGroup;
+    private TravelCostsGroup travelCostsGroup;
     @Temporal(TemporalType.DATE)
-    private Date perDiemDate;
+    private Date travelCostsDate;
     private Double timeFrom;
     private Double timeTo;
     @ManyToOne
@@ -49,7 +49,7 @@ public class PerDiem implements Serializable {
     private boolean taxable;
 
     @Column(precision = 6, scale = 2)
-    private BigDecimal charges; //FIXME decimal places!
+    private BigDecimal charges;
 
     public Long getId() {
         return id;
@@ -65,6 +65,22 @@ public class PerDiem implements Serializable {
 
     public void setIndividual(Individual individual) {
         this.individual = individual;
+    }
+
+    public TravelCostsGroup getTravelCostsGroup() {
+        return travelCostsGroup;
+    }
+
+    public void setTravelCostsGroup(TravelCostsGroup travelCostsGroup) {
+        this.travelCostsGroup = travelCostsGroup;
+    }
+
+    public Date getTravelCostsDate() {
+        return travelCostsDate;
+    }
+
+    public void setTravelCostsDate(Date travelCostsDate) {
+        this.travelCostsDate = travelCostsDate;
     }
 
     public Double getTimeFrom() {
@@ -99,22 +115,6 @@ public class PerDiem implements Serializable {
         this.travelExpensesRate = travelExpensesRate;
     }
 
-    public BigDecimal getCharges() {
-        return charges;
-    }
-
-    public void setCharges(BigDecimal charges) {
-        this.charges = charges;
-    }
-
-    public Date getPerDiemDate() {
-        return perDiemDate;
-    }
-
-    public void setPerDiemDate(Date perDiemDate) {
-        this.perDiemDate = perDiemDate;
-    }
-
     public boolean isBreakfast() {
         return breakfast;
     }
@@ -147,12 +147,12 @@ public class PerDiem implements Serializable {
         this.taxable = taxable;
     }
 
-    public PerDiemGroup getPerDiemGroup() {
-        return perDiemGroup;
+    public BigDecimal getCharges() {
+        return charges;
     }
 
-    public void setPerDiemGroup(PerDiemGroup perDiemGroup) {
-        this.perDiemGroup = perDiemGroup;
+    public void setCharges(BigDecimal charges) {
+        this.charges = charges;
     }
 
 }

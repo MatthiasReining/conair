@@ -4,7 +4,7 @@
  */
 package com.sourcecoding.pb.business;
 
-import com.sourcecoding.pb.business.perdiemcharges.entity.TravelExpensesRate;
+import com.sourcecoding.pb.business.travelcosts.entity.TravelExpensesRate;
 import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.WorkPackage;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
@@ -57,7 +57,7 @@ public class InitalizeTravelExpensesRate {
     public void run() throws IOException {
         List<TravelExpensesRate> data = new ArrayList<>();
 
-        URL resource = this.getClass().getResource("/per-diem-2013.csv");
+        URL resource = this.getClass().getResource("/travel-costs-2013.csv");
         System.out.println(resource);
         BufferedReader in = new BufferedReader(new InputStreamReader(
                 new FileInputStream(resource.getFile()), "UTF8"));
@@ -83,7 +83,7 @@ public class InitalizeTravelExpensesRate {
             ter.setAccommodationExpenses(new BigDecimal(values[4]));
         }
 
-        Response cr = base.path("per-diem/travel-expenses-rates")
+        Response cr = base.path("travel-costs/travel-expenses-rates")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(data), Response.class);
 

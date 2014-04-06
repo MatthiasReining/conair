@@ -20,7 +20,7 @@ import org.junit.Test;
  * @author Matthias
  */
 @Ignore
-public class UpdatePerDiemTest {
+public class UpdateTravelCostsTest {
 
     private static final String REST_ROOT = "http://localhost:8080/conair/rest";
     private WebTarget base;
@@ -38,7 +38,7 @@ public class UpdatePerDiemTest {
         String json = convertStreamToString(jsonStream);
 
         //FIXME wird nicht klappen :-( Entity vs json String
-        Response cr = base.path("per-diem/4/2013-04")
+        Response cr = base.path("travel-costs/4/2013-04")
                 .request(MediaType.APPLICATION_JSON)
                 .put(Entity.json(json), Response.class);
 
