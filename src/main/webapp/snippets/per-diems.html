@@ -67,7 +67,14 @@
     </div>
     <div class="panel-footer" >
         <div class="row">
-            <div class="col-md-6"><button class="btn btn-success" ng-click="sendToServer()">Save</button></div>
+            <div class="col-md-6">
+                <button class="btn btn-success" ng-click="sendToServer()">Save</button>
+                 <a href="rest/per-diem/{{perDiemsData.indiviudalId}}/{{perDiemsData.yearMonth}}/xls">
+                    <button class="btn btn-primary btn-sm">
+                        <i class="icon-list-alt"></i> Excel Download
+                    </button>
+                </a>
+            </div>
             <div class="col-md-6" style="text-align: right; "><h3>Summe: {{perDiemsData.sum| currency:'€'}}</h3></div>
         </div>
 

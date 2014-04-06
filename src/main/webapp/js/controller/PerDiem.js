@@ -1,10 +1,14 @@
 'use strict';
 
-function PerDiemsSelectorCtrl($scope, $http) {
+function TravelCostsSelectorCtrl($scope) {
+    $('.panel-heading').css('background-color', 'green');
+    $('.panel-heading').css('color', 'white');
+    
+    $scope.travelCostsYear = '' + new Date().getFullYear();
 
-}
+};
 
-function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
+function PerDiemsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
     $('.panel-heading').css('background-color', 'green');
     $('.panel-heading').css('color', 'white');
     
@@ -157,9 +161,8 @@ function PerDiemsCtrl($scope, $routeParams, $http, $rootScope) {
         console.log('->sendToServer');
         console.log($scope.perDiemsData);
 
-        $http.put(serviceBaseUrl + 'per-diem/' + $rootScope.user.id, $scope.perDiemsData).success(function(data) {
-            console.log('<--fromServer');
-            console.log(data);
+        $http.put(serviceBaseUrl + 'per-diem/' + $rootScope.user.id, $scope.perDiemsData).success(function(data) {           
+            msgbox.open({title: 'Server feedback', message: 'Travel costs sucessfully saved!', hideCancelBtn: true});        
             $scope.perDiemsData = data;
             calcSum();
         });

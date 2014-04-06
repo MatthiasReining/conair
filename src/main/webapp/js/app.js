@@ -60,7 +60,7 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/vacations/:individualId', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).
                 when('/vacation-manager', {templateUrl: 'snippets/vacation-manager.html', controller: VacationManagerCtrl}).
                 when('/travel-costs-list', {templateUrl: 'snippets/travel-costs-list.html', controller: TravelCostsListCtrl}).
-                when('/per-diems-selector', {templateUrl: 'snippets/per-diems-selector.html', controller: PerDiemsSelectorCtrl}).
+                when('/travel-costs-selector', {templateUrl: 'snippets/travel-costs-selector.html', controller: TravelCostsSelectorCtrl}).
                 when('/per-diems/:yearMonth', {templateUrl: 'snippets/per-diems.html', controller: PerDiemsCtrl}).
                 when('/travel-costs', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
                 when('/tasks-vacation-approval-list', {templateUrl: 'snippets/tasks-vacation-approval-list.html', controller: TaskVacationApprovalListCtrl}).
