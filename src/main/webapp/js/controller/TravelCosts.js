@@ -9,9 +9,11 @@ function TravelCostsSelectorCtrl($scope) {
 };
 
 function TravelCostsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
+    
     $('.panel-heading').css('background-color', 'green');
     $('.panel-heading').css('color', 'white');
     
+    $scope.passt = false;
     
     var serviceURL = serviceBaseUrl + 'travel-costs/' + $rootScope.user.id + '/' + $routeParams.yearMonth;
 
@@ -35,6 +37,8 @@ function TravelCostsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
                 console.log(data);
                 $scope.travelCostsData = data;
                 calcSum();
+                
+                $scope.passt = true;
             });
         });
 
@@ -168,4 +172,3 @@ function TravelCostsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
         });
     };
 }
-

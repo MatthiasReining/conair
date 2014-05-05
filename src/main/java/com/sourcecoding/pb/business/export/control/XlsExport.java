@@ -211,12 +211,12 @@ public class XlsExport {
 
             Object innerValue = DataExtractor.getDataValue(scopedCollections.get(ROOT_KEY), fieldPath);
             if (innerValue == null) {
-                Map<String, Object> innerCollection = new HashMap<>();
-                innerCollection.putAll(scopedCollections);
-                innerCollection.putAll((Map<String, Object>) scopedCollections.get(ROOT_KEY));
+                //Map<String, Object> innerCollection = new HashMap<>();
+                //innerCollection.putAll(scopedCollections);
+                //innerCollection.putAll((Map<String, Object>) scopedCollections.get(ROOT_KEY));
 
-                System.out.println("lookup for " + fieldPath + " in " + innerCollection);
-                innerValue = DataExtractor.getDataValue(innerCollection, fieldPath);
+                System.out.println("lookup for " + fieldPath + " in " + scopedCollections);
+                innerValue = DataExtractor.getDataValue(scopedCollections, fieldPath);
             }
             if (innerValue == null) {
                 //skip

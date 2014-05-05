@@ -20,7 +20,7 @@ import javax.persistence.PersistenceContext;
  *
  * @author Matthias
  */
-public class AccountingTimeController {
+public class TimeRecordCollector {
 
     @PersistenceContext
     EntityManager em;

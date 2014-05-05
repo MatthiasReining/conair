@@ -40,11 +40,82 @@ function datepicker2model(e, $scope) {
 }
 ;
 
+var spinnerCounter = 0;
+angular.module('ajxaInterceptor', [])
+        .config(function($httpProvider) {
 
-var app = angular.module('conair', ['ngRoute', 'ui.bootstrap']);
+
+            $httpProvider.interceptors.push('myHttpInterceptor2');
+        })
+        .factory('myHttpInterceptor2', function($q, $timeout) {
+
+            var spinner = {};
+            return {
+                // optional method
+                'request': function(config) {
+                    // do something on success
+                    if (config.url.indexOf('rest') > -1) {
+                        spinner[config.url] = $timeout(function() {
+                            console.log('update with timeout fired');
+                            $('.loader').css("display", "block");
+                        }, 300);
+                        console.log('request spinner: ' + config.url + '  - '+ spinner[config.url].$$timeoutId + '   -  ' + new Date().getTime());
+                    }
+                    return config || $q.when(config);
+                },
+                // optional method
+                'response': function(response) {
+                    // do something on success
+                    $('.loader').css("display", "none");
+                    if (response.config.url.indexOf('rest') > -1) {
+                        var code = $timeout.cancel(spinner[response.config.url]);
+                        console.log('response code spider: ' + code + '  id: ' + spinner[response.config.url].$$timeoutId + '   -> ' + response.config.url + '   -  ' + new Date().getTime()) ;
+                    }
+                    return response || $q.when(response);
+                }
+            };
+
+        });
+
+angular.module('SharedServices', [])
+        .config(function($httpProvider) {
+            $httpProvider.responseInterceptors.push('myHttpInterceptor');
+            var spinnerFunction = function(data, headersGetter) {
+                // todo start the spinner here
+
+                //alert('start spinner');
+                $('.loader').css("display", "block");
+
+                return data;
+            };
+            $httpProvider.defaults.transformRequest.push(spinnerFunction);
+        })
+// register the interceptor as a service, intercepts ALL angular ajax http calls
+        .factory('myHttpInterceptor', function($q, $window) {
+            return function(promise) {
+                return promise.then(function(response) {
+                    // do something on success
+                    // todo hide the spinner
+                    //alert('stop spinner'); 
+                    $('.loader').css("display", "none");
+
+                    return response;
+
+                }, function(response) {
+                    // do something on error
+                    // todo hide the spinner
+                    //alert('stop spinner');
+                    $('.loader').css("display", "none");
+
+                    return $q.reject(response);
+                });
+            };
+        });
+
+var app = angular.module('conair', ['ngRoute', 'ui.bootstrap']); //ajxaInterceptor
 
 app.service('msgbox', ['$modal', MsgBoxService]);
-  
+
 app.config(['$routeProvider', function($routeProvider) {
 
         $routeProvider.
@@ -58,9 +129,9 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/time-recording/weeks/:weeks', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/time-recording/range', {templateUrl: 'snippets/time-recording.html', controller: TimeRecordingCtrl}).
                 when('/vacations/:individualId', {templateUrl: 'snippets/vacation.html', controller: VacationCtrl}).
-                when('/vacation-manager', {templateUrl: 'snippets/vacation-manager.html', controller: VacationManagerCtrl}).                
+                when('/vacation-manager', {templateUrl: 'snippets/vacation-manager.html', controller: VacationManagerCtrl}).
                 when('/travel-costs-selector', {templateUrl: 'snippets/travel-costs-selector.html', controller: TravelCostsSelectorCtrl}).
-                when('/travel-costs/:yearMonth', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).                
+                when('/travel-costs/:yearMonth', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
                 when('/tasks-vacation-approval-list', {templateUrl: 'snippets/tasks-vacation-approval-list.html', controller: TaskVacationApprovalListCtrl}).
                 when('/tasks-vacation-approval/:vacationRecordId', {templateUrl: 'snippets/tasks-vacation-approval.html', controller: TaskVacationApprovalCtrl}).
                 otherwise({redirectTo: '/projects'});
@@ -86,7 +157,7 @@ angular.element(document).ready(function() {
         console.log("auth done..");
         user = data.user;
         version = data.version;
-        
+
         angular.bootstrap(document, ['conair']);
     }).error(function(data, status) {
 

@@ -5,7 +5,7 @@
  */
 package com.sourcecoding.pb.business.accounting.boundary;
 
-import com.sourcecoding.pb.business.accounting.controller.AccountingTimeController;
+import com.sourcecoding.pb.business.accounting.controller.TimeRecordCollector;
 import com.sourcecoding.pb.business.accounting.entity.AccountingContainer;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriod;
 import com.sourcecoding.pb.business.accounting.entity.AccountingPeriodDTO;
@@ -37,10 +37,10 @@ import javax.ws.rs.core.Response;
  */
 @Stateless
 @Path("accounting")
-public class AccountingTimeService {
+public class AccountingResource {
 
     @Inject
-    AccountingTimeController atc;
+    TimeRecordCollector trc;
 
     @PersistenceContext
     EntityManager em;
@@ -91,7 +91,7 @@ public class AccountingTimeService {
             periodFrom = project.getProjectStart();
         }
 
-        atc.collectTimeRecords(project.getId(), periodFrom, periodTo);
+        trc.collectTimeRecords(project.getId(), periodFrom, periodTo);
 
         return getAccountingPeriods(projectKey);
     }
@@ -107,7 +107,7 @@ public class AccountingTimeService {
             periodFrom = new Date(0L); //1.1.1970
         }
 
-        atc.collectTimeRecords(projectId, periodFrom, periodTo);
+        trc.collectTimeRecords(projectId, periodFrom, periodTo);
 
         return Response.ok().build();
     }
@@ -152,7 +152,7 @@ public class AccountingTimeService {
         String invoiceTemplateURL = ap.getProjectInformation().getInvoiceTemplateURL();
         System.out.println( invoiceTemplateURL);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-
+        
         exportService.generate(invoiceTemplateURL, ac, os);
         String filename = "accounting-" + projectKey + "-" + ap.getAccountingNumber() + ".xls";
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)

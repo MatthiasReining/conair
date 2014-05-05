@@ -125,6 +125,21 @@ body {
     content: " ";
 }
 
+
+/* LOADER */
+/* ====== */
+
+.loader {
+    top: 50%;
+    left: 50%;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    display: none;
+    
+}
+
 /* PER DIEMS */
 /* ========= */
 
@@ -219,3 +234,5 @@ body {
     background-color: #a9dba9;
     background-image: none;
 }
+
+
