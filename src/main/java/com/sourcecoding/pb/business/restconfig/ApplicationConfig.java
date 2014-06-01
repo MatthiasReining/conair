@@ -40,6 +40,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.sourcecoding.pb.business.accounting.boundary.AccountingResource.class);
         resources.add(com.sourcecoding.pb.business.authentication.boundary.AuthLinkedInService.class);
         resources.add(com.sourcecoding.pb.business.authentication.boundary.AuthService.class);
+        resources.add(com.sourcecoding.pb.business.cashdisbursement.boundary.CashDisbursementResource.class);
         resources.add(com.sourcecoding.pb.business.individuals.boundary.IndividualsResource.class);
         resources.add(com.sourcecoding.pb.business.meta.boundary.VersionService.class);
         resources.add(com.sourcecoding.pb.business.project.boundary.ProjectServices.class);

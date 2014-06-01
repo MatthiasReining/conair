@@ -134,6 +134,9 @@ app.config(['$routeProvider', function($routeProvider) {
                 when('/travel-costs/:yearMonth', {templateUrl: 'snippets/travel-costs.html', controller: TravelCostsCtrl}).
                 when('/tasks-vacation-approval-list', {templateUrl: 'snippets/tasks-vacation-approval-list.html', controller: TaskVacationApprovalListCtrl}).
                 when('/tasks-vacation-approval/:vacationRecordId', {templateUrl: 'snippets/tasks-vacation-approval.html', controller: TaskVacationApprovalCtrl}).
+                when('/cash-disbursement-selector', {templateUrl: 'snippets/cash-disbursement-selector.html', controller: CashDisbursementSelectorCtrl}).
+                when('/cash-disbursement/:yearMonth', {templateUrl: 'snippets/cash-disbursement.html', controller: CashDisbursementCtrl}).
+                
                 otherwise({redirectTo: '/projects'});
     }]);
 

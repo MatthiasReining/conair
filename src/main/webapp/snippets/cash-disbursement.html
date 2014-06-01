@@ -1,0 +1,63 @@
+<h3>Cash Disbursement</h3>
+<h6></h6>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Cash Disbursement {{cashDisbursementData.yearMonth}}</h3>
+    </div>
+    
+    <div class="panel-body" >
+        <div class="row">
+            <div class="col-md-12" style="text-align: right; "><h3>Summe: {{cashDisbursementData.sum| currency:'€'}}</h3></div>
+        </div>
+
+        <table class="table travel-costs">
+            <thead>
+                <tr>
+                    <th class="cd-action-column"></th>
+                    <th class="cd-date-column">Date</th>
+                    <th class="cd-description-column">Description</th>
+                    <th class="cd-category-column">Category</th>
+                    <th class="cd-amount-column">Amount</th>                    
+                </tr> 
+            </thead>
+            <tbody ng-repeat="cashDisbursement in cashDisbursementData.cashDisbursementList">
+                <tr>
+                    <td class="cd-action-column">
+                        <span style="width:25px; display:inline-block; text-align: center;">
+                            <i class="icon-remove" tooltip="remove data" ng-click="remove($index)"></i>
+                        </span>
+                    </td>
+                    <td class="cd-date-column">
+                        <select class="form-control" ng-model="cashDisbursement.cdDate" ng-options="month.date for month in dateSelector"></select>
+                    </td>
+                    <td class="cd-description-column">
+                        <input type="text" class="form-control" ng-model="cashDisbursement.description" required>
+                    </td>
+                    <td class="cd-category-column">
+                        <input type="text" class="form-control" ng-model="cashDisbursement.category" required>
+                    </td>   
+                    <td class="cd-description-column">
+                        <input type="number" class="form-control" ng-model="cashDisbursement.amount" ng-change="calcSum()" required> €
+                    </td>                       
+                </tr>
+            </tbody>                            
+        </table>
+    </div>
+    <div class="panel-footer" >
+        <div class="row">
+            <div class="col-md-8">
+                <button class="btn btn-success" ng-click="addRows(4)">Add Rows</button>
+                <button class="btn btn-success" ng-click="sendToServer()">Save</button>
+                 <a href="rest/travel-costs/{{cashDisbursementData.indiviudalId}}/{{cashDisbursementData.yearMonth}}/xls">
+                    <button class="btn btn-primary">
+                        <i class="icon-list-alt"></i> Excel Download
+                    </button>
+                </a>
+            </div>
+            <div class="col-md-4" style="text-align: right; "><h3>Summe: {{cashDisbursementData.sum| currency:'€'}}</h3></div>
+        </div>
+
+    </div>
+</div>
