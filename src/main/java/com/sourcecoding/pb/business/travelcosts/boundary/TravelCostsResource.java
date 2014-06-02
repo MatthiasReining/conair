@@ -43,7 +43,7 @@ import javax.ws.rs.core.Response;
 @Stateless
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class TravelCostsService {
+public class TravelCostsResource {
 
     @PersistenceContext
     EntityManager em;
@@ -108,7 +108,7 @@ public class TravelCostsService {
 
     @PUT
     @Path("{individualId}")
-    public TravelCostsGroupDTO utcateChargesByMonth(TravelCostsGroupDTO travelCostsGroupDTO,
+    public TravelCostsGroupDTO updateChargesByMonth(TravelCostsGroupDTO travelCostsGroupDTO,
             @PathParam("individualId") Long individualId) {
         String yearAndMonth = travelCostsGroupDTO.yearMonth;
         int year = Integer.parseInt(yearAndMonth.split("-")[0]);

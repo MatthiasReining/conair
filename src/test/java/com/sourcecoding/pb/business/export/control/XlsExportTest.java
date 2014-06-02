@@ -23,7 +23,7 @@ import org.junit.Ignore;
  *
  * @author Matthias
  */
-//@Ignore
+@Ignore
 public class XlsExportTest {
 
     @Test

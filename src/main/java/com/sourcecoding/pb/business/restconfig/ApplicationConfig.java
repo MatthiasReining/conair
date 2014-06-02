@@ -46,7 +46,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.sourcecoding.pb.business.project.boundary.ProjectServices.class);
         resources.add(com.sourcecoding.pb.business.resources.boundary.ResourcesResource.class);
         resources.add(com.sourcecoding.pb.business.timerecording.boundary.TimeRecordingService.class);
-        resources.add(com.sourcecoding.pb.business.travelcosts.boundary.TravelCostsService.class);
+        resources.add(com.sourcecoding.pb.business.travelcosts.boundary.TravelCostsResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.IndividualVacationResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.LegalHolidayResource.class);
         resources.add(com.sourcecoding.pb.business.vacation.boundary.TasksResource.class);

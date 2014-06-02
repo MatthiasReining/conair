@@ -146,8 +146,12 @@ public class XlsExport {
                                 Map.Entry<String, Object> entry = (Map.Entry<String, Object>) loopValue;
                                 scopedCollections.put(scopeKeyName, entry.getKey());
                                 scopedCollections.put(scopeValueName, entry.getValue());
+                                
+                                ((Map)scopedCollections.get(ROOT_KEY)).put(scopeKeyName, entry.getKey());
+                                ((Map)scopedCollections.get(ROOT_KEY)).put(scopeValueName, entry.getValue());
                             } else {
                                 scopedCollections.put(scopeName, loopValue);
+                                ((Map)scopedCollections.get(ROOT_KEY)).put(scopeName, loopValue);
                             }
 
                             int newLines = replaceRows(currentRowNumber, (currentRowNumber + loopBlockLines), sheet);

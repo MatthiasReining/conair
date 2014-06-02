@@ -29,7 +29,7 @@ public class DataExtractor {
             return result;
 
         } catch (OgnlException ex) {
-            Logger.getLogger(DataExtractor.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(DataExtractor.class.getName()).log(Level.SEVERE, ex.getMessage() ); //, ex);
             //throw new RuntimeException(ex);
             return null;
         }
