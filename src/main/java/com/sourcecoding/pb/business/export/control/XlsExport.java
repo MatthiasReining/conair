@@ -146,12 +146,18 @@ public class XlsExport {
                                 Map.Entry<String, Object> entry = (Map.Entry<String, Object>) loopValue;
                                 scopedCollections.put(scopeKeyName, entry.getKey());
                                 scopedCollections.put(scopeValueName, entry.getValue());
-                                
-                                ((Map)scopedCollections.get(ROOT_KEY)).put(scopeKeyName, entry.getKey());
-                                ((Map)scopedCollections.get(ROOT_KEY)).put(scopeValueName, entry.getValue());
+
+                                try {
+                                    //FIXME dirty hack to avoid Account Container bug
+                                    ((Map) scopedCollections.get(ROOT_KEY)).put(scopeKeyName, entry.getKey());
+                                    ((Map) scopedCollections.get(ROOT_KEY)).put(scopeValueName, entry.getValue());
+                                }                                
+                                catch(Exception e) {
+                                    System.out.println(e.getMessage());
+                                }
                             } else {
                                 scopedCollections.put(scopeName, loopValue);
-                                ((Map)scopedCollections.get(ROOT_KEY)).put(scopeName, loopValue);
+                                ((Map) scopedCollections.get(ROOT_KEY)).put(scopeName, loopValue);
                             }
 
                             int newLines = replaceRows(currentRowNumber, (currentRowNumber + loopBlockLines), sheet);
@@ -188,12 +194,12 @@ public class XlsExport {
 
                             WritableCellFormat format = new WritableCellFormat(cell.getCellFormat());
                             if (objValue.getClass().equals(java.util.Date.class)) {
-                                Date dateValue = (Date)objValue;                                
-                                jxl.write.DateTime xlsCell = new jxl.write.DateTime(cell.getColumn(), cell.getRow(), dateValue, format);                                
+                                Date dateValue = (Date) objValue;
+                                jxl.write.DateTime xlsCell = new jxl.write.DateTime(cell.getColumn(), cell.getRow(), dateValue, format);
                                 sheet.addCell(xlsCell);
                             } else if (objValue instanceof Number) {
                                 Double numberValue = Double.valueOf(value);
-                                jxl.write.Number xlsCell = new jxl.write.Number(cell.getColumn(), cell.getRow(), numberValue, format);                                
+                                jxl.write.Number xlsCell = new jxl.write.Number(cell.getColumn(), cell.getRow(), numberValue, format);
                                 sheet.addCell(xlsCell);
                             }
 
@@ -230,7 +236,7 @@ public class XlsExport {
             if (innerValue != null) {
                 if (fields.size() > 1 || innerValue instanceof String) {
                     value = value.toString().replace(field, innerValue.toString());
-                } else {             
+                } else {
                     value = innerValue;
                 }
             }
