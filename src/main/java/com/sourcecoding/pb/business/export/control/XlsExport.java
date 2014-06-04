@@ -151,13 +151,16 @@ public class XlsExport {
                                     //FIXME dirty hack to avoid Account Container bug
                                     ((Map) scopedCollections.get(ROOT_KEY)).put(scopeKeyName, entry.getKey());
                                     ((Map) scopedCollections.get(ROOT_KEY)).put(scopeValueName, entry.getValue());
-                                }                                
-                                catch(Exception e) {
+                                } catch (Exception e) {
                                     System.out.println(e.getMessage());
                                 }
                             } else {
                                 scopedCollections.put(scopeName, loopValue);
-                                ((Map) scopedCollections.get(ROOT_KEY)).put(scopeName, loopValue);
+                                try {
+                                    ((Map) scopedCollections.get(ROOT_KEY)).put(scopeName, loopValue);
+                                } catch (Exception e) {
+                                    System.out.println(e.getMessage());
+                                }
                             }
 
                             int newLines = replaceRows(currentRowNumber, (currentRowNumber + loopBlockLines), sheet);
