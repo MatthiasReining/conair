@@ -33,5 +33,3 @@ DROP TABLE PERDIEMGROUP;
 
 delete CONFIGURATION where id = 12;
 INSERT INTO CONFIGURATION(id, configkey, configvalue) VALUES(12, 'xls-template-path-for-travel-costs', 'https://onedrive.live.com/download?resid=6F3F709C6FABCA05!5596&authkey=!AIdSdDjAVrfjyHc&ithint=file%2c.xls')
-delete CONFIGURATION where id = 13;
-INSERT INTO CONFIGURATION(id, configkey, configvalue) VALUES(13, 'xls-template-path-for-reimbursement-of-expenses', 'https://onedrive.live.com/download?resid=6F3F709C6FABCA05!14255&authkey=!AJJHBSZVJcSeG6k&ithint=file%2cxls')

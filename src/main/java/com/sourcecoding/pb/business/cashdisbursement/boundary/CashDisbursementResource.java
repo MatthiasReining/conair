@@ -70,7 +70,6 @@ public class CashDisbursementResource {
 
         CashDisbursementGroup cdg = getCDByMonth(individualId, yearAndMonth);
 
-        
         List<CashDisbursement> cd2remove = new ArrayList<>();
         for (CashDisbursement cd : cdg.getCashDisbursementList()) {
 
@@ -104,7 +103,7 @@ public class CashDisbursementResource {
             cd.setCdCategory(cdDTO.cdCategory);
             cd.setDescription(cdDTO.description);
         }
-        
+
         cdg.setGroupSum(BigDecimal.valueOf(cashDisbursementGroupDTO.sum));
         em.merge(cdg);
 
@@ -112,27 +111,7 @@ public class CashDisbursementResource {
 
     }
 
-    @PUT
-    @Path("travel-expenses-rates")
-    public Response uploadTravelExpensesRate(List<TravelExpensesRate> terList) {
-
-        for (TravelExpensesRate ter : terList) {
-            em.merge(ter);
-        }
-        return Response.ok().build();
-    }
-
-    @GET
-    @Path("travel-expenses-rates/{travelYear}")
-    public List<TravelExpensesRate> getTravelExpensesRate(@PathParam("travelYear") Integer travelYear) {
-        return em.createNamedQuery(TravelExpensesRate.findByDate, TravelExpensesRate.class
-        )
-                .setParameter(TravelExpensesRate.queryParam_travelYear, travelYear)
-                .getResultList();
-    }
-
-    private CashDisbursementGroup
-            getCDByMonth(Long individualId, String yearAndMonth) throws RuntimeException {
+    private CashDisbursementGroup getCDByMonth(Long individualId, String yearAndMonth) throws RuntimeException {
         List<CashDisbursementGroup> chList = em.createNamedQuery(CashDisbursementGroup.findByGroupKey, CashDisbursementGroup.class)
                 .setParameter(CashDisbursementGroup.queryParam_individualId, individualId)
                 .setParameter(CashDisbursementGroup.queryParam_groupKey, yearAndMonth)
@@ -177,45 +156,23 @@ public class CashDisbursementResource {
     @GET
     @Path("{individualId}/{yearAndMonth}/xls")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response getVacationsXls(@PathParam("individualId") Long individualId,
+    public Response getReimbursementOfExpesesXls(@PathParam("individualId") Long individualId,
             @PathParam("yearAndMonth") String yearAndMonth) throws IOException {
 
-        String templateUrl = configurator.getValue(Configurator.XLS_TEMPLATE_PATH_FOR_TRAVEL_COSTS);
+        String templateUrl = configurator.getValue(Configurator.XLS_TEMPLATE_PATH_FOR_REIMBURSEMENT_OF_EXPENSES);
 
-        System.out.println(templateUrl);
-        CashDisbursementGroupDTO tcg = getCashDisbursementListByMonth(individualId, yearAndMonth);
+        CashDisbursementGroupDTO cdg = getCashDisbursementListByMonth(individualId, yearAndMonth);
         Individual individual = em.find(Individual.class, individualId);
 
         Map<String, Object> payloadMap = new HashMap<>();
 
-        payloadMap.put(
-                "travelCostsGroup", tcg);
-
-        Map<Long, Object> travelExpensesRateMap = new HashMap<>();
-        int year = Integer.parseInt(yearAndMonth.split("-")[0]);
-        for (TravelExpensesRate ter
-                : getTravelExpensesRate(year)) {
-            travelExpensesRateMap.put(ter.getId(), ter);
-        }
-
-        payloadMap.put(
-                "travelExpensesRates", travelExpensesRateMap);
-
-        Map<Long, ProjectInformation> projectMap = new HashMap<>();
-        for (ProjectInformation pi
-                : em.createNamedQuery(ProjectInformation.findAllValidProjects, ProjectInformation.class
-                ).getResultList()) {
-            projectMap.put(pi.getId(), pi);
-        }
-        payloadMap.put(
-                "projects", projectMap);
-        payloadMap.put(
-                "individual", individual);
+        payloadMap.put("roe", cdg);
+        payloadMap.put("individual", individual);
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         exportService.generate(templateUrl, payloadMap, os);
-        String filename = "travel-costs-" + individual.getFirstname().toLowerCase() + "-" + yearAndMonth + ".xls";
+        String filename = yearAndMonth + "-roe-" + individual.getFirstname().toLowerCase() + ".xls";
 
         return Response.ok(os.toByteArray(), MediaType.APPLICATION_OCTET_STREAM)
                 .header("content-disposition", "attachment; filename = " + filename)
