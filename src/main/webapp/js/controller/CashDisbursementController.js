@@ -30,14 +30,14 @@ function CashDisbursementCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
         
         var firstDate = new Date(year, month-1, 1);
         for(var i=1; i<=31; i++) {
-            var currentDate = new Date(year, month-1, i);
+            var currentDate = new Date(year, month-1, i, 0,0,0);
             if (currentDate.getMonth() !== firstDate.getMonth() )
                 break;
 
-            var dayText = String( currentDate.getDate() );
-            if (dayText.length === 1) dayText = '0' + dayText;
+            var day = String( currentDate.getDate() );
+            if (day.length === 1) day = '0' + day;
             
-            result.push( {'date': yearMonth+'-'+dayText, 'dateObj': currentDate});            
+            result.push( {'day': day, 'date': currentDate.getText() });            
         }
         return result;
         

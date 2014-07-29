@@ -27,6 +27,14 @@ public class CashDisbursementGroupDTO {
             this.cashDisbursementList.add( new CashDisbursementDTO(cd) );
         }
     }
+    
+    public CashDisbursementDTO findCashDisbursementDTOById(Long id) {
+        for(CashDisbursementDTO cdDTO : cashDisbursementList) {
+            if (id.equals(cdDTO.id))
+                return cdDTO;
+        }
+        return null;
+    }
 
     public Long indiviudalId;
     public String yearMonth;

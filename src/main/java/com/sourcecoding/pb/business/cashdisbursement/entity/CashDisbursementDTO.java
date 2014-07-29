@@ -5,6 +5,7 @@
  */
 package com.sourcecoding.pb.business.cashdisbursement.entity;
 
+import com.sourcecoding.pb.business.restconfig.JsonDateAdapter;
 import com.sourcecoding.pb.business.restconfig.JsonDateTimeAdapter;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +30,7 @@ public class CashDisbursementDTO {
 
     public Long id;
 
-    @XmlJavaTypeAdapter(JsonDateTimeAdapter.class)
+    @XmlJavaTypeAdapter(JsonDateAdapter.class)
     public Date cdDate;
 
     public String description;

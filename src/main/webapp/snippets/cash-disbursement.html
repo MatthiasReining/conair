@@ -29,17 +29,23 @@
                             <i class="icon-remove" tooltip="remove data" ng-click="remove($index)"></i>
                         </span>
                     </td>
-                    <td class="cd-date-column">
-                        <select class="form-control" ng-model="cashDisbursement.cdDate" ng-options="month.date for month in dateSelector"></select>
+                    <td class="cd-date-column" style="width: 165px">
+                         <div class="input-group">                             
+                            <span class="input-group-addon">{{cashDisbursementData.yearMonth}}-</span>
+                            <select class="form-control" ng-model="cashDisbursement.cdDate" ng-options="m.date as m.day for m in dateSelector"></select>
+                         </div>
                     </td>
                     <td class="cd-description-column">
                         <input type="text" class="form-control" ng-model="cashDisbursement.description" required>
                     </td>
                     <td class="cd-category-column">
-                        <input type="text" class="form-control" ng-model="cashDisbursement.category" required>
+                        <input type="text" class="form-control" ng-model="cashDisbursement.cdCategory" required>
                     </td>   
-                    <td class="cd-description-column">
-                        <input type="number" class="form-control" ng-model="cashDisbursement.amount" ng-change="calcSum()" required> €
+                    <td class="cd-description-column" style="width: 150px">
+                        <div class="input-group">
+                            <input type="number" class="form-control text-right" ng-model="cashDisbursement.amount" ng-change="calcSum()" required>
+                            <span class="input-group-addon">€</span>
+                        </div>
                     </td>                       
                 </tr>
             </tbody>                            
