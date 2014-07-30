@@ -10,10 +10,8 @@ import com.sourcecoding.pb.business.cashdisbursement.entity.CashDisbursementDTO;
 import com.sourcecoding.pb.business.configuration.boundary.Configurator;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
-import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.cashdisbursement.entity.CashDisbursementGroup;
 import com.sourcecoding.pb.business.cashdisbursement.entity.CashDisbursementGroupDTO;
-import com.sourcecoding.pb.business.travelcosts.entity.TravelExpensesRate;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -149,7 +147,8 @@ public class CashDisbursementResource {
         if (cdg.getCashDisbursementList()
                 == null)
             cdg.setCashDisbursementList(new ArrayList<CashDisbursement>());
-
+        
+        em.refresh(cdg); //sort order will be used!
         return cdg;
     }
 
