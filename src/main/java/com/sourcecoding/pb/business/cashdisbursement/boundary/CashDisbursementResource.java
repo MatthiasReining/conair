@@ -142,13 +142,13 @@ public class CashDisbursementResource {
 
             cdg.setGroupFrom(fromDate.getTime());
             cdg.setGroupTo(untilDay.getTime());
+        } else {
+            em.refresh(cdg); //sort order will be used!
         }
 
-        if (cdg.getCashDisbursementList()
-                == null)
+        if (cdg.getCashDisbursementList() == null)
             cdg.setCashDisbursementList(new ArrayList<CashDisbursement>());
-        
-        em.refresh(cdg); //sort order will be used!
+
         return cdg;
     }
 
