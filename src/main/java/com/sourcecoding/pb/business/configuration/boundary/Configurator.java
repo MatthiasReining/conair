@@ -48,13 +48,13 @@ public class Configurator {
     }
 
     
-    public static String VACATION_NEW_REQUEST_SEND_EMAIL = "vacation-new-request-send-email";
+    public static final String VACATION_NEW_REQUEST_SEND_EMAIL = "vacation-new-request-send-email";
     
-    public static String XLS_TEMPLATE_PATH_FOR_VACATION = "xls-template-path-for-vacation";
-    public static String XLS_TEMPLATE_PATH_FOR_VACATION_OVERVIEW = "xls-template-path-for-vacation-overview";
+    public static final String XLS_TEMPLATE_PATH_FOR_VACATION = "xls-template-path-for-vacation";
+    public static final String XLS_TEMPLATE_PATH_FOR_VACATION_OVERVIEW = "xls-template-path-for-vacation-overview";
     
-    public static String XLS_TEMPLATE_PATH_FOR_TRAVEL_COSTS = "xls-template-path-for-travel-costs";
-    public static String XLS_TEMPLATE_PATH_FOR_REIMBURSEMENT_OF_EXPENSES = "xls-template-path-for-reimbursement-of-expenses";
+    public static final String XLS_TEMPLATE_PATH_FOR_TRAVEL_COSTS = "xls-template-path-for-travel-costs";
+    public static final String XLS_TEMPLATE_PATH_FOR_REIMBURSEMENT_OF_EXPENSES = "xls-template-path-for-reimbursement-of-expenses";
         
     
     
