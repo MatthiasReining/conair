@@ -9,6 +9,7 @@ import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -38,6 +39,7 @@ public class CashDisbursement implements Serializable {
     private Date cdDate;
     private String description;
     private String cdCategory;
+    @Column(precision = 10, scale = 2)
     private BigDecimal amount;
 
     public Long getId() {
