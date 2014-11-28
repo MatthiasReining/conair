@@ -11,6 +11,7 @@ import com.sourcecoding.pb.business.project.entity.ProjectInformation;
 import com.sourcecoding.pb.business.project.entity.ProjectMember;
 import com.sourcecoding.pb.business.timerecording.entity.TimeRecord;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -68,7 +69,8 @@ public class TimeRecordCollector {
             BigDecimal priceHour = pm.getPriceHour();
             System.out.println( pm.getPriceHour());
             //use minutes for calculation
-            BigDecimal price = priceHour.divide(new BigDecimal("60")).multiply(BigDecimal.valueOf(tr.getWorkingTime()));
+            //
+            BigDecimal price = new BigDecimal( priceHour.doubleValue() / 60 * tr.getWorkingTime() ).setScale(2, RoundingMode.HALF_UP);
             adt.setPriceHour(priceHour);
             adt.setPrice(price);
             ap.getAccoutingTimeDetails().add(adt);  
