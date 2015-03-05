@@ -16,12 +16,14 @@ function TravelCostsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
     $scope.passt = false;
     
     var serviceURL = serviceBaseUrl + 'travel-costs/' + $rootScope.user.id + '/' + $routeParams.yearMonth;
+    
+    var travelYear = $routeParams.yearMonth.split('-')[0];
 
     //load destination list
     //FIXME cache
     //FIXME hard coded travel year
     $scope.travelExpensesRatesById = {};
-    $http.get(serviceBaseUrl + 'travel-costs/travel-expenses-rates/2014').success(function(data) {
+    $http.get(serviceBaseUrl + 'travel-costs/travel-expenses-rates/'+travelYear).success(function(data) {
         $scope.travelExpensesRates = data;
         $.map(data, function(entry) { //use also as map object;
             $scope.travelExpensesRatesById[entry.id] = entry;
