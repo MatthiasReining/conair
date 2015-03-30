@@ -74,8 +74,6 @@ public class TravelCostsResource {
         day.setTimeInMillis(0);
         day.set(year, month - 1, 0, 0, 0, 0); //start one day before, incr in loop
         Calendar untilDay = Calendar.getInstance();
-        //untilDay.setTime(day.getTime());
-        //untilDay.add(Calendar.MONTH, 1);
         untilDay.setTimeInMillis(0);
         untilDay.set(year, month, 0, 0, 0, 0);
         
@@ -123,9 +121,9 @@ public class TravelCostsResource {
         day.setTimeInMillis(0);
         day.set(year, month - 1, 0, 0, 0, 0); //start one day before, incr in loop
         Calendar untilDay = Calendar.getInstance();
-        untilDay.setTime(day.getTime());
-        untilDay.add(Calendar.MONTH, 1);
-
+        untilDay.setTimeInMillis(0);
+        untilDay.set(year, month, 0, 0, 0, 0);
+        
         Calendar fromDate = Calendar.getInstance();
         fromDate.setTime(day.getTime());
         fromDate.add(Calendar.DATE, 1);

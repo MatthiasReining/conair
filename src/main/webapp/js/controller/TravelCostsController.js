@@ -143,10 +143,10 @@ function TravelCostsCtrl($scope, $routeParams, $http, $rootScope, msgbox) {
 
         if (duration === 24)
             travelCosts.charges = $scope.travelExpensesRatesById[terId].rate24h;
-        else if (duration > 8)
+        else //jeder Reisetag wird bezahlt! if (duration > 8)
             travelCosts.charges = $scope.travelExpensesRatesById[terId].rateFrom8To24;
-        else
-            travelCosts.charges = 0;
+        //else
+        //    travelCosts.charges = 0;
 
         travelCosts.charges = travelCosts.charges - food;
         if (travelCosts.charges < 0)
