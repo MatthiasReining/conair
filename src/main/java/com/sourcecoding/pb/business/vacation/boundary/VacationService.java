@@ -7,7 +7,6 @@ package com.sourcecoding.pb.business.vacation.boundary;
 import com.sourcecoding.pb.business.configuration.boundary.Configurator;
 import com.sourcecoding.pb.business.export.boundary.XlsExportService;
 import com.sourcecoding.pb.business.export.control.DataExtractor;
-import com.sourcecoding.pb.business.export.control.DataExtractorOld;
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import com.sourcecoding.pb.business.vacation.control.ResponseBuilder;
 import com.sourcecoding.pb.business.vacation.control.VacationCalculator;
@@ -107,11 +106,6 @@ public class VacationService {
     public IndividualVacationResource getIndividualVacationResource(@PathParam("individualId") Long individualId) {
         //Call sub resource
         IndividualVacationResource ivr = resourceContext.getResource(IndividualVacationResource.class);
-
-        Individual individual = em.find(Individual.class, individualId);
-
-        //FIXME setter for slsb :-( search for a better solution!
-        ivr.setIndividual(individual);
         return ivr;
     }
 

@@ -58,20 +58,17 @@ public class IndividualVacationResource {
     @Inject
     MailService mailService;
 
-    private Individual individual;
+    @PathParam("individualId")
+    private Long individualId;
 
     @Inject
     Configurator configurator;
-
-    public void setIndividual(Individual individual) {
-        this.individual = individual;
-    }
 
     @GET
     @Path("xls")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response getVacationXls(@QueryParam("year") Integer year) throws IOException {
-
+        Individual individual = em.find(Individual.class, individualId);
         String templateUrl = configurator.getValue("xls-template-path-for-vacation");
         System.out.println(templateUrl);
         ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -89,6 +86,8 @@ public class IndividualVacationResource {
     @GET
     public Map<String, Object> getVaction(@QueryParam("year") Integer year) {
         Map<String, Object> result = new HashMap<>();
+
+        Individual individual = em.find(Individual.class, individualId);
 
         if (year == null)
             year = Calendar.getInstance().get(Calendar.YEAR);
@@ -159,11 +158,13 @@ public class IndividualVacationResource {
             @QueryParam("vacationFrom") String vacationFrom,
             @QueryParam("vacationUntil") String vacationUntil) {
 
+        Individual individual = em.find(Individual.class, individualId);
         return vacationCalculator.calcVacationDays(individual, vacationFrom, vacationUntil);
     }
 
     @POST
     public Response issueRequestForTimeOff(Map<String, Object> payload) {
+        Individual individual = em.find(Individual.class, individualId);
         //validation
         Integer numberOfDays = (Integer) payload.get("numberOfDays");
         Date vacationFrom = DateParameter.valueOf(payload.get("vacationFrom").toString());
@@ -236,6 +237,7 @@ public class IndividualVacationResource {
     @PUT
     @Path("admin/{year}/change-number-of-vacation-days")
     public Response changeNumberOfVacationDays(@PathParam("year") Integer year, Map<String, Object> payload) {
+        Individual individual = em.find(Individual.class, individualId);
 
         Integer newNumberOfVacationDays = (Integer) payload.get("newNumberOfVacationDays");
 
