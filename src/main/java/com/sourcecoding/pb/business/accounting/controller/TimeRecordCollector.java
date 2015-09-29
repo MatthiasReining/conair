@@ -47,7 +47,7 @@ public class TimeRecordCollector {
 
         List<TimeRecord> trList = em.createNamedQuery(TimeRecord.findTimeRecordsInARangeByProjectAndStatus, TimeRecord.class)
                 .setParameter(TimeRecord.queryParam_project, projectInformation)
-                .setParameter(TimeRecord.queryParam_status, 0)
+                .setParameter(TimeRecord.queryParam_status, 0L)
                 .setParameter(TimeRecord.queryParam_startDate, periodFrom)
                 .setParameter(TimeRecord.queryParam_endDate, periodTo)
                 .getResultList();
