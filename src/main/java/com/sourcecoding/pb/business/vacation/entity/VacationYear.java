@@ -6,6 +6,7 @@ package com.sourcecoding.pb.business.vacation.entity;
 
 import com.sourcecoding.pb.business.individuals.entity.Individual;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -43,7 +44,7 @@ public class VacationYear implements Serializable {
     private Individual individual;
     private Integer vacationYear;
     @OneToMany(mappedBy = "vacationYear", cascade = CascadeType.ALL)
-    List<VacationRecord> vacationRecords;
+    List<VacationRecord> vacationRecords = new ArrayList<>();
     private Integer numberOfVacationDays;
     private Integer residualLeaveYearBefore;
     private Integer residualLeave;
