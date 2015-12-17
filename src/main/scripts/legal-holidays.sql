@@ -32,3 +32,34 @@ INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystat
 INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (30, '2014-11-01', 'Allerheiligen', 'Bayern');
 INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (31, '2014-12-25', '1. Weihnachtstag', 'Bayern');
 INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (32, '2014-12-26', '2. Weihnachtstag', 'Bayern');
+
+
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (33, '2015-01-01', 'Neujahr', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (34, '2015-01-06', 'Heilige Drei Könige', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (35, '2015-04-03', 'Karfreitag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (36, '2015-04-06', 'Ostermontag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (37, '2015-05-01', 'Maifeiertag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (38, '2015-05-14', 'Christi Himmelfahrt', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (39, '2015-05-25', 'Pfingstmontag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (40, '2015-06-04', 'Fronleichnam', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (41, '2015-08-15', 'Mariä Himmelfahrt', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (42, '2015-10-03', 'Tag der Deutschen Einheit', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (43, '2015-11-01', 'Allerheiligen', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (44, '2015-25-01', '1. Weihnachtstag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (45, '2015-26-01', '2. Weihnachtstag', 'Bayern');
+
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (50, '2016-01-01', 'Neujahr', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (51, '2016-01-06', 'Heilige Drei Könige', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (52, '2016-25-03', 'Karfreitag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (53, '2016-28-03', 'Ostermontag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (54, '2016-05-01', 'Maifeiertag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (55, '2016-05-05', 'Christi Himmelfahrt', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (56, '2016-05-16', 'Pfingstmontag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (57, '2016-05-26', 'Fronleichnam', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (58, '2016-08-15', 'Mariä Himmelfahrt', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (59, '2016-10-03', 'Tag der Deutschen Einheit', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (60, '2016-11-01', 'Allerheiligen', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (61, '2016-25-01', '1. Weihnachtstag', 'Bayern');
+INSERT INTO LEGALHOLIDAY(ID, legalholidaydate, legalholidyname, legalholidaystate) VALUES (62, '2016-26-01', '2. Weihnachtstag', 'Bayern');
+
+COMMIT;
