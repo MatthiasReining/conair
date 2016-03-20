@@ -3,7 +3,7 @@
 
     <groupId>com.sourcecoding</groupId>
     <artifactId>conair</artifactId>
-    <version>0.4.25-SNAPSHOT</version>
+    <version>0.4.27-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>conair</name>
@@ -13,8 +13,11 @@
         <url>scm:git:https://github.com/mr678/conair.git</url>
         <connection>scm:git:https://github.com/mr678/conair.git</connection>
         <developerConnection>scm:git:https://github.com/mr678/conair.git</developerConnection>
-      <tag>conair-0.4.24</tag>
-  </scm>
+    </scm>
+    <distributionManagement>
+    
+    </distributionManagement>
+  
   
 		
 	
