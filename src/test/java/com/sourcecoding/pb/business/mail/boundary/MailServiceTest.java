@@ -13,7 +13,6 @@ import org.junit.Test;
  *
  * @author Matthias Reining
  */
-@Ignore
 public class MailServiceTest {
 
     @Test
