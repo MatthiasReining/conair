@@ -3,16 +3,17 @@
 
     <groupId>com.sourcecoding</groupId>
     <artifactId>conair</artifactId>
-    <version>0.4.23-SNAPSHOT</version>
+    <version>0.4.24-SNAPSHOT</version>
     <packaging>war</packaging>
 
     <name>conair</name>
     <description>Consulting Administration of Internal Resources</description>
 
     <scm>
+        <url>scm:git:git@github.com:mr678/conair.git</url>
         <connection>scm:git:git@github.com:mr678/conair.git</connection>
         <developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
-        <tag>conair-0.4.22</tag>
+        <tag>conair-0.4.23</tag>
     </scm>
   
 		
