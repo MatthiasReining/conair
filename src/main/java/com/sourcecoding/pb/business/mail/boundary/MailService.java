@@ -35,7 +35,7 @@ public class MailService {
     private void sendMail(String mailTo, String subject, String body) {
 
         final String username = "rgideutschland@gmail.com";
-        final String password = "Ua1SBDmzsKuhs71ev1q4";
+        final String password = "c7yuNwzGB8A0MUW7mdTI";
 
         Properties props = new Properties();
 
