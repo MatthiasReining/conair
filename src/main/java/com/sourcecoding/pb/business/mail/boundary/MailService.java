@@ -34,34 +34,30 @@ public class MailService {
 
     private void sendMail(String mailTo, String subject, String body) {
 
-        final String username = "rgideutschland@gmail.com";
-        final String password = "c7yuNwzGB8A0MUW7mdTI";
+        final String u = "conair-deutschland@outlook.com";
+        final String p = "DKzuK1DKynsfdfK6n3pm";
 
         Properties props = new Properties();
-
-        //props.put("mail.smtp.host", "smtp.gmail.com");
-        //props.put("mail.smtp.socketFactory.port", "465");
-        //props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-        //props.put("mail.smtp.auth", "true");
-        //props.put("mail.smtp.port", "465");
-
-        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.host", "smtp-mail.outlook.com");
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "587");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.port", "587");
-     
+
+        System.out.println(props);
         Session session = Session.getInstance(props,
                 new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(username, password);
+                return new PasswordAuthentication(u, p);
             }
         });
 
         try {
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
+            message.setFrom(new InternetAddress(u));
             message.setRecipients(Message.RecipientType.TO,
                     InternetAddress.parse(mailTo));
             message.setSubject(subject);

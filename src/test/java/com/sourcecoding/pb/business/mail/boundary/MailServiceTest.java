@@ -19,6 +19,8 @@ public class MailServiceTest {
     public void shouldSendMeAnEMail() throws IOException {
         System.out.println("blub");
         //GmailQuickStart.authorize();
+        
+        
         MailService ms = new MailService();
         ms.send("matthias.reining@outlook.com", "Test-Mail von ConAIR", "blub blu");
 
