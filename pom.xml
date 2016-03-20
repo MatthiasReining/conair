@@ -13,7 +13,6 @@
         <url>scm:git:git@github.com:mr678/conair.git</url>
         <connection>scm:git:git@github.com:mr678/conair.git</connection>
         <developerConnection>scm:git:git@github.com:mr678/conair.git</developerConnection>
-        <tag>conair-0.4.23</tag>
     </scm>
   
 		
